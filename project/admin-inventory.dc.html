@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+html,body{margin:0;padding:0;background:#F4F4F5;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Vazirmatn',Tahoma,sans-serif;color:#1a1a1a;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+a:hover{color:#FF5B0F;}
+input,select,button{font-family:inherit;}
+button{white-space:nowrap;}
+@keyframes hmpane{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+[data-btn]{cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,background-color .3s,color .3s,border-color .3s;}
+[data-btn]:hover{transform:translateY(-2px);}
+[data-btn]:active{transform:scale(.97);}
+[data-field]:focus{outline:none;border-color:#FF5B0F !important;box-shadow:0 0 0 4px rgba(255,91,15,.14);background:#fff !important;}
+[data-nav-i]{transition:all .3s;}
+[data-nav-i]:hover{background:rgba(255,255,255,.06);color:#fff !important;}
+[data-nav-i][data-active="1"]{background:#FF5B0F !important;color:#fff !important;box-shadow:0 10px 24px rgba(255,91,15,.35);}
+[data-chip]{transition:all .3s;cursor:pointer;white-space:nowrap;}
+[data-chip][data-active="1"]{background:#141414 !important;color:#fff !important;border-color:#141414 !important;}
+[data-node]{transition:all .45s cubic-bezier(.2,.8,.2,1);}
+[data-node][data-on="1"]{background:#FF5B0F !important;color:#fff !important;border-color:#FF5B0F !important;box-shadow:0 12px 26px rgba(255,91,15,.3);transform:scale(1.03);}
+[data-node][data-on="1"] [data-node-sub]{color:#FFE3D5 !important;}
+[data-tr]{transition:background .25s;}
+[data-tr]:hover{background:#FAFAFA;}
+[data-pane]{animation:hmpane .45s cubic-bezier(.2,.8,.2,1) both;}
+[data-tone]{white-space:nowrap;flex:none;}
+[data-tone="orange"]{background:#FFF0E8;color:#E4500A;}
+[data-tone="green"]{background:#E6F6EC;color:#178A48;}
+[data-tone="blue"]{background:#E8EFFD;color:#1E4FD8;}
+[data-tone="gray"]{background:#F0F0F0;color:#666;}
+[data-tone="red"]{background:#FDECEA;color:#C8341E;}
+@media (max-width:1180px){[data-cols]{grid-template-columns:1fr !important;}}
+@media (max-width:1000px){[data-side]{display:none !important;}}
+@media (max-width:640px){[data-main]{padding:16px 14px 40px !important;}[data-stats]{grid-template-columns:1fr 1fr !important;}[data-g3]{grid-template-columns:1fr 1fr !important;}[data-tree]{grid-template-columns:1fr !important;}}
+</style>
+</helmet>
+<div dir="rtl" style="font-family:'Vazirmatn',Tahoma,sans-serif;background:#F4F4F5;min-height:100vh;display:flex;min-width:0;">
+  <aside data-side="" style="position:sticky;top:0;height:100vh;width:260px;flex:none;background:#141414;color:#fff;display:flex;flex-direction:column;padding:24px 18px;">
+    <a href="index.dc.html" style="display:flex;align-items:center;gap:10px;color:#fff;padding:0 6px;">
+      <img src="assets/logo-light.png" alt="" style="height:40px;width:auto;">
+      <span style="font-size:22px;font-weight:900;white-space:nowrap;"><span style="color:#FF5B0F;">های</span> مصالح</span>
+    </a>
+    <div style="margin-top:10px;padding:0 6px;font-size:12px;font-weight:700;color:#FF8A4F;display:flex;align-items:center;gap:6px;"><i class="ti ti-shield-lock" style="font-size:15px;"></i>پنل مدیریت</div>
+    <nav style="margin-top:24px;display:flex;flex-direction:column;gap:4px;">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="7">
+        <a data-nav-i="" data-active="{{ n.a }}" href="{{ n.href }}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;font-size:15px;font-weight:600;color:#BDBDBD;white-space:nowrap;"><i class="ti ti-{{ n.icon }}" style="font-size:20px;"></i>{{ n.label }}</a>
+      </sc-for>
+    </nav>
+  </aside>
+
+  <main data-main="" style="flex:1;min-width:0;padding:24px 32px 40px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+      <div>
+        <div style="font-size:14px;color:#888;">تامین از موجودی خودمان، بدون واسطه</div>
+        <h1 style="margin:2px 0 0;font-size:clamp(22px,2.4vw,28px);font-weight:900;color:#141414;">انبار های مصالح</h1>
+      </div>
+      <sc-if value="{{ saved }}" hint-placeholder-val="{{ false }}"><span data-tone="green" style="font-size:13px;font-weight:800;padding:8px 14px;border-radius:12px;">ذخیره شد و روی تخصیص بار اعمال می‌شود</span></sc-if>
+    </div>
+
+    <div data-stats="" style="margin-top:20px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;">
+      <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+        <div style="background:#fff;border-radius:18px;padding:18px;border:1px solid #EFEFEF;display:flex;align-items:center;gap:14px;">
+          <span data-tone="{{ s.tone }}" style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ s.icon }}" style="font-size:24px;"></i></span>
+          <div style="min-width:0;"><div style="font-size:20px;font-weight:900;color:#141414;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ s.v }}</div><div style="font-size:13px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ s.k }}</div></div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div data-cols="" style="margin-top:20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:20px;align-items:start;">
+      <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:22px;">
+        <div style="font-size:17px;font-weight:900;color:#141414;white-space:nowrap;display:flex;align-items:center;gap:8px;"><i class="ti ti-route-2" style="font-size:22px;color:#FF5B0F;"></i>قانون مسیردهی سفارش</div>
+        <div style="margin-top:6px;font-size:13px;color:#888;line-height:1.9;">وقتی سفارش ثبت می‌شود، سیستم اول انبار خودمان را بررسی می‌کند و فقط در صورت نبود یا کمبود، از مصالح‌فروش استعلام می‌گیرد.</div>
+        <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px;">
+          <sc-for list="{{ toggles }}" as="t" hint-placeholder-count="4">
+            <div onClick="{{ t.flip }}" style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:12px 12px 18px;border-radius:14px;background:#FAFAFA;border:1px solid #F0F0F0;opacity:{{ t.op }};">
+              <span style="position:relative;margin-top:2px;width:42px;height:24px;flex:none;border-radius:999px;background:{{ t.track }};transition:background .3s;"><span style="position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.2);transform:{{ t.knob }};transition:transform .35s cubic-bezier(.2,.8,.2,1);"></span></span>
+              <span style="display:flex;flex-direction:column;"><span style="font-size:14px;font-weight:800;color:#222;">{{ t.t }}</span><span style="font-size:12px;color:#888;line-height:1.8;">{{ t.d }}</span></span>
+            </div>
+          </sc-for>
+        </div>
+        <div data-g3="" style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <sc-for list="{{ nums }}" as="n" hint-placeholder-count="2">
+            <div>
+              <label style="font-size:13px;font-weight:800;color:#333;white-space:nowrap;">{{ n.label }}</label>
+              <div style="margin-top:6px;display:flex;align-items:center;border:1.5px solid #ECECEC;border-radius:12px;overflow:hidden;background:#FAFAFA;">
+                <button data-btn="" onClick="{{ n.dec }}" style="width:40px;height:46px;border:none;background:#F1F1F1;"><i class="ti ti-minus"></i></button>
+                <span style="flex:1;text-align:center;font-size:14px;font-weight:900;white-space:nowrap;">{{ n.v }}</span>
+                <button data-btn="" onClick="{{ n.inc }}" style="width:40px;height:46px;border:none;background:#F1F1F1;"><i class="ti ti-plus"></i></button>
+              </div>
+              <div style="margin-top:4px;font-size:11px;color:#999;">{{ n.hint }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <button data-btn="" onClick="{{ save }}" style="margin-top:16px;width:100%;height:50px;border:none;border-radius:14px;background:#FF5B0F;color:#fff;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 12px 28px rgba(255,91,15,.3);"><i class="ti ti-device-floppy" style="font-size:19px;"></i>ذخیره قانون</button>
+      </div>
+
+      <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:22px;">
+        <div style="font-size:17px;font-weight:900;color:#141414;white-space:nowrap;display:flex;align-items:center;gap:8px;"><i class="ti ti-player-play" style="font-size:22px;color:#FF5B0F;"></i>شبیه‌ساز: این سفارش از کجا تامین می‌شود؟</div>
+        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;">
+          <sc-for list="{{ samples }}" as="x" hint-placeholder-count="4">
+            <span data-chip="" data-active="{{ x.a }}" onClick="{{ x.pick }}" style="border:1.5px solid #E6E6E6;background:#fff;border-radius:12px;padding:9px 12px;font-size:13px;font-weight:700;color:#333;">{{ x.t }}</span>
+          </sc-for>
+        </div>
+        <div style="margin-top:16px;display:flex;flex-direction:column;align-items:stretch;gap:10px;">
+          <div data-node="" data-on="1" style="border:2px solid #EEE;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;"><i class="ti ti-package" style="font-size:22px;"></i><div><div style="font-size:14px;font-weight:900;">سفارش: {{ sim.order }}</div><div data-node-sub="" style="font-size:12px;color:#888;">{{ sim.city }}</div></div></div>
+          <div style="display:flex;justify-content:center;color:#CCC;"><i class="ti ti-arrow-down" style="font-size:20px;"></i></div>
+          <div data-node="" data-on="1" style="border:2px solid #EEE;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;"><i class="ti ti-building-warehouse" style="font-size:22px;"></i><div><div style="font-size:14px;font-weight:900;">بررسی انبار خودمان</div><div data-node-sub="" style="font-size:12px;color:#888;">{{ sim.check }}</div></div></div>
+          <div style="display:flex;justify-content:center;color:#CCC;"><i class="ti ti-arrow-down" style="font-size:20px;"></i></div>
+          <div data-tree="" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;">
+            <sc-for list="{{ sim.paths }}" as="p" hint-placeholder-count="3">
+              <div data-node="" data-on="{{ p.on }}" style="border:2px solid #EEE;border-radius:14px;padding:12px;text-align:center;background:#fff;color:#999;">
+                <i class="ti ti-{{ p.icon }}" style="font-size:24px;"></i>
+                <div style="margin-top:4px;font-size:13px;font-weight:900;">{{ p.t }}</div>
+                <div data-node-sub="" style="margin-top:2px;font-size:11px;color:#AAA;line-height:1.7;">{{ p.d }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div data-pane="" style="margin-top:4px;padding:14px;border-radius:14px;background:{{ sim.bg }};color:{{ sim.c }};font-size:14px;font-weight:800;line-height:1.9;display:flex;gap:10px;align-items:flex-start;"><i class="ti ti-{{ sim.icon }}" style="font-size:22px;flex:none;"></i><span>{{ sim.result }}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <div style="font-size:17px;font-weight:900;color:#141414;white-space:nowrap;display:flex;align-items:center;gap:8px;"><i class="ti ti-building-warehouse" style="font-size:22px;color:#FF5B0F;"></i>موجودی انبارها</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <sc-for list="{{ whChips }}" as="w" hint-placeholder-count="3"><span data-chip="" data-active="{{ w.a }}" onClick="{{ w.pick }}" style="border:1.5px solid #E6E6E6;background:#fff;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700;color:#333;">{{ w.t }}</span></sc-for>
+        </div>
+      </div>
+      <div style="margin-top:12px;overflow-x:auto;">
+        <div style="min-width:760px;">
+          <div style="display:grid;grid-template-columns:minmax(200px,2fr) 1.1fr 1.5fr 1fr 1fr .8fr 1fr;gap:10px;padding:10px 12px;background:#F6F6F6;border-radius:12px;font-size:12px;font-weight:800;color:#666;">
+            <span>کالا</span><span>انبار</span><span style="text-align:center;">موجودی</span><span>قیمت خرید</span><span>قیمت فروش</span><span>سود</span><span>وضعیت</span>
+          </div>
+          <sc-for list="{{ rows }}" as="r" hint-placeholder-count="5">
+            <div data-tr="" style="display:grid;grid-template-columns:minmax(200px,2fr) 1.1fr 1.5fr 1fr 1fr .8fr 1fr;gap:10px;align-items:center;padding:12px;border-bottom:1px solid #F4F4F4;">
+              <span style="font-size:14px;font-weight:800;color:#222;">{{ r.name }}</span>
+              <span style="font-size:13px;color:#666;white-space:nowrap;">{{ r.wh }}</span>
+              <span style="display:flex;align-items:center;justify-content:center;gap:6px;">
+                <button data-btn="" onClick="{{ r.dec }}" style="width:30px;height:30px;border-radius:8px;border:1px solid #E6E6E6;background:#fff;"><i class="ti ti-minus" style="font-size:14px;"></i></button>
+                <span style="min-width:84px;text-align:center;font-size:14px;font-weight:900;color:#141414;white-space:nowrap;">{{ r.qty }}</span>
+                <button data-btn="" onClick="{{ r.inc }}" style="width:30px;height:30px;border-radius:8px;border:1px solid #E6E6E6;background:#fff;"><i class="ti ti-plus" style="font-size:14px;"></i></button>
+              </span>
+              <span style="font-size:13px;color:#666;white-space:nowrap;">{{ r.cost }}</span>
+              <span style="font-size:13px;font-weight:800;color:#141414;white-space:nowrap;">{{ r.price }}</span>
+              <span style="font-size:13px;font-weight:900;color:#178A48;white-space:nowrap;">{{ r.margin }}</span>
+              <span data-tone="{{ r.tone }}" style="font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px;justify-self:start;">{{ r.st }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div data-g3="" style="margin-top:16px;display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr 1fr auto;gap:10px;align-items:end;">
+        <div><label style="font-size:12px;font-weight:700;color:#666;">کالای جدید</label><input data-field="" value="{{ nf.name }}" onChange="{{ setN.name }}" placeholder="مثلاً بلوک سیمانی ۱۵" style="margin-top:4px;width:100%;height:44px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:10px;padding:0 12px;font-size:14px;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:#666;">انبار</label><div style="position:relative;margin-top:4px;"><select data-field="" value="{{ nf.wh }}" onChange="{{ setN.wh }}" style="appearance:none;-webkit-appearance:none;width:100%;height:44px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:10px;padding:0 12px 0 30px;font-size:13px;"><sc-for list="{{ whOpts }}" as="w" hint-placeholder-count="2"><option value="{{ w.k }}">{{ w.name }}</option></sc-for></select><i class="ti ti-chevron-down" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#999;pointer-events:none;"></i></div></div>
+        <div><label style="font-size:12px;font-weight:700;color:#666;">تعداد و واحد</label><input data-field="" value="{{ nf.qty }}" onChange="{{ setN.qty }}" placeholder="۵۰۰ عدد" style="margin-top:4px;width:100%;height:44px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:10px;padding:0 12px;font-size:14px;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:#666;">قیمت خرید</label><input data-field="" inputmode="numeric" value="{{ nf.cost }}" onChange="{{ setN.cost }}" placeholder="تومان" style="margin-top:4px;width:100%;height:44px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:10px;padding:0 12px;font-size:14px;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:#666;">قیمت فروش</label><input data-field="" inputmode="numeric" value="{{ nf.price }}" onChange="{{ setN.price }}" placeholder="تومان" style="margin-top:4px;width:100%;height:44px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:10px;padding:0 12px;font-size:14px;"></div>
+        <button data-btn="" onClick="{{ addItem }}" style="height:44px;border:none;border-radius:10px;background:#141414;color:#fff;padding:0 16px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:6px;"><i class="ti ti-plus" style="font-size:17px;"></i>ورود کالا</button>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  WH = [{ k: 'thr', name: 'انبار مرکزی تهران', city: 'تهران' }, { k: 'krj', name: 'انبار کرج', city: 'کرج' }];
+  SEED = {
+    rule: { own: true, sameCity: true, radius: 50, partial: true, reserve: true, cheaper: 5 },
+    stock: [
+      { sku: 'rebar14', name: 'میلگرد آجدار A3 سایز ۱۴', wh: 'thr', qty: 40, unit: 'تن', step: 1, cost: 30800000, price: 32100000, min: 10 },
+      { sku: 'cement2', name: 'سیمان پرتلند تیپ ۲', wh: 'krj', qty: 1200, unit: 'کیسه', step: 50, cost: 262000, price: 282000, min: 300 },
+      { sku: 'brick', name: 'آجر فشاری', wh: 'thr', qty: 4000, unit: 'قالب', step: 500, cost: 3100, price: 3500, min: 5000 },
+      { sku: 'gypsum', name: 'گچ ساختمانی', wh: 'krj', qty: 0, unit: 'کیسه', step: 50, cost: 95000, price: 110000, min: 200 },
+      { sku: 'pvc110', name: 'لوله PVC فاضلابی ۱۱۰', wh: 'thr', qty: 340, unit: 'شاخه', step: 10, cost: 410000, price: 465000, min: 100 }
+    ]
+  };
+  SAMPLES = [
+    { t: 'میلگرد ۶ تن — تهران', sku: 'rebar14', q: 6, city: 'تهران' },
+    { t: 'سیمان ۱۵۰ کیسه — اصفهان', sku: 'cement2', q: 150, city: 'اصفهان' },
+    { t: 'آجر ۸٬۰۰۰ قالب — تهران', sku: 'brick', q: 8000, city: 'تهران' },
+    { t: 'گچ ۳۰۰ کیسه — کرج', sku: 'gypsum', q: 300, city: 'کرج' }
+  ];
+  state = { inv: null, saved: false, sim: 0, whf: 'all', nf: { name: '', wh: 'thr', qty: '', cost: '', price: '' } };
+  componentDidMount() { let v = null; try { v = JSON.parse(localStorage.getItem('hm_inv') || 'null'); } catch (e) {} this.setState({ inv: v || this.SEED }); }
+  upd(p) { this.setState(s => ({ inv: { ...(s.inv || this.SEED), ...p }, saved: false })); }
+  renderVals() {
+    const s = this.state, inv = s.inv || this.SEED, R = inv.rule, fa = v => String(v).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]).replace('.', '٫');
+    const sep = n => fa(Math.round(n).toLocaleString('en-US').replace(/,/g, '٬'));
+    const words = n => { const b = Math.floor(n / 1e9), m = Math.floor((n % 1e9) / 1e6); return [b ? fa(b) + ' میلیارد' : '', m ? fa(m) + ' میلیون' : ''].filter(Boolean).join(' و ') + ' تومان'; };
+    const num = v => parseFloat(String(v).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[^\d.]/g, '')) || 0;
+    const whOf = k => this.WH.find(w => w.k === k) || this.WH[0];
+    const setStock = (i, q) => { const st = inv.stock.map((x, j) => j === i ? { ...x, qty: Math.max(0, q) } : x); this.upd({ stock: st }); };
+    const value = inv.stock.reduce((a, x) => a + x.qty * x.cost, 0);
+    const low = inv.stock.filter(x => x.qty < x.min).length;
+    const smp = this.SAMPLES[s.sim], item = inv.stock.find(x => x.sku === smp.sku);
+    const wh = item ? whOf(item.wh) : null;
+    const cityOk = !R.sameCity || (wh && wh.city === smp.city) || (wh && ((wh.city === 'تهران' && smp.city === 'کرج') || (wh.city === 'کرج' && smp.city === 'تهران')) && R.radius >= 50);
+    const qty = item ? item.qty : 0;
+    let path = 'sup', result, icon = 'message-question', bg = '#E8EFFD', c = '#1E4FD8', check;
+    if (!R.own) { check = 'اولویت انبار خاموش است'; result = 'اولویت انبار خاموش است؛ از مصالح‌فروشی‌های شهر استعلام گرفته می‌شود.'; }
+    else if (!item || qty === 0) { check = 'این کالا در انبار نیست'; result = `«${item ? item.name : ''}» در انبار موجود نیست؛ از مصالح‌فروشی‌های ${smp.city} استعلام گرفته می‌شود.`; }
+    else if (!cityOk) { check = `${wh.name} خارج از محدوده ${smp.city} است`; result = `انبار ما در ${wh.city} است و خارج از محدوده ${fa(R.radius)} کیلومتری؛ از مصالح‌فروش ${smp.city} استعلام گرفته می‌شود.`; }
+    else if (qty >= smp.q) { path = 'own'; check = `موجودی ${sep(qty)} ${item.unit} در ${wh.name}`; result = `بدون استعلام: ${sep(smp.q)} ${item.unit} از ${wh.name}${R.reserve ? ' رزرو می‌شود' : ''} و مستقیم به مرحله تخصیص راننده می‌رود. سود: ${words((item.price - item.cost) * smp.q)}.`; icon = 'circle-check'; bg = '#E6F6EC'; c = '#178A48'; }
+    else if (R.partial) { path = 'mix'; check = `فقط ${sep(qty)} ${item.unit} موجود است`; result = `ترکیبی: ${sep(qty)} ${item.unit} از ${wh.name} و ${sep(smp.q - qty)} ${item.unit} باقی‌مانده با استعلام از مصالح‌فروش تامین می‌شود.`; icon = 'arrows-split'; bg = '#FFF0E8'; c = '#E4500A'; }
+    else { check = `موجودی ناکافی (${sep(qty)} ${item.unit})`; result = 'موجودی کافی نیست و تامین ترکیبی خاموش است؛ کل سفارش از مصالح‌فروش استعلام می‌شود.'; }
+    const setN = {}; ['name', 'wh', 'qty', 'cost', 'price'].forEach(k => { setN[k] = e => this.setState({ nf: { ...s.nf, [k]: e.target.value } }); });
+    return {
+      nav: [['layout-dashboard', 'داشبورد', 'admin.dc.html'], ['route', 'تخصیص بار', 'admin.dc.html'], ['building-warehouse', 'انبار خودمان', '#'], ['cash', 'مالی و حق‌العمل', 'admin-finance.dc.html'], ['gift', 'پاداش و کش‌بک', 'admin-rewards.dc.html'], ['users-plus', 'معرفی (Referral)', 'admin-referral.dc.html'], ['shield-lock', 'کارکنان و دسترسی', 'admin-team.dc.html'], ['layout-board', 'محتوای سایت', 'admin-cms.dc.html']].map(([icon, label, href], i) => ({ icon, label, href, a: i === 2 ? '1' : '0' })),
+      saved: s.saved,
+      stats: [
+        { icon: 'coin', k: 'ارزش موجودی (قیمت خرید)', v: value >= 1e9 ? fa((value / 1e9).toFixed(1)) + ' میلیارد' : fa(Math.round(value / 1e6)) + ' میلیون', tone: 'blue' }, { icon: 'packages', k: 'اقلام در انبار', v: fa(inv.stock.filter(x => x.qty > 0).length) + ' کالا', tone: 'gray' },
+        { icon: 'alert-triangle', k: 'کم‌موجود یا تمام‌شده', v: fa(low) + ' کالا', tone: low ? 'red' : 'green' }, { icon: 'bolt', k: 'تامین مستقیم این ماه', v: '۳۴ سفارش', tone: 'orange' }
+      ],
+      toggles: [
+        ['own', 'اولویت با انبار خودمان', 'اگر کالا موجود بود، از مصالح‌فروش استعلام گرفته نمی‌شود.'],
+        ['sameCity', 'فقط انبارهای نزدیک به مقصد', 'انبار باید در همان شهر یا داخل شعاع تعیین‌شده باشد تا کرایه حمل بالا نرود.'],
+        ['partial', 'تامین ترکیبی', 'اگر موجودی کم بود، بخشی از انبار و بقیه از مصالح‌فروش تامین شود.'],
+        ['reserve', 'رزرو خودکار موجودی', 'با ثبت سفارش، مقدار سفارش از موجودی قابل فروش کم می‌شود.']
+      ].map(([k, t, d]) => ({ t, d, track: R[k] ? '#FF5B0F' : '#D5D5D5', knob: R[k] ? 'none' : 'translateX(-18px)', op: k !== 'own' && !R.own ? .5 : 1, flip: () => this.upd({ rule: { ...R, [k]: !R[k] } }) })),
+      nums: [
+        { label: 'شعاع مجاز انبار تا مقصد', v: fa(R.radius) + ' کیلومتر', hint: 'انبارهای دورتر در نظر گرفته نمی‌شوند', dec: () => this.upd({ rule: { ...R, radius: Math.max(10, R.radius - 10) } }), inc: () => this.upd({ rule: { ...R, radius: R.radius + 10 } }) },
+        { label: 'استعلام اگر فروشنده ارزان‌تر بود', v: fa(R.cheaper) + '٪ ارزان‌تر', hint: 'برای مقایسه قیمت انبار با آخرین قیمت بازار', dec: () => this.upd({ rule: { ...R, cheaper: Math.max(0, R.cheaper - 1) } }), inc: () => this.upd({ rule: { ...R, cheaper: R.cheaper + 1 } }) }
+      ],
+      save: () => { try { localStorage.setItem('hm_inv', JSON.stringify(inv)); } catch (e) {} this.setState({ saved: true }); },
+      samples: this.SAMPLES.map((x, i) => ({ t: x.t, a: s.sim === i ? '1' : '0', pick: () => this.setState({ sim: i }) })),
+      sim: { order: smp.t.split(' — ')[0], city: 'مقصد: ' + smp.city, check, result, icon, bg, c,
+        paths: [['building-warehouse', 'از انبار خودمان', 'بدون استعلام', 'own'], ['arrows-split', 'ترکیبی', 'انبار + مصالح‌فروش', 'mix'], ['message-question', 'استعلام از مصالح‌فروش', 'مسیر واسطه‌گری', 'sup']].map(([ic, t, d, k]) => ({ icon: ic, t, d, on: path === k ? '1' : '0' })) },
+      whChips: [{ k: 'all', name: 'همه انبارها' }, ...this.WH].map(w => ({ t: w.name, a: s.whf === w.k ? '1' : '0', pick: () => this.setState({ whf: w.k }) })),
+      rows: inv.stock.map((x, i) => ({ ...x, i })).filter(x => s.whf === 'all' || x.wh === s.whf).map(x => {
+        const st = x.qty === 0 ? ['تمام شد', 'red'] : x.qty < x.min ? ['کم‌موجود', 'orange'] : ['کافی', 'green'];
+        return { name: x.name, wh: whOf(x.wh).name, qty: `${sep(x.qty)} ${x.unit}`, cost: sep(x.cost), price: sep(x.price), margin: x.cost ? fa(((x.price - x.cost) / x.cost * 100).toFixed(1)) + '٪' : '—', st: st[0], tone: st[1],
+          dec: () => setStock(x.i, x.qty - x.step), inc: () => setStock(x.i, x.qty + x.step) }; }),
+      nf: s.nf, setN, whOpts: this.WH,
+      addItem: () => { const n = s.nf; if (!n.name.trim()) return; const q = num(n.qty), unit = String(n.qty).replace(/[\d۰-۹.,٬\s]/g, '') || 'عدد';
+        this.upd({ stock: [...inv.stock, { sku: 'x' + Date.now(), name: n.name.trim(), wh: n.wh, qty: q, unit, step: Math.max(1, Math.round(q / 10)), cost: num(n.cost), price: num(n.price), min: Math.round(q / 4) }] });
+        this.setState({ nf: { name: '', wh: n.wh, qty: '', cost: '', price: '' } }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@media (max-width:900px){[data-foot-grid]{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}[data-foot-brand]{grid-column:1/-1;border-left:none !important;padding-left:0 !important;}}
+@media (max-width:560px){[data-foot-grid]{grid-template-columns:1fr !important;}}
+</style>
+</helmet>
+<footer dir="rtl" data-screen-label="Footer" style="position:relative;margin-top:66px;background:#F7F7F7;border-top:1px solid #ECECEC;font-family:'Vazirmatn',Tahoma,sans-serif;">
+  <div data-wrap="" data-foot-grid="" style="max-width:1280px;margin:0 auto;padding:70px 40px 40px;display:grid;grid-template-columns:minmax(0,1.2fr) repeat(3,minmax(0,1fr));gap:clamp(24px,3vw,40px);">
+    <div data-reveal="" data-foot-brand="" style="border-left:1px solid #E2E2E2;padding-left:30px;">
+      <a href="index.dc.html" style="display:flex;align-items:center;gap:10px;">
+        <img src="assets/logo-dark.png" alt="" style="height:48px;width:auto;display:block;">
+        <span style="font-size:26px;font-weight:900;color:#141414;white-space:nowrap;"><span style="color:#FF5B0F;">های</span> مصالح</span>
+      </a>
+      <p style="margin:24px 0 0;font-size:15px;line-height:2.1;color:#555;max-width:280px;text-wrap:pretty;">{{ st.about }}</p>
+      <div style="display:flex;gap:14px;margin-top:26px;">
+        <sc-for list="{{ socials }}" as="s" hint-placeholder-count="4">
+          <a href="#" style="width:40px;height:40px;border-radius:50%;border:1px solid #CFCFCF;display:flex;align-items:center;justify-content:center;color:#2A2A2A;transition:all .4s cubic-bezier(.2,.8,.2,1);" style-hover="background:#FF5B0F;border-color:#FF5B0F;color:#fff;transform:translateY(-4px);box-shadow:0 10px 22px rgba(255,91,15,.35);"><i class="ti ti-{{ s }}" style="font-size:19px;"></i></a>
+        </sc-for>
+      </div>
+    </div>
+    <div data-reveal="" data-delay="1">
+      <div style="font-size:17px;font-weight:800;color:#141414;">دسترسی سریع</div>
+      <div style="margin-top:22px;display:flex;flex-direction:column;gap:18px;font-size:15px;">
+        <sc-for list="{{ quick }}" as="q" hint-placeholder-count="6"><a href="{{ q.href }}" style="color:#444;transition:color .3s,padding .3s;" style-hover="color:#FF5B0F;padding-right:6px;">{{ q.label }}</a></sc-for>
+      </div>
+    </div>
+    <div data-reveal="" data-delay="2">
+      <div style="font-size:17px;font-weight:800;color:#141414;">دسته‌بندی محصولات</div>
+      <div style="margin-top:22px;display:flex;flex-direction:column;gap:18px;font-size:15px;">
+        <sc-for list="{{ cats }}" as="c" hint-placeholder-count="5"><a href="{{ c.href }}" style="color:#444;transition:color .3s,padding .3s;" style-hover="color:#FF5B0F;padding-right:6px;">{{ c.name }}</a></sc-for>
+      </div>
+    </div>
+    <div data-reveal="" data-delay="3">
+      <div style="font-size:17px;font-weight:800;color:#141414;">اطلاعات تماس</div>
+      <div style="margin-top:22px;display:flex;flex-direction:column;gap:18px;font-size:15px;color:#444;">
+        <a href="tel:02117345678" style="display:flex;align-items:center;gap:12px;color:#444;"><i class="ti ti-phone" style="font-size:20px;color:#FF5B0F;"></i><span dir="ltr" style="white-space:nowrap;">{{ st.phone }}</span></a>
+        <a href="tel:09121734567" style="display:flex;align-items:center;gap:12px;color:#444;"><i class="ti ti-device-mobile" style="font-size:20px;color:#FF5B0F;"></i><span dir="ltr" style="white-space:nowrap;">{{ st.mobile }}</span></a>
+        <a href="mailto:info@hymasaleh.com" style="display:flex;align-items:center;gap:12px;color:#444;"><i class="ti ti-mail" style="font-size:20px;color:#FF5B0F;"></i><span dir="ltr" style="white-space:nowrap;">{{ st.email }}</span></a>
+        <div style="display:flex;align-items:flex-start;gap:12px;line-height:1.9;"><i class="ti ti-map-pin" style="font-size:20px;color:#FF5B0F;margin-top:3px;"></i><span>{{ st.address }}</span></div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center;font-size:14px;color:#555;padding:26px 40px calc(34px + env(safe-area-inset-bottom));">{{ st.copyright }}</div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const CM = (() => { try { return JSON.parse(localStorage.getItem('hm_cms') || 'null'); } catch (e) { return null; } })(), ST = (CM && CM.settings) || {};
+    return {
+      st: { about: ST.footerAbout || 'تامین و عرضه انواع مصالح ساختمانی با بهترین کیفیت و قیمت مناسب برای ساخت آینده‌ای بهتر', phone: ST.phone || '021-17345678', mobile: ST.mobile || '0912-173-4567', email: ST.email || 'info@hymasaleh.com', address: ST.address || 'تهران، بازار آهن، مجتمع تجاری، طبقه ۲، واحد ۵', copyright: ST.copyright || 'تمام حقوق این سایت متعلق به های مصالح می‌باشد.' },
+      quick: [
+        { label: 'خانه', href: 'index.dc.html' }, { label: 'محصولات', href: 'products.dc.html' }, { label: 'دسته‌بندی‌ها', href: 'categories.dc.html' },
+        { label: 'همکاری رانندگان', href: 'login.dc.html?mode=register&role=driver' }, { label: 'همکاری مصالح‌فروشان', href: 'login.dc.html?mode=register&role=supplier' }, { label: 'درباره ما', href: 'about.dc.html' }, { label: 'تماس با ما', href: 'contact.dc.html' }
+      ],
+      cats: (CM ? CM.categories.filter(c => c.on).map(c => [c.k, c.name]) : [['cement', 'سیمان و افزودنی‌ها'], ['steel', 'آهن آلات'], ['brick', 'انواع آجر و بلوک'], ['sand', 'شن، ماسه و مصالح'], ['pipe', 'لوله و اتصالات']]).map(([k, name]) => ({ name, href: `products.dc.html?cat=${k}` })),
+      socials: ['brand-whatsapp', 'brand-telegram', 'brand-linkedin', 'brand-instagram']
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#141414">
+<link rel="manifest" href="manifest.webmanifest">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+html,body{margin:0;padding:0;background:#F4F4F5;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Vazirmatn',Tahoma,sans-serif;color:#1a1a1a;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+a:hover{color:#FF5B0F;}
+input,textarea,select,button{font-family:inherit;}
+@keyframes hmspin{to{transform:rotate(360deg);}}
+@keyframes hmpane{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+@keyframes hmpulse{0%{box-shadow:0 0 0 0 rgba(255,91,15,.5);}100%{box-shadow:0 0 0 14px rgba(255,91,15,0);}}
+[data-btn]{cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,background-color .3s,color .3s,border-color .3s;}
+[data-btn]:hover{transform:translateY(-2px);}
+[data-btn]:active{transform:scale(.97);}
+[data-field]:focus{outline:none;border-color:#FF5B0F !important;box-shadow:0 0 0 4px rgba(255,91,15,.14);background:#fff !important;}
+[data-nav-i]{transition:all .3s;}
+[data-nav-i]:hover{background:rgba(255,255,255,.06);color:#fff !important;}
+[data-nav-i][data-active="1"]{background:#FF5B0F !important;color:#fff !important;box-shadow:0 10px 24px rgba(255,91,15,.35);}
+[data-sel]{transition:all .35s cubic-bezier(.2,.8,.2,1);cursor:pointer;}
+[data-sel]:hover{border-color:#FFC9AE !important;}
+[data-sel][data-active="1"]{border-color:#FF5B0F !important;background:#FFF8F4 !important;box-shadow:0 12px 28px rgba(255,91,15,.12);}
+button,[data-seg],[data-tab]{white-space:nowrap;}
+[data-pane]{animation:hmpane .5s cubic-bezier(.2,.8,.2,1) both;}
+[data-tone]{white-space:nowrap;flex:none;}
+span[dir="ltr"]{white-space:nowrap;flex:none;}
+[data-sel] span,[data-stat-k]{white-space:nowrap;}
+[data-tone="orange"]{background:#FFF0E8;color:#E4500A;}
+[data-tone="green"]{background:#E6F6EC;color:#178A48;}
+[data-tone="blue"]{background:#E8EFFD;color:#1E4FD8;}
+[data-tone="gray"]{background:#F0F0F0;color:#666;}
+[data-st="done"] [data-st-dot]{background:#141414 !important;color:#fff !important;border-color:#141414 !important;}
+[data-st="cur"] [data-st-dot]{background:#FF5B0F !important;color:#fff !important;border-color:#FF5B0F !important;animation:hmpulse 1.6s infinite;}
+[data-st="done"] [data-st-line]{background:#141414 !important;}
+[data-st="todo"] [data-st-txt]{color:#AAA !important;}
+@media (max-width:1180px){[data-cols]{grid-template-columns:1fr !important;}}
+@media (max-width:1000px){[data-side]{display:none !important;}[data-bnav]{display:flex !important;}[data-main]{padding-bottom:100px !important;}}
+@media (max-width:640px){[data-stats]{grid-template-columns:1fr 1fr !important;}[data-search]{display:none !important;}[data-main]{padding:16px 14px 100px !important;}[data-tl]{flex-direction:column !important;align-items:stretch !important;}[data-tl] > div{flex-direction:row !important;text-align:right !important;gap:12px !important;}[data-st-line]{display:none !important;}}
+</style>
+</helmet>
+<div dir="rtl" style="font-family:'Vazirmatn',Tahoma,sans-serif;background:#F4F4F5;min-height:100vh;display:flex;min-width:0;">
+  <aside data-side="" style="position:sticky;top:0;height:100vh;width:270px;flex:none;background:#141414;color:#fff;display:flex;flex-direction:column;padding:24px 18px;">
+    <a href="index.dc.html" style="display:flex;align-items:center;gap:10px;color:#fff;padding:0 6px;">
+      <img src="assets/logo-light.png" alt="" style="height:40px;width:auto;">
+      <span style="font-size:22px;font-weight:900;white-space:nowrap;"><span style="color:#FF5B0F;">های</span> مصالح</span>
+    </a>
+    <div style="margin-top:26px;display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:12px;">
+      <span style="width:44px;height:44px;border-radius:50%;background:#FF5B0F;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;">{{ initial }}</span>
+      <div style="min-width:0;">
+        <div style="font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ userName }}</div>
+        <div style="margin-top:3px;display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;background:rgba(255,91,15,.16);color:#FF8A4F;padding:2px 8px;border-radius:999px;"><i class="ti ti-{{ roleIcon }}" style="font-size:12px;"></i>{{ roleLabel }}</div>
+      </div>
+    </div>
+    <nav style="margin-top:22px;display:flex;flex-direction:column;gap:4px;">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6">
+        <a data-nav-i="" data-active="{{ n.a }}" href="#" onClick="{{ n.go }}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;font-size:15px;font-weight:600;color:#BDBDBD;"><i class="ti ti-{{ n.icon }}" style="font-size:20px;"></i><span style="flex:1;">{{ n.label }}</span><sc-if value="{{ n.hasBadge }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;font-weight:800;background:#fff;color:#141414;border-radius:999px;padding:1px 8px;">{{ n.badge }}</span></sc-if></a>
+      </sc-for>
+    </nav>
+    <div style="margin-top:auto;background:rgba(255,255,255,.05);border-radius:16px;padding:16px;">
+      <div style="font-size:14px;font-weight:800;">پشتیبانی سفارش</div>
+      <div style="margin-top:4px;font-size:12px;color:#AAA;">شنبه تا پنجشنبه ۸ تا ۱۸</div>
+      <a href="tel:02117245678" dir="ltr" style="margin-top:10px;display:flex;align-items:center;justify-content:center;gap:6px;background:#FF5B0F;color:#fff;border-radius:10px;padding:10px;font-size:14px;font-weight:800;"><i class="ti ti-phone" style="font-size:16px;"></i>021-17245678</a>
+    </div>
+    <a href="login.dc.html" style="margin-top:12px;display:flex;align-items:center;gap:10px;padding:10px 14px;color:#888;font-size:14px;font-weight:600;"><i class="ti ti-logout" style="font-size:19px;"></i>خروج از حساب</a>
+  </aside>
+
+  <main data-main="" style="flex:1;min-width:0;padding:24px 32px 40px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <div>
+        <div style="font-size:14px;color:#888;">{{ greet }}</div>
+        <h1 style="margin:2px 0 0;font-size:clamp(22px,2.4vw,28px);font-weight:900;color:#141414;">{{ pageTitle }}</h1>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div data-search="" style="position:relative;width:260px;">
+          <i class="ti ti-search" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#999;font-size:18px;"></i>
+          <input data-field="" placeholder="جستجوی سفارش یا بارنامه…" style="width:100%;height:46px;border:1.5px solid #E8E8E8;background:#fff;border-radius:12px;padding:0 42px 0 14px;font-size:14px;">
+        </div>
+        <button data-btn="" aria-label="اعلان‌ها" style="position:relative;width:46px;height:46px;border-radius:12px;border:1.5px solid #E8E8E8;background:#fff;color:#333;display:flex;align-items:center;justify-content:center;"><i class="ti ti-bell" style="font-size:21px;"></i><span style="position:absolute;top:10px;left:11px;width:9px;height:9px;border-radius:50%;background:#FF5B0F;border:2px solid #fff;"></span></button>
+        <a data-btn="" href="products.dc.html" style="height:46px;display:flex;align-items:center;gap:8px;background:#FF5B0F;color:#fff;border-radius:12px;padding:0 18px;font-size:14px;font-weight:800;white-space:nowrap;box-shadow:0 10px 24px rgba(255,91,15,.3);" style-hover="color:#fff;"><i class="ti ti-plus" style="font-size:18px;"></i>سفارش جدید</a>
+      </div>
+    </div>
+
+    <div data-stats="" style="margin-top:22px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;">
+      <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+        <div style="background:#fff;border-radius:18px;padding:18px;border:1px solid #EFEFEF;display:flex;align-items:center;gap:14px;">
+          <span data-tone="{{ s.tone }}" style="width:48px;height:48px;flex:none;border-radius:14px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ s.icon }}" style="font-size:24px;"></i></span>
+          <div style="min-width:0;"><div style="font-size:24px;font-weight:900;color:#141414;line-height:1.2;">{{ s.v }}</div><div data-stat-k="" style="font-size:13px;color:#888;overflow:hidden;text-overflow:ellipsis;">{{ s.k }}</div></div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;">
+      <sc-for list="{{ rewards }}" as="w" hint-placeholder-count="1">
+          <div data-pane="" style="position:relative;overflow:hidden;border-radius:20px;padding:18px;background:linear-gradient(135deg,#FF5B0F,#FF8A3D);color:#fff;box-shadow:0 14px 30px rgba(255,91,15,.3);">
+            <i class="ti ti-{{ w.icon }}" style="position:absolute;left:-8px;bottom:-18px;font-size:100px;opacity:.18;"></i>
+            <div style="position:relative;display:flex;align-items:center;gap:12px;"><span style="width:46px;height:46px;flex:none;border-radius:16px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ w.icon }}" style="font-size:24px;"></i></span><div style="min-width:0;"><div style="font-size:13px;font-weight:700;opacity:.9;">{{ w.kind }}</div><div style="font-size:16px;font-weight:900;line-height:1.5;">{{ w.title }}</div></div></div>
+            <div style="position:relative;margin-top:10px;font-size:22px;font-weight:900;">{{ w.panelBig }}</div>
+            <div style="position:relative;margin-top:2px;font-size:14px;line-height:1.8;opacity:.95;">{{ w.panelSmall }}</div>
+          </div>
+        </sc-for>
+    </div>
+    <div data-cols="" style="margin-top:22px;display:grid;grid-template-columns:340px minmax(0,1fr);gap:20px;align-items:start;">
+      <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 6px 12px;"><span style="font-size:16px;font-weight:900;color:#141414;white-space:nowrap;">سفارش‌های من</span><span style="font-size:12px;color:#999;">{{ ordersCount }}</span></div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <sc-for list="{{ orders }}" as="o" hint-placeholder-count="3">
+            <div data-sel="" data-active="{{ o.a }}" onClick="{{ o.pick }}" style="border:1.5px solid #F0F0F0;border-radius:16px;padding:14px;background:#fff;">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                <span style="font-size:13px;font-weight:800;color:#141414;" dir="ltr">{{ o.code }}</span>
+                <span data-tone="{{ o.tone }}" style="font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px;">{{ o.status }}</span>
+              </div>
+              <div style="margin-top:8px;font-size:14px;font-weight:700;color:#333;">{{ o.goods }}</div>
+              <div style="margin-top:6px;display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#999;"><span style="display:flex;align-items:center;gap:4px;"><i class="ti ti-map-pin" style="font-size:14px;"></i>{{ o.dest }}</span><span>{{ o.date }}</span></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div data-pane="" style="display:flex;flex-direction:column;gap:20px;min-width:0;">
+        <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:22px;">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+            <div>
+              <div style="font-size:13px;color:#999;">وضعیت سفارش <span dir="ltr" style="font-weight:800;color:#141414;">{{ sel.code }}</span></div>
+              <div style="margin-top:4px;font-size:20px;font-weight:900;color:#141414;">{{ sel.headline }}</div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <sc-if value="{{ sel.hasDriver }}" hint-placeholder-val="{{ false }}"><a data-btn="" href="tel:09121112233" style="display:flex;align-items:center;gap:6px;border:1.5px solid #141414;color:#141414;border-radius:10px;padding:9px 14px;font-size:13px;font-weight:800;" style-hover="background:#141414;color:#fff;"><i class="ti ti-phone" style="font-size:16px;"></i>تماس با راننده</a></sc-if>
+              <sc-if value="{{ sel.canConfirm }}" hint-placeholder-val="{{ false }}"><button data-btn="" onClick="{{ confirmDelivery }}" style="display:flex;align-items:center;gap:6px;border:none;background:#FF5B0F;color:#fff;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:800;"><i class="ti ti-circle-check" style="font-size:16px;"></i>تایید تحویل بار</button></sc-if>
+            </div>
+          </div>
+          <div data-tl="" style="margin-top:24px;display:flex;align-items:flex-start;">
+            <sc-for list="{{ sel.timeline }}" as="t" hint-placeholder-count="7">
+              <div data-st="{{ t.st }}" style="position:relative;flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;">
+                <span data-st-line="" style="position:absolute;top:17px;right:50%;width:100%;height:2px;background:#EAEAEA;z-index:0;display:{{ t.line }};"></span>
+                <span data-st-dot="" style="position:relative;z-index:1;width:36px;height:36px;flex:none;border-radius:50%;border:2px solid #E2E2E2;background:#fff;color:#AAA;display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ t.icon }}" style="font-size:17px;"></i></span>
+                <span data-st-txt="" style="font-size:12px;font-weight:700;color:#333;line-height:1.6;">{{ t.label }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{ sel.hasWb }}" hint-placeholder-val="{{ true }}">
+          <dc-import name="WaybillCard" data="{{ sel.wb }}" hint-size="100%,760px"></dc-import>
+        </sc-if>
+        <sc-if value="{{ sel.noWb }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1.5px dashed #F1C3AC;border-radius:20px;padding:30px;text-align:center;">
+            <i class="ti ti-file-time" style="font-size:44px;color:#FF5B0F;"></i>
+            <div style="margin-top:10px;font-size:17px;font-weight:800;color:#141414;">بارنامه هنوز صادر نشده است</div>
+            <div style="margin-top:6px;font-size:14px;color:#777;line-height:1.9;">{{ sel.wbWait }}</div>
+          </div>
+        </sc-if>
+        <div style="max-width:560px;"><dc-import name="ReferCard" role="{{ role }}" hint-size="100%,860px"></dc-import></div>
+      </div>
+    </div>
+  </main>
+
+  <nav data-bnav="" style="display:none;position:fixed;bottom:0;right:0;left:0;z-index:50;background:rgba(20,20,20,.94);backdrop-filter:blur(14px);padding:8px 8px calc(8px + env(safe-area-inset-bottom));justify-content:space-around;">
+    <sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+      <a data-nav-i="" data-active="{{ n.a }}" href="#" onClick="{{ n.go }}" style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 10px;border-radius:12px;font-size:11px;font-weight:700;color:#BDBDBD;min-width:56px;"><i class="ti ti-{{ n.icon }}" style="font-size:22px;"></i>{{ n.short }}</a>
+    </sc-for>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { sel: 0, nav: 0, role: 'contractor', name: '', confirmed: false };
+  TL = [['clipboard-list', 'ثبت سفارش'], ['building-store', 'استعلام از مصالح‌فروشی'], ['packages', 'تایید موجودی'], ['steering-wheel', 'تخصیص راننده'], ['file-invoice', 'بارگیری و بارنامه'], ['truck', 'در مسیر'], ['circle-check', 'تحویل']];
+  ORDERS = [
+    { code: 'HM-10231', goods: 'سیمان پرتلند تیپ ۲ — ۲۰۰ کیسه', dest: 'تهران، ونک', date: '۱۲ مهر ۱۴۰۵', step: 5,
+      wb: { no: '۱۴۰۵۰۷۱۲-۸۸۴۱', track: 'HM-58213', fromTitle: 'مصالح فروشی البرز — کرج', fromAddr: 'کرج، جاده ملارد، بعد از پل فردیس', toTitle: 'کارگاه پروژه ونک', toAddr: 'تهران، ونک، خیابان ملاصدرا، پلاک ۱۸', distance: '۴۲ کیلومتر',
+        items: 'سیمان پرتلند تیپ ۲ — ۲۰۰ کیسه ۵۰ کیلویی', weight: '۱۰ تن', fare: '۸٬۵۰۰٬۰۰۰ تومان', pay: 'پس‌کرایه (پرداخت در مقصد)', issued: '۱۲ مهر ۱۴۰۵ — ۱۰:۲۰', due: '۱۲ مهر، تا ساعت ۱۶:۰۰',
+        driverName: 'حسن کریمی', vehicle: 'کامیون ده‌چرخ کفی', plate: ['۱۲', 'ع', '۳۴۵', '۶۷'] } },
+    { code: 'HM-10244', goods: 'میلگرد آجدار A3 سایز ۱۴ — ۶ تن', dest: 'تهران، پردیس', date: '۱۳ مهر ۱۴۰۵', step: 3, wait: 'استعلام از آهن‌فروشی‌های تهران انجام شد و موجودی تایید شده است. پس از تخصیص راننده و بارگیری، بارنامه اینجا نمایش داده می‌شود.' },
+    { code: 'HM-10198', goods: 'آجر فشاری — ۸٬۰۰۰ قالب', dest: 'شهریار، اندیشه', date: '۲۸ شهریور ۱۴۰۵', step: 7,
+      wb: { no: '۱۴۰۵۰۶۲۸-۷۱۱۲', track: 'HM-57790', fromTitle: 'آجر و بلوک رضوی — شهریار', fromAddr: 'شهریار، جاده قدیم، کوره‌های آجرپزی', toTitle: 'کارگاه اندیشه فاز ۳', toAddr: 'شهریار، اندیشه، خیابان گلستان', distance: '۱۸ کیلومتر',
+        items: 'آجر فشاری ۲۰×۱۰×۵ — ۸٬۰۰۰ قالب', weight: '۱۴ تن', fare: '۶٬۲۰۰٬۰۰۰ تومان', pay: 'پیش‌کرایه (پرداخت‌شده)', issued: '۲۸ شهریور ۱۴۰۵ — ۰۸:۱۵', due: '۲۸ شهریور، تا ساعت ۱۴:۰۰',
+        driverName: 'مهدی رستمی', vehicle: 'تریلی کفی', plate: ['۴۵', 'ق', '۷۸۲', '۲۱'] } }
+  ];
+  componentDidMount() {
+    const r = new URLSearchParams(location.search).get('role');
+    let u = {}; try { u = JSON.parse(localStorage.getItem('hm_user') || '{}'); } catch (e) {}
+    this.setState({ role: r === 'personal' || r === 'contractor' ? r : (u.role === 'personal' ? 'personal' : 'contractor'), name: u.name || '' });
+  }
+rwd() { let c = null; try { c = JSON.parse(localStorage.getItem('hm_rewards') || 'null'); } catch (e) {} c = c && c.length ? c : [{ id: 1, type: 'goal', role: 'driver', title: 'چالش ۱۰ بار در هفته', on: true, amount: 0, panelBig: '۲ میلیون تومان جایزه', panelSmall: 'اگر این هفته ۱۰ بار بزنید' }, { id: 2, type: 'cash', role: 'supplier', title: 'کش‌بک فروش سیمان', on: true, amount: 0, panelBig: '۱٪ از فروش شما برمی‌گردد', panelSmall: 'تا سقف ۵ میلیون تومان در این ماه' }, { id: 3, type: 'cash', role: 'contractor', title: 'کش‌بک ۲٪ خرید پروژه', on: true, amount: 0, panelBig: '۲٪ کش‌بک به کیف پول', panelSmall: 'روی هر خرید تا پایان مهر' }]; return c.filter(x => x.on && x.panel !== false && x.role === this.state.role).map(x => ({ ...x, icon: { bonus: 'gift', cash: 'receipt-refund', goal: 'trophy' }[x.type], kind: { bonus: 'پاداش برای شما', cash: 'کش‌بک برای شما', goal: 'طرح تشویقی' }[x.type] })); }
+  wbData(o, status) {
+    const w = o.wb;
+    return { no: w.no, status, track: w.track, fromTitle: w.fromTitle, fromAddr: w.fromAddr, toTitle: w.toTitle, toAddr: w.toAddr, distance: w.distance,
+      rows: [{ k: 'کالا', v: w.items }, { k: 'وزن', v: w.weight }, { k: 'فرستنده', v: w.fromTitle.split(' — ')[0] }, { k: 'گیرنده', v: this.state.name || 'مهندس رضایی' },
+        { k: 'تاریخ صدور', v: w.issued }, { k: 'کرایه حمل', v: w.fare }, { k: 'نوع پرداخت', v: w.pay }, { k: 'مهلت تحویل', v: w.due }],
+      driverName: w.driverName, vehicle: w.vehicle, p1: w.plate[0], pl: w.plate[1], p2: w.plate[2], p3: w.plate[3],
+      notes: ['بار باید با برزنت پوشانده و مهار شود.', 'تخلیه بار به عهده گیرنده است؛ مسئولیت راننده تا درب کارگاه است.', 'کسری یا آسیب بار باید هنگام تحویل در بارنامه ثبت و امضا شود.', 'مهر و امضای تحویل‌گیرنده روی بارنامه الزامی است.', `کرایه: ${w.pay}.`],
+      hasAdmin: false, adminNote: '' };
+  }
+  renderVals() {
+    const s = this.state, fa = v => String(v).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    const isC = s.role === 'contractor';
+    const orders = this.ORDERS.map((o, i) => ({ ...o, step: i === 0 && s.confirmed ? 7 : o.step }));
+    const tone = st => st >= 7 ? 'green' : st >= 5 ? 'orange' : st >= 3 ? 'blue' : 'gray';
+    const label = st => st >= 7 ? 'تحویل شده' : this.TL[st - 1] ? (st === 6 ? 'در مسیر' : this.TL[st - 1][1]) : '';
+    const o = orders[s.sel], st = o.step;
+    const NAV = [['layout-dashboard', 'داشبورد', 'خانه'], ['package', 'سفارش‌ها', 'سفارش‌ها', '۲'], ['file-invoice', 'بارنامه‌ها', 'بارنامه'], ['receipt-2', 'استعلام‌ها', 'استعلام', '۳'], [isC ? 'building-skyscraper' : 'map-pin', isC ? 'پروژه‌ها' : 'آدرس‌ها', isC ? 'پروژه' : 'آدرس'], ['user', 'پروفایل', 'پروفایل']];
+    const name = s.name || (isC ? 'مهندس رضایی' : 'علی محمدی');
+    return {
+      rewards: this.rwd(), role: s.role,
+      initial: name.trim()[0] || 'ک', userName: name, roleLabel: isC ? 'حساب پیمانکار' : 'حساب شخصی', roleIcon: isC ? 'helmet' : 'user',
+      greet: `${name} عزیز، خوش آمدید`, pageTitle: 'پیگیری سفارش و بارنامه',
+      nav: NAV.map(([icon, label, short, badge], i) => ({ icon, label, short, badge: badge || '', hasBadge: !!badge, a: s.nav === i ? '1' : '0', go: e => { e.preventDefault(); this.setState({ nav: i }); } })).filter((n, i) => i < 5 || true),
+      stats: [
+        { icon: 'package', k: 'سفارش فعال', v: fa(orders.filter(x => x.step < 7).length), tone: 'orange' }, { icon: 'truck', k: 'بار در مسیر', v: fa(orders.filter(x => x.step === 6 || x.step === 5).length), tone: 'blue' },
+        { icon: 'circle-check', k: 'تحویل شده', v: fa(17 + orders.filter(x => x.step >= 7).length), tone: 'green' }, { icon: 'receipt-2', k: 'استعلام باز', v: '۳', tone: 'gray' }
+      ],
+      ordersCount: `${fa(orders.length)} سفارش اخیر`,
+      orders: orders.map((x, i) => ({ code: x.code, goods: x.goods, dest: x.dest, date: x.date, status: label(x.step), tone: tone(x.step), a: s.sel === i ? '1' : '0', pick: () => this.setState({ sel: i }) })),
+      sel: {
+        code: o.code,
+        headline: st >= 7 ? 'بار تحویل داده شد' : st === 6 ? 'بار در مسیر کارگاه شماست' : st === 5 ? 'بارگیری انجام شد و بارنامه صادر شد' : 'در حال آماده‌سازی بار',
+        timeline: this.TL.map(([icon, label], i) => ({ icon, label, st: i + 1 < st ? 'done' : i + 1 === st ? (st >= 7 ? 'done' : 'cur') : 'todo', line: i === 0 ? 'none' : 'block' })),
+        hasWb: !!o.wb, noWb: !o.wb, wbWait: o.wait || '',
+        wb: o.wb ? this.wbData(o, label(st)) : null,
+        hasDriver: !!o.wb && st < 7, canConfirm: !!o.wb && st === 6 || (o.wb && st === 5 && s.sel === 0 && !s.confirmed)
+      },
+      confirmDelivery: () => this.setState({ confirmed: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

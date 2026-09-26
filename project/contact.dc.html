@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+html,body{margin:0;padding:0;background:#fff;}
+*{box-sizing:border-box;}
+body{font-family:'Vazirmatn',Tahoma,sans-serif;color:#1a1a1a;}
+a{color:inherit;text-decoration:none;}
+a:hover{color:#FF5B0F;}
+[data-ccard]:hover [data-feat-ic]{background:#FF5B0F !important;color:#fff !important;transform:translateY(-4px) rotate(-8deg);}
+@media (max-width:1000px){[data-ccards]{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}}
+@media (max-width:900px){[data-contact]{grid-template-columns:1fr !important;}}
+@media (max-width:560px){[data-ccards]{grid-template-columns:1fr !important;}[data-frow]{grid-template-columns:1fr !important;}}
+</style>
+</helmet>
+<div dir="rtl" style="font-family:'Vazirmatn',Tahoma,sans-serif;background:#fff;min-width:0;overflow-x:clip;">
+  <dc-import name="SiteHeader" active="contact" hint-size="100%,0px"></dc-import>
+  <dc-import name="PageHero" title="تماس با ما" crumb="تماس با ما" subtitle="برای استعلام قیمت، مشاوره یا ثبت سفارش از هر راهی که راحت‌ترید با ما در ارتباط باشید." img="assets/ctabg.jpg" hint-size="100%,520px"></dc-import>
+
+  <section data-wrap="" style="position:relative;z-index:3;max-width:1280px;margin:-70px auto 0;padding:0 40px;">
+    <div data-ccards="" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;">
+      <sc-for list="{{ cards }}" as="c" hint-placeholder-count="4">
+        <div data-reveal="" data-delay="{{ $index }}">
+          <a data-ccard="" href="{{ c.href }}" style="height:100%;display:flex;flex-direction:column;align-items:flex-start;gap:14px;background:#fff;border:1px solid #F0F0F0;border-radius:22px;padding:26px;box-shadow:0 18px 44px rgba(0,0,0,.08);transition:all .5s cubic-bezier(.2,.8,.2,1);color:#141414;" style-hover="transform:translateY(-6px);box-shadow:0 26px 54px rgba(0,0,0,.12);color:#141414;">
+            <span data-feat-ic="" style="width:56px;height:56px;border-radius:16px;background:#FFF0E8;color:#FF5B0F;display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ c.icon }}" style="font-size:28px;"></i></span>
+            <span style="font-size:14px;color:#888;font-weight:600;">{{ c.label }}</span>
+            <span style="font-size:17px;font-weight:800;line-height:1.8;">{{ c.value }}</span>
+          </a>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section data-wrap="" data-screen-label="Contact form" data-contact="" style="max-width:1280px;margin:0 auto;padding:70px 40px 0;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:28px;align-items:stretch;">
+    <div data-reveal="right" style="background:#fff;border:1px solid #F0F0F0;border-radius:24px;padding:clamp(24px,3.5vw,40px);box-shadow:0 14px 40px rgba(0,0,0,.06);">
+      <sc-if value="{{ form }}" hint-placeholder-val="{{ true }}">
+        <div style="display:inline-flex;color:#FF5B0F;font-size:14px;font-weight:700;background:#FFF0E8;padding:7px 16px;border-radius:999px;">فرم تماس</div>
+        <h2 style="margin:14px 0 0;font-size:clamp(24px,2.6vw,32px);font-weight:900;color:#141414;">پیام خود را برای ما بفرستید</h2>
+        <p style="margin:10px 0 0;font-size:15px;color:#777;line-height:1.9;">پاسخ پیام‌ها در ساعات کاری و در سریع‌ترین زمان داده می‌شود.</p>
+        <div data-frow="" style="margin-top:26px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;">
+          <div>
+            <label style="display:block;font-size:14px;font-weight:700;color:#222;">نام و نام خانوادگی</label>
+            <input data-field="" type="text" value="{{ name }}" onChange="{{ onName }}" placeholder="مثلاً علی محمدی" style="margin-top:8px;width:100%;height:54px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:14px;padding:0 16px;font-size:15px;color:#141414;">
+          </div>
+          <div>
+            <label style="display:block;font-size:14px;font-weight:700;color:#222;">شماره موبایل <span style="color:#FF5B0F;">*</span></label>
+            <input data-field="" type="tel" inputmode="numeric" dir="ltr" value="{{ phone }}" onChange="{{ onPhone }}" placeholder="0912 345 6789" style="margin-top:8px;width:100%;height:54px;border:1.5px solid {{ phoneBorder }};background:#FAFAFA;border-radius:14px;padding:0 16px;font-size:16px;font-weight:600;color:#141414;text-align:left;">
+          </div>
+        </div>
+        <label style="display:block;margin-top:16px;font-size:14px;font-weight:700;color:#222;">موضوع</label>
+        <div style="position:relative;margin-top:8px;">
+          <select data-field="" value="{{ subject }}" onChange="{{ onSubject }}" style="appearance:none;-webkit-appearance:none;width:100%;height:54px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:14px;padding:0 16px 0 44px;font-size:15px;color:#141414;cursor:pointer;">
+            <sc-for list="{{ subjects }}" as="s" hint-placeholder-count="5"><option value="{{ s }}">{{ s }}</option></sc-for>
+          </select>
+          <i class="ti ti-chevron-down" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:18px;color:#999;pointer-events:none;"></i>
+        </div>
+        <label style="display:block;margin-top:16px;font-size:14px;font-weight:700;color:#222;">پیام <span style="color:#FF5B0F;">*</span></label>
+        <textarea data-field="" rows="5" value="{{ msg }}" onChange="{{ onMsg }}" placeholder="پیام خود را بنویسید…" style="margin-top:8px;width:100%;border:1.5px solid {{ msgBorder }};background:#FAFAFA;border-radius:14px;padding:14px 16px;font-size:15px;color:#141414;resize:vertical;line-height:1.9;"></textarea>
+        <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:10px;font-size:13px;color:#E0371F;display:flex;align-items:center;gap:6px;"><i class="ti ti-alert-circle" style="font-size:16px;"></i>شماره موبایل معتبر و متن پیام را وارد کنید.</div>
+        </sc-if>
+        <button data-btn="" onClick="{{ submit }}" type="button" style="margin-top:22px;width:100%;height:58px;border:none;border-radius:14px;background:#FF5B0F;color:#fff;font-size:17px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 14px 30px rgba(255,91,15,.35);">
+          <sc-if value="{{ sending }}" hint-placeholder-val="{{ false }}"><i class="ti ti-loader-2" style="font-size:20px;animation:hmspin .8s linear infinite;"></i>در حال ارسال…</sc-if>
+          <sc-if value="{{ idle }}" hint-placeholder-val="{{ true }}">ارسال پیام<i class="ti ti-send" style="font-size:19px;transform:scaleX(-1);"></i></sc-if>
+        </button>
+      </sc-if>
+      <sc-if value="{{ done }}" hint-placeholder-val="{{ false }}">
+        <div style="min-height:420px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+          <div style="width:96px;height:96px;border-radius:50%;background:#FF5B0F;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 12px #FFF0E8,0 20px 40px rgba(255,91,15,.35);animation:hmpop .7s cubic-bezier(.2,.8,.2,1) both;"><i class="ti ti-check" style="font-size:50px;"></i></div>
+          <div style="margin-top:30px;font-size:24px;font-weight:900;color:#141414;">پیام شما ارسال شد</div>
+          <p style="margin:12px 0 0;font-size:15px;color:#666;line-height:2;">به‌زودی با شما تماس می‌گیریم.</p>
+          <button data-btn="" onClick="{{ reset }}" type="button" style="margin-top:24px;border:1.5px solid #141414;background:#fff;color:#141414;font-size:15px;font-weight:700;padding:13px 32px;border-radius:12px;" style-hover="background:#141414;color:#fff;">ارسال پیام جدید</button>
+        </div>
+      </sc-if>
+    </div>
+
+    <div data-reveal="left" style="display:flex;flex-direction:column;gap:20px;">
+      <div style="position:relative;flex:1;min-height:300px;border-radius:24px;overflow:hidden;background:#EEE;box-shadow:0 14px 40px rgba(0,0,0,.08);">
+        <iframe title="نقشه" src="https://www.openstreetmap.org/export/embed.html?bbox=51.262%2C35.655%2C51.302%2C35.680&amp;layer=mapnik&amp;marker=35.6675%2C51.282" style="position:absolute;inset:0;width:100%;height:100%;border:0;filter:grayscale(1) contrast(1.05);" loading="lazy"></iframe>
+        <a data-btn="" href="https://www.openstreetmap.org/?mlat=35.6675&amp;mlon=51.282#map=15/35.6675/51.282" target="_blank" rel="noopener" style="position:absolute;right:16px;bottom:16px;background:#141414;color:#fff;font-size:14px;font-weight:700;padding:12px 18px;border-radius:12px;display:flex;align-items:center;gap:8px;" style-hover="color:#fff;background:#FF5B0F;"><i class="ti ti-map-pin" style="font-size:18px;"></i>مسیریابی</a>
+      </div>
+      <div onMouseMove="{{ spot }}" style="border-radius:24px;background:radial-gradient(420px circle at var(--mx,50%) var(--my,30%),rgba(255,91,15,.2),transparent 55%),#161616;color:#fff;padding:28px;">
+        <div style="display:flex;align-items:center;gap:10px;font-size:18px;font-weight:800;"><i class="ti ti-clock-hour-4" style="font-size:24px;color:#FF5B0F;"></i>ساعات کاری</div>
+        <div style="margin-top:18px;display:flex;flex-direction:column;gap:12px;">
+          <sc-for list="{{ hours }}" as="h" hint-placeholder-count="3">
+            <div style="display:flex;justify-content:space-between;gap:12px;font-size:15px;padding-bottom:12px;border-bottom:1px solid #2A2A2A;"><span style="color:#BBB;">{{ h.d }}</span><span style="font-weight:700;">{{ h.t }}</span></div>
+          </sc-for>
+        </div>
+        <button data-btn="" onClick="{{ consult }}" style="margin-top:20px;width:100%;border:none;background:#FF5B0F;color:#fff;font-size:15px;font-weight:800;padding:15px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:8px;"><i class="ti ti-message-2" style="font-size:18px;"></i>درخواست مشاوره فوری</button>
+      </div>
+    </div>
+  </section>
+
+  <dc-import name="SiteFooter" hint-size="100%,420px"></dc-import>
+  <dc-import name="ConsultModal" hint-size="0px,0px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { name: '', phone: '', subject: 'استعلام قیمت', msg: '', err: false, sending: false, done: false };
+  norm(v) { return String(v).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[^\d]/g, '').slice(0, 11); }
+  renderVals() {
+    const CM = (() => { try { return JSON.parse(localStorage.getItem('hm_cms') || 'null'); } catch (e) { return null; } })(), ST = (CM && CM.settings) || {}, PG = (CM && CM.pages && CM.pages.contact) || {};
+    const s = this.state, okP = /^09\d{9}$/.test(s.phone), okM = s.msg.trim().length > 2;
+    return {
+      cards: [
+        { icon: 'phone', label: 'تلفن ثابت', value: ST.phone || '۰۲۱-۱۷۳۴۵۶۷۸', href: 'tel:02117345678' },
+        { icon: 'device-mobile', label: 'موبایل و واتساپ', value: ST.mobile || '۰۹۱۲-۱۷۳-۴۵۶۷', href: 'tel:09121734567' },
+        { icon: 'mail', label: 'ایمیل', value: ST.email || 'info@hymasaleh.com', href: 'mailto:info@hymasaleh.com' },
+        { icon: 'map-pin', label: 'آدرس', value: ST.address || 'تهران، بازار آهن، مجتمع تجاری، طبقه ۲، واحد ۵', href: '#map' }
+      ],
+      hours: [{ d: 'شنبه تا چهارشنبه', t: PG.hours1 || '۸:۰۰ تا ۱۸:۰۰' }, { d: 'پنجشنبه', t: PG.hours2 || '۸:۰۰ تا ۱۳:۰۰' }, { d: 'جمعه و تعطیلات', t: PG.hours3 || 'تعطیل' }],
+      subjects: ['استعلام قیمت', 'ثبت سفارش', 'مشاوره فنی', 'پیگیری سفارش', 'همکاری و نمایندگی', 'انتقادات و پیشنهادات'],
+      form: !s.done, done: s.done, sending: s.sending, idle: !s.sending,
+      name: s.name, phone: s.phone, subject: s.subject, msg: s.msg,
+      err: s.err && !(okP && okM),
+      phoneBorder: s.err && !okP ? '#E0371F' : '#ECECEC', msgBorder: s.err && !okM ? '#E0371F' : '#ECECEC',
+      onName: e => this.setState({ name: e.target.value }),
+      onPhone: e => this.setState({ phone: this.norm(e.target.value) }),
+      onSubject: e => this.setState({ subject: e.target.value }),
+      onMsg: e => this.setState({ msg: e.target.value }),
+      submit: () => { if (s.sending) return; if (!(okP && okM)) return this.setState({ err: true }); this.setState({ sending: true }); setTimeout(() => this.setState({ sending: false, done: true }), 1100); },
+      reset: () => this.setState({ name: '', phone: '', msg: '', err: false, done: false }),
+      spot: e => { const r = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty('--mx', (e.clientX - r.left) + 'px'); e.currentTarget.style.setProperty('--my', (e.clientY - r.top) + 'px'); },
+      consult: () => window.dispatchEvent(new CustomEvent('hm:consult', { detail: {} }))
+    };
+  }
+}
+</script>
+</body>
+</html>

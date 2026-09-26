@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+html,body{margin:0;padding:0;background:#fff;}
+*{box-sizing:border-box;}
+body{font-family:'Vazirmatn',Tahoma,sans-serif;color:#1a1a1a;}
+a{color:inherit;text-decoration:none;}
+a:hover{color:#FF5B0F;}
+@media (max-width:900px){
+ [data-hero]{border-bottom-left-radius:50% 60px !important;padding-bottom:120px !important;}
+ [data-hero-grid]{grid-template-columns:1fr !important;padding-top:130px !important;padding-bottom:0 !important;text-align:center;}
+ [data-hero-grid] > div{min-width:0 !important;}
+ [data-hero-title2]{white-space:normal !important;}
+ [data-hero-btns]{justify-content:center;}
+ [data-hero-img]{position:relative !important;width:100% !important;height:auto !important;aspect-ratio:1.05;margin-top:10px;-webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 18%,#000 75%,transparent) !important;mask-image:linear-gradient(to bottom,transparent 0%,#000 18%,#000 75%,transparent) !important;}
+ [data-feat-grid]{grid-template-columns:repeat(2,minmax(0,1fr)) !important;row-gap:34px;}
+ [data-feat]:nth-child(2n){border-left:none !important;}
+ [data-cat-grid]{display:flex !important;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -20px;padding:10px 20px 24px !important;}
+ [data-cat-grid] > *{flex:0 0 40%;scroll-snap-align:start;}
+ [data-cat-label]{font-size:14px !important;}
+ [data-stats-grid]{grid-template-columns:repeat(2,minmax(0,1fr)) !important;row-gap:34px;}
+ [data-stat]:nth-child(2n){border-left:none !important;}
+ [data-why]{grid-template-columns:1fr !important;gap:44px !important;}
+ [data-cta]{padding:44px 28px !important;flex-direction:column;align-items:stretch !important;text-align:center;}
+ [data-cta-btns]{width:100% !important;}
+ [data-drv]{grid-template-columns:1fr !important;gap:40px !important;}
+ [data-drv-steps]{grid-template-columns:1fr !important;}
+}
+@media (max-width:560px){
+ [data-hero-btns]{flex-direction:column;align-items:stretch;gap:22px !important;}
+ [data-hero-btns] > a{justify-content:center;}
+ [data-feat]{padding:4px 8px !important;}
+ [data-feat-desc]{font-size:13px !important;}
+ [data-cat-grid] > *{flex-basis:60%;}
+}
+</style>
+</helmet>
+<div dir="rtl" style="font-family:'Vazirmatn',Tahoma,sans-serif;background:#fff;min-width:0;overflow-x:clip;">
+  <dc-import name="SiteHeader" active="home" hint-size="100%,0px"></dc-import>
+
+  <section data-hero="" data-screen-label="Hero" style="position:relative;background:#121212;color:#fff;border-bottom-left-radius:62% 150px;padding-bottom:170px;overflow:hidden;">
+    <div style="position:absolute;right:-10%;top:-20%;width:60%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(255,91,15,.14),transparent 62%);pointer-events:none;"></div>
+    <div data-wrap="" data-hero-grid="" style="position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:220px 40px 40px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);">
+      <div style="grid-column:1;min-width:min(560px,100%);">
+        <h1 style="margin:0;font-weight:900;line-height:1.35;">
+          <span data-reveal="" data-delay="1" style="display:block;font-size:clamp(34px,3.8vw,52px);"><span style="color:#FF5B0F;">{{ h1a }}</span> {{ h1b }}</span>
+          <span data-reveal="" data-delay="2" data-hero-title2="" style="display:block;font-size:clamp(30px,3.6vw,50px);margin-top:10px;white-space:nowrap;">{{ h2 }}</span>
+        </h1>
+        <p data-reveal="" data-delay="3" style="margin:34px 0 0;font-size:clamp(16px,1.5vw,21px);line-height:2;color:#E6E6E6;font-weight:500;text-wrap:pretty;">{{ heroSub }}</p>
+        <div data-reveal="" data-delay="4" data-hero-btns="" style="display:flex;align-items:center;gap:36px;margin-top:44px;flex-wrap:wrap;">
+          <a data-btn="" href="products.dc.html" style="display:flex;align-items:center;gap:12px;background:#FF5B0F;color:#fff;font-size:17px;font-weight:700;padding:18px 30px;border-radius:12px;white-space:nowrap;box-shadow:0 0 34px rgba(255,91,15,0.55);" style-hover="box-shadow:0 14px 44px rgba(255,91,15,0.75);color:#fff;">مشاهده محصولات<i class="ti ti-chevron-left" style="font-size:18px;"></i></a>
+          <a data-btn="" href="about.dc.html" style="display:flex;align-items:center;gap:10px;color:#fff;font-size:17px;font-weight:600;white-space:nowrap;" style-hover="color:#FF5B0F;">درباره ما بیشتر بدانید<i class="ti ti-chevron-left" style="font-size:18px;color:#FF5B0F;"></i></a>
+        </div>
+      </div>
+    </div>
+    <div data-hero-img="" ref="{{ heroImgRef }}" style="position:absolute;left:0;top:0;bottom:0;width:min(56%,calc(100% - 560px));-webkit-mask-image:linear-gradient(to left,transparent 0%,#000 30%);mask-image:linear-gradient(to left,transparent 0%,#000 30%);overflow:hidden;">
+      <div ref="{{ kbRef }}" style="position:absolute;inset:0;background:url('{{ heroImg }}') center/cover no-repeat;"></div>
+      <div ref="{{ orbRef }}" style="position:absolute;left:38%;top:30%;width:34%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(255,110,30,.45),transparent 65%);mix-blend-mode:screen;pointer-events:none;"></div>
+      <div style="position:absolute;left:0;right:0;top:0;height:30%;background:linear-gradient(#121212,rgba(18,18,18,0));"></div>
+    </div>
+  </section>
+
+  <section data-wrap="" style="position:relative;z-index:3;max-width:1280px;margin:-150px auto 0;padding:0 40px;">
+    <div data-reveal="scale" data-feat-grid="" style="background:rgba(255,255,255,.94);backdrop-filter:blur(20px);border-radius:22px;box-shadow:0 24px 60px rgba(0,0,0,0.10);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:44px 0;">
+      <sc-for list="{{ features }}" as="f" hint-placeholder-count="4">
+        <div data-feat="" style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:4px clamp(10px,1.6vw,30px);border-left:1px solid #EFEFEF;">
+          <div data-feat-ic="" style="width:74px;height:74px;border-radius:50%;background:#FFF0E8;display:flex;align-items:center;justify-content:center;color:#FF5B0F;"><i class="ti ti-{{ f.icon }}" style="font-size:36px;"></i></div>
+          <div style="margin-top:22px;font-size:clamp(15px,1.4vw,19px);font-weight:800;color:#141414;white-space:nowrap;">{{ f.title }}</div>
+          <div data-feat-desc="" style="margin-top:16px;font-size:15px;line-height:2;color:#707070;max-width:220px;">{{ f.desc }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section data-wrap="" data-screen-label="Products" style="max-width:1280px;margin:0 auto;padding:96px 40px 0;text-align:center;">
+    <div data-reveal="" style="display:inline-flex;color:#FF5B0F;font-size:14px;font-weight:700;background:#FFF0E8;padding:7px 16px;border-radius:999px;">محصولات ما</div>
+    <h2 data-reveal="" data-delay="1" style="margin:18px 0 0;font-size:clamp(28px,3vw,38px);font-weight:900;color:#141414;">مشاهده دسته‌بندی محصولات</h2>
+    <p data-reveal="" data-delay="2" style="margin:20px 0 0;font-size:clamp(15px,1.3vw,18px);color:#6B6B6B;">انواع مصالح ساختمانی با کیفیت بالا و قیمت مناسب</p>
+    <div data-cat-grid="" data-hscroll="" style="margin-top:52px;padding-top:10px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(12px,2vw,30px);">
+      <sc-for list="{{ categories }}" as="c" hint-placeholder-count="5">
+        <div data-reveal="" data-delay="{{ $index }}">
+          <a data-card="" href="{{ c.href }}" style="display:block;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.08);transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .5s;" style-hover="transform:translateY(-8px);box-shadow:0 24px 50px rgba(0,0,0,0.14);color:#141414;">
+            <div style="aspect-ratio:1.25;overflow:hidden;"><div data-zoom="" style="width:100%;height:100%;background-image:url('{{ c.img }}');background-size:cover;background-position:center;"></div></div>
+            <div data-cat-label="" style="display:flex;align-items:center;justify-content:center;gap:clamp(4px,0.7vw,10px);padding:clamp(16px,1.8vw,24px) 6px;font-size:clamp(11px,1.15vw,16px);font-weight:700;color:#141414;white-space:nowrap;">
+              <i class="ti ti-{{ c.icon }}" style="font-size:clamp(18px,2vw,28px);color:#FF5B0F;"></i><span>{{ c.name }}</span>
+            </div>
+          </a>
+        </div>
+      </sc-for>
+    </div>
+    <div data-reveal="">
+      <a data-btn="" href="products.dc.html" style="display:inline-flex;align-items:center;gap:10px;margin-top:38px;border:1.5px solid #FF5B0F;color:#FF5B0F;font-size:16px;font-weight:700;padding:17px 38px;border-radius:12px;" style-hover="background:#FF5B0F;color:#fff;box-shadow:0 12px 30px rgba(255,91,15,.35);">مشاهده همه محصولات<i class="ti ti-chevron-left" style="font-size:17px;"></i></a>
+    </div>
+  </section>
+
+  <section data-wrap="" style="max-width:1280px;margin:0 auto;padding:80px 40px 0;">
+    <div data-reveal="scale" ref="{{ statsRef }}" onMouseMove="{{ spot }}" data-stats-grid="" style="background:radial-gradient(520px circle at var(--mx,50%) var(--my,50%),rgba(255,91,15,.16),transparent 45%),#161616;border-radius:22px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:50px 0;border:1px solid #242424;">
+      <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+        <div data-stat="" style="text-align:center;border-left:1px solid #3A3A3A;padding:6px 20px;">
+          <div style="font-size:clamp(34px,3.6vw,50px);font-weight:900;color:#FF5B0F;line-height:1.2;font-variant-numeric:tabular-nums;">{{ s.num }}</div>
+          <div style="margin-top:14px;font-size:clamp(14px,1.2vw,17px);font-weight:600;color:#fff;">{{ s.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section data-wrap="" data-screen-label="Why us" data-why="" style="max-width:1280px;margin:0 auto;padding:78px 40px 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:84px;align-items:center;">
+    <div style="order:1;">
+      <div data-reveal="right" style="display:inline-flex;color:#FF5B0F;font-size:14px;font-weight:700;background:#FFF0E8;padding:7px 16px;border-radius:999px;">چرا های مصالح؟</div>
+      <h2 data-reveal="right" data-delay="1" style="margin:16px 0 0;font-size:clamp(30px,3.1vw,40px);line-height:1.55;font-weight:900;color:#141414;">مزایایی که ما را<br>متمایز می‌کند</h2>
+      <p data-reveal="right" data-delay="2" style="margin:26px 0 0;font-size:16px;line-height:2.1;color:#6B6B6B;max-width:440px;text-wrap:pretty;">ما با تکیه بر تجربه، کیفیت و تعهد، بهترین مصالح ساختمانی را برای ساخت آینده‌ای بهتر فراهم می‌کنیم.</p>
+      <div style="margin-top:28px;display:flex;flex-direction:column;gap:18px;">
+        <sc-for list="{{ perks }}" as="p" hint-placeholder-count="4">
+          <div data-reveal="right" data-delay="{{ p.d }}" style="display:flex;align-items:center;gap:12px;font-size:16px;color:#3A3A3A;font-weight:500;"><i class="ti ti-circle-check" style="font-size:22px;color:#FF5B0F;"></i>{{ p.t }}</div>
+        </sc-for>
+      </div>
+      <div data-reveal="right" data-delay="3">
+        <a data-btn="" href="about.dc.html" style="display:inline-flex;align-items:center;gap:10px;margin-top:42px;background:#FF5B0F;color:#fff;font-size:16px;font-weight:700;padding:17px 32px;border-radius:12px;" style-hover="box-shadow:0 14px 34px rgba(255,91,15,.45);color:#fff;">درباره ما بیشتر بدانید<i class="ti ti-chevron-left" style="font-size:17px;"></i></a>
+      </div>
+    </div>
+    <div data-reveal="left" style="order:2;">
+      <div data-card="" style="border-radius:22px;overflow:hidden;aspect-ratio:1.39;background:#222;box-shadow:0 24px 60px rgba(0,0,0,0.16);">
+        <div data-zoom="" style="width:100%;height:100%;background:url('assets/warehouse.jpg') center/cover no-repeat;"></div>
+      </div>
+    </div>
+  </section>
+
+  <section data-wrap="" data-screen-label="Drivers" style="max-width:1280px;margin:0 auto;padding:90px 40px 0;">
+    <div data-drv="" style="display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:70px;align-items:center;">
+      <div>
+        <div data-reveal="right" style="display:inline-flex;align-items:center;gap:6px;color:#FF5B0F;font-size:14px;font-weight:700;background:#FFF0E8;padding:7px 16px;border-radius:999px;"><i class="ti ti-truck" style="font-size:16px;"></i>همکاری با رانندگان</div>
+        <h2 data-reveal="right" data-delay="1" style="margin:16px 0 0;font-size:clamp(28px,3vw,40px);line-height:1.6;font-weight:900;color:#141414;">ماشین داری؟<br>در شهر خودت با ما بار بزن</h2>
+        <p data-reveal="right" data-delay="2" style="margin:20px 0 0;font-size:16px;line-height:2.1;color:#6B6B6B;max-width:500px;text-wrap:pretty;">یک‌بار ثبت‌نام کنید و مدارک را بارگذاری کنید. هر وقت در شهر شما سفارشی ثبت شود و مصالح‌فروشی همان شهر موجودی داشته باشد، بار برای شما ارسال می‌شود.</p>
+        <div data-drv-steps="" style="margin-top:28px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;">
+          <sc-for list="{{ drvSteps }}" as="d" hint-placeholder-count="3">
+            <div data-reveal="right" data-delay="{{ d.delay }}" style="background:#FAFAFA;border:1px solid #F0F0F0;border-radius:16px;padding:16px;">
+              <span style="width:40px;height:40px;border-radius:12px;background:#FFF0E8;color:#FF5B0F;display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ d.icon }}" style="font-size:21px;"></i></span>
+              <div style="margin-top:12px;font-size:15px;font-weight:800;color:#141414;">{{ d.title }}</div>
+              <div style="margin-top:4px;font-size:13px;line-height:1.8;color:#888;">{{ d.desc }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div data-reveal="right" data-delay="4" style="margin-top:30px;display:flex;gap:12px;flex-wrap:wrap;">
+          <a data-btn="" href="login.dc.html?mode=register&amp;role=driver" style="display:inline-flex;align-items:center;gap:10px;background:#FF5B0F;color:#fff;font-size:16px;font-weight:800;padding:17px 30px;border-radius:12px;box-shadow:0 14px 30px rgba(255,91,15,.35);" style-hover="color:#fff;box-shadow:0 18px 40px rgba(255,91,15,.5);"><i class="ti ti-id" style="font-size:19px;"></i>ثبت‌نام راننده</a>
+          <a data-btn="" href="login.dc.html?role=driver" style="display:inline-flex;align-items:center;gap:10px;border:1.5px solid #141414;color:#141414;font-size:16px;font-weight:700;padding:16px 26px;border-radius:12px;" style-hover="background:#141414;color:#fff;">ورود رانندگان<i class="ti ti-chevron-left" style="font-size:17px;"></i></a>
+        </div>
+        <div data-reveal="right" data-delay="5" style="margin-top:18px;display:flex;align-items:center;gap:10px;font-size:14px;color:#666;">
+          <i class="ti ti-building-store" style="font-size:19px;color:#FF5B0F;"></i>مصالح‌فروش هستید؟ <a href="login.dc.html?mode=register&amp;role=supplier" style="color:#FF5B0F;font-weight:800;">استعلام‌های شهرتان را دریافت کنید</a>
+        </div>
+      </div>
+      <div data-reveal="left" style="position:relative;border-radius:26px;overflow:hidden;min-height:460px;background:#161616;box-shadow:0 30px 70px rgba(0,0,0,.18);">
+        <div data-zoom="" style="position:absolute;inset:0;background:url('assets/c2.jpg') center/cover;opacity:.45;"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(22,22,22,.2),#161616 80%);"></div>
+        <div ref="{{ offerRef }}" style="position:absolute;right:8%;left:8%;top:12%;background:#fff;border-radius:20px;padding:18px;box-shadow:0 24px 60px rgba(0,0,0,.35);">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><span style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:900;color:#141414;"><span style="width:10px;height:10px;border-radius:50%;background:#22B35E;box-shadow:0 0 0 4px #E3F6EA;"></span>بار جدید در کرج</span><span style="font-size:12px;font-weight:800;color:#E4500A;">۰۴:۵۹</span></div>
+          <div style="margin-top:12px;font-size:16px;font-weight:900;color:#141414;">سیمان پرتلند تیپ ۲ — ۲۰۰ کیسه</div>
+          <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;font-size:13px;color:#555;"><span style="display:flex;align-items:center;gap:6px;"><i class="ti ti-building-store" style="font-size:16px;color:#FF5B0F;"></i>مصالح فروشی البرز — کرج</span><span style="display:flex;align-items:center;gap:6px;"><i class="ti ti-map-pin" style="font-size:16px;color:#1F9D55;"></i>تهران، ونک — ۴۲ کیلومتر</span></div>
+          <div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;"><div><div style="font-size:11px;color:#999;">کرایه</div><div style="font-size:17px;font-weight:900;color:#141414;">۸٬۵۰۰٬۰۰۰ تومان</div></div><span style="background:#FF5B0F;color:#fff;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:800;">قبول بار</span></div>
+        </div>
+        <div style="position:absolute;right:8%;bottom:9%;display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.1);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:12px 16px;color:#fff;">
+          <span style="width:40px;height:40px;border-radius:12px;background:#FF5B0F;display:flex;align-items:center;justify-content:center;"><i class="ti ti-file-invoice" style="font-size:21px;"></i></span>
+          <div><div style="font-size:14px;font-weight:800;">بارنامه الکترونیکی</div><div style="font-size:12px;color:#CCC;">نکات بار در پنل راننده</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-wrap="" style="max-width:1280px;margin:0 auto;padding:60px 40px 0;">
+    <div data-reveal="" data-cta="" onMouseMove="{{ spot }}" style="position:relative;overflow:hidden;background:radial-gradient(560px circle at var(--mx,20%) var(--my,50%),rgba(255,91,15,.18),transparent 45%),#181818;border-radius:22px;padding:54px 72px;display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;border:1px solid #262626;">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:48%;background:url('assets/ctabg.jpg') left center/cover no-repeat;opacity:0.5;-webkit-mask-image:linear-gradient(to left,transparent,#000 60%);mask-image:linear-gradient(to left,transparent,#000 60%);pointer-events:none;"></div>
+      <h3 style="position:relative;margin:0;font-size:clamp(22px,2.5vw,34px);line-height:1.75;font-weight:800;color:#fff;">برای دریافت مشاوره<br>و استعلام قیمت با ما در ارتباط باشید</h3>
+      <div data-cta-btns="" style="position:relative;display:flex;flex-direction:column;gap:18px;width:270px;max-width:100%;">
+        <a data-btn="" href="contact.dc.html" style="display:flex;align-items:center;justify-content:space-between;background:#FF5B0F;color:#fff;font-size:16px;font-weight:700;padding:17px 26px;border-radius:12px;" style-hover="box-shadow:0 14px 34px rgba(255,91,15,.45);color:#fff;"><span style="display:flex;align-items:center;gap:8px;"><i class="ti ti-phone" style="font-size:18px;"></i>تماس با ما</span><i class="ti ti-chevron-left" style="font-size:17px;"></i></a>
+        <button data-btn="" onClick="{{ consult }}" style="display:flex;align-items:center;justify-content:space-between;border:1.5px solid #fff;background:transparent;color:#fff;font-size:16px;font-weight:700;padding:16px 26px;border-radius:12px;" style-hover="background:#fff;color:#141414;"><span style="display:flex;align-items:center;gap:8px;"><i class="ti ti-message-2" style="font-size:18px;"></i>درخواست مشاوره</span><i class="ti ti-chevron-left" style="font-size:17px;"></i></button>
+      </div>
+    </div>
+  </section>
+
+  <dc-import name="SiteFooter" hint-size="100%,420px"></dc-import>
+  <dc-import name="ConsultModal" hint-size="0px,0px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { counts: [0, 0, 0, 0] };
+  offerRef = React.createRef(); heroImgRef = React.createRef(); kbRef = React.createRef(); orbRef = React.createRef(); statsRef = React.createRef();
+  targets = [15, 520, 3000, 1200];
+  componentDidMount() {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) { this.setState({ counts: this.targets.slice() }); return; }
+    if (this.statsRef.current) {
+      this.sio = new IntersectionObserver(ents => { if (ents[0].isIntersecting) { this.countUp(); this.sio.disconnect(); } }, { threshold: 0.4 });
+      this.sio.observe(this.statsRef.current);
+    }
+    this.kbRef.current && this.kbRef.current.animate && this.kbRef.current.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.07) translate(-1%,-1%)' }], { duration: 16000, iterations: Infinity, direction: 'alternate', easing: 'ease-in-out' });
+    this.offerRef.current && this.offerRef.current.animate && this.offerRef.current.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-14px)' }], { duration: 3400, iterations: Infinity, direction: 'alternate', easing: 'ease-in-out' });
+    this.orbRef.current && this.orbRef.current.animate && this.orbRef.current.animate([{ opacity: .35, transform: 'scale(.9)' }, { opacity: .9, transform: 'scale(1.15)' }], { duration: 4200, iterations: Infinity, direction: 'alternate', easing: 'ease-in-out' });
+    this.onScroll = () => { const hi = this.heroImgRef.current, y = window.scrollY; if (hi) hi.style.transform = window.innerWidth > 900 && y < 1000 ? `translateY(${y * 0.18}px)` : ''; };
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+  }
+  componentWillUnmount() { this.sio && this.sio.disconnect(); window.removeEventListener('scroll', this.onScroll); cancelAnimationFrame(this.raf); }
+  countUp() {
+    const st = performance.now(), dur = 2000;
+    const tick = now => { const k = Math.min(1, (now - st) / dur), e = k === 1 ? 1 : 1 - Math.pow(2, -10 * k);
+      this.setState({ counts: this.targets.map(v => Math.round(v * e)) }); if (k < 1) this.raf = requestAnimationFrame(tick); };
+    this.raf = requestAnimationFrame(tick);
+  }
+  renderVals() {
+    const fa = n => String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    const labels = ['سال تجربه', 'پروژه موفق', 'مشتری رضایتمند', 'محصول متنوع'];
+    return {
+      ...(() => { const CM = (() => { try { return JSON.parse(localStorage.getItem('hm_cms') || 'null'); } catch (e) { return null; } })(), PG = (CM && CM.pages && CM.pages.home) || {}; const t1 = (PG.heroTitle1 || 'های مصالح').trim().split(' '); return { h1a: t1[0], h1b: t1.slice(1).join(' '), h2: PG.heroTitle2 || 'کیفیتی که ماندگار می‌سازد', heroSub: PG.heroSub || 'تامین و عرضه انواع مصالح ساختمانی با بهترین کیفیت از معتبرترین برندها در سریع‌ترین زمان', heroImg: PG.heroImg || 'assets/hero.jpg' }; })(),
+      offerRef: this.offerRef, drvSteps: [
+        { icon: 'id', title: 'ثبت‌نام و مدارک', desc: 'کارت ملی، کارت ماشین، برگ سبز و ویدیو' },
+        { icon: 'shield-check', title: 'تایید حساب', desc: 'بررسی مدارک توسط تیم های مصالح' },
+        { icon: 'truck-delivery', title: 'دریافت بار', desc: 'بار شهر خودت با بارنامه آنلاین' }
+      ].map((d, i) => ({ ...d, delay: i + 2 })),
+      heroImgRef: this.heroImgRef, kbRef: this.kbRef, orbRef: this.orbRef, statsRef: this.statsRef,
+      features: [
+        { icon: 'award', title: 'کیفیت تضمینی', desc: 'ارائه بهترین کیفیت مصالح با ضمانت اصالت کالا' },
+        { icon: 'truck-delivery', title: 'تحویل سریع', desc: 'ارسال سریع و مطمئن به سراسر کشور' },
+        { icon: 'discount', title: 'قیمت منصفانه', desc: 'بهترین قیمت‌ها بدون واسطه' },
+        { icon: 'headset', title: 'پشتیبانی تخصصی', desc: 'مشاوره و پشتیبانی قبل و بعد از خرید' }
+      ],
+      categories: [
+        ['cement', 'c1', 'package', 'سیمان و افزودنی‌ها'], ['steel', 'c2', 'layout-columns', 'آهن آلات'], ['brick', 'c3', 'wall', 'انواع آجر و بلوک'],
+        ['sand', 'c4', 'shovel', 'شن، ماسه و مصالح'], ['pipe', 'c5', 'tools', 'لوله و اتصالات']
+      ].map(([k, img, icon, name]) => ({ href: `products.dc.html?cat=${k}`, img: `assets/${img}.jpg`, icon, name })),
+      stats: this.state.counts.map((c, i) => ({ num: fa(c) + '+', label: labels[i] })),
+      perks: ['تامین مستقیم از تولیدکنندگان معتبر', 'کنترل کیفیت در تمام مراحل', 'مشاوره تخصصی رایگان', 'تنوع کامل محصولات'].map((t, i) => ({ t, d: i + 2 })),
+      spot: e => { const r = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty('--mx', (e.clientX - r.left) + 'px'); e.currentTarget.style.setProperty('--my', (e.clientY - r.top) + 'px'); },
+      consult: () => window.dispatchEvent(new CustomEvent('hm:consult', { detail: {} }))
+    };
+  }
+}
+</script>
+</body>
+</html>

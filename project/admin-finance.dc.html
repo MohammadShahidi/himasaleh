@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+html,body{margin:0;padding:0;background:#F4F4F5;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Vazirmatn',Tahoma,sans-serif;color:#1a1a1a;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+a:hover{color:#FF5B0F;}
+input,textarea,select,button{font-family:inherit;}
+@keyframes hmpane{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+[data-btn]{cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,background-color .3s,color .3s,border-color .3s;}
+[data-btn]:hover{transform:translateY(-2px);}
+[data-btn]:active{transform:scale(.97);}
+[data-field]:focus{outline:none;border-color:#FF5B0F !important;box-shadow:0 0 0 4px rgba(255,91,15,.14);background:#fff !important;}
+[data-nav-i]{transition:all .3s;}
+[data-nav-i]:hover{background:rgba(255,255,255,.06);color:#fff !important;}
+[data-nav-i][data-active="1"]{background:#FF5B0F !important;color:#fff !important;box-shadow:0 10px 24px rgba(255,91,15,.35);}
+[data-model]{transition:all .35s cubic-bezier(.2,.8,.2,1);cursor:pointer;}
+[data-model]:hover{border-color:#FFC9AE !important;}
+[data-model][data-active="1"]{border-color:#FF5B0F !important;background:#FFF8F4 !important;box-shadow:0 12px 28px rgba(255,91,15,.12);}
+[data-model][data-active="1"] [data-radio]{border-color:#FF5B0F !important;box-shadow:inset 0 0 0 4px #fff;background:#FF5B0F !important;}
+[data-seg][data-active="1"]{background:#fff !important;color:#141414 !important;box-shadow:0 4px 12px rgba(0,0,0,.08);}
+[data-tab][data-active="1"]{background:#141414 !important;color:#fff !important;}
+[data-bar]{transition:width .7s cubic-bezier(.2,.8,.2,1);}
+button,[data-seg],[data-tab]{white-space:nowrap;}
+[data-pane]{animation:hmpane .5s cubic-bezier(.2,.8,.2,1) both;}
+[data-tone]{white-space:nowrap;flex:none;}
+[data-tone="orange"]{background:#FFF0E8;color:#E4500A;}
+[data-tone="green"]{background:#E6F6EC;color:#178A48;}
+[data-tone="blue"]{background:#E8EFFD;color:#1E4FD8;}
+[data-tone="gray"]{background:#F0F0F0;color:#666;}
+[data-tone="red"]{background:#FDECEA;color:#C8341E;}
+[data-tr]:hover{background:#FAFAFA;}
+@media (max-width:1180px){[data-cols]{grid-template-columns:1fr !important;}}
+@media (max-width:1000px){[data-side]{display:none !important;}}
+@media (max-width:640px){[data-stats]{grid-template-columns:1fr 1fr !important;}[data-main]{padding:16px 14px 40px !important;}[data-models],[data-g2]{grid-template-columns:1fr !important;}[data-flow]{flex-direction:column !important;}[data-flow-arrow]{transform:rotate(-90deg);}}
+</style>
+</helmet>
+<div dir="rtl" style="font-family:'Vazirmatn',Tahoma,sans-serif;background:#F4F4F5;min-height:100vh;display:flex;min-width:0;">
+  <aside data-side="" style="position:sticky;top:0;height:100vh;width:260px;flex:none;background:#141414;color:#fff;display:flex;flex-direction:column;padding:24px 18px;">
+    <a href="index.dc.html" style="display:flex;align-items:center;gap:10px;color:#fff;padding:0 6px;">
+      <img src="assets/logo-light.png" alt="" style="height:40px;width:auto;">
+      <span style="font-size:22px;font-weight:900;white-space:nowrap;"><span style="color:#FF5B0F;">های</span> مصالح</span>
+    </a>
+    <div style="margin-top:10px;padding:0 6px;font-size:12px;font-weight:700;color:#FF8A4F;display:flex;align-items:center;gap:6px;"><i class="ti ti-shield-lock" style="font-size:15px;"></i>پنل مدیریت</div>
+    <nav style="margin-top:24px;display:flex;flex-direction:column;gap:4px;">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="7">
+        <a data-nav-i="" data-active="{{ n.a }}" href="{{ n.href }}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;font-size:15px;font-weight:600;color:#BDBDBD;"><i class="ti ti-{{ n.icon }}" style="font-size:20px;"></i>{{ n.label }}</a>
+      </sc-for>
+    </nav>
+  </aside>
+
+  <main data-main="" style="flex:1;min-width:0;padding:24px 32px 40px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+      <div>
+        <div style="font-size:14px;color:#888;">مدل درآمد واسطه‌گری</div>
+        <h1 style="margin:2px 0 0;font-size:clamp(22px,2.4vw,28px);font-weight:900;color:#141414;">مالی، حق‌العمل و تسویه</h1>
+      </div>
+      <div style="display:flex;gap:4px;background:#E9E9EB;border-radius:12px;padding:4px;">
+        <sc-for list="{{ periods }}" as="p" hint-placeholder-count="3">
+          <button data-seg="" data-active="{{ p.a }}" onClick="{{ p.pick }}" style="border:none;background:transparent;border-radius:9px;padding:9px 16px;font-size:13px;font-weight:800;color:#666;cursor:pointer;">{{ p.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div data-stats="" style="margin-top:20px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;">
+      <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+        <div style="background:#fff;border-radius:18px;padding:18px;border:1px solid #EFEFEF;">
+          <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:13px;color:#888;white-space:nowrap;">{{ s.k }}</span><span data-tone="{{ s.tone }}" style="width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ s.icon }}" style="font-size:19px;"></i></span></div>
+          <div style="margin-top:8px;font-size:22px;font-weight:900;color:#141414;white-space:nowrap;">{{ s.v }}</div>
+          <div style="margin-top:2px;font-size:12px;color:#999;">{{ s.sub }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top:20px;background:#141414;color:#fff;border-radius:20px;padding:20px 22px;">
+      <div style="font-size:15px;font-weight:900;display:flex;align-items:center;gap:8px;"><i class="ti ti-arrows-exchange" style="font-size:20px;color:#FF5B0F;"></i>چرخه پول در پرداخت امانی</div>
+      <div data-flow="" style="margin-top:16px;display:flex;align-items:stretch;gap:10px;">
+        <sc-for list="{{ flow }}" as="f" hint-placeholder-count="5">
+          <div style="flex:1;display:flex;align-items:center;gap:10px;">
+            <div style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px;">
+              <i class="ti ti-{{ f.icon }}" style="font-size:22px;color:#FF5B0F;"></i>
+              <div style="margin-top:8px;font-size:14px;font-weight:800;">{{ f.t }}</div>
+              <div style="margin-top:2px;font-size:12px;color:#AAA;line-height:1.8;">{{ f.d }}</div>
+            </div>
+            <i data-flow-arrow="" class="ti ti-chevron-left" style="font-size:18px;color:#555;display:{{ f.arrow }};"></i>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div data-cols="" style="margin-top:20px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:20px;align-items:start;">
+      <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:22px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+          <div style="white-space:nowrap;font-size:17px;font-weight:900;color:#141414;display:flex;align-items:center;gap:8px;"><i class="ti ti-adjustments-dollar" style="font-size:22px;color:#FF5B0F;"></i>قوانین حق‌العمل</div>
+          <sc-if value="{{ saved }}" hint-placeholder-val="{{ false }}"><span data-tone="green" style="font-size:12px;font-weight:800;padding:4px 12px;border-radius:999px;">ذخیره شد</span></sc-if>
+        </div>
+        <label style="display:block;margin-top:18px;font-size:13px;font-weight:800;color:#333;">مدل دریافت درآمد</label>
+        <div data-models="" style="margin-top:8px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;">
+          <sc-for list="{{ models }}" as="m" hint-placeholder-count="3">
+            <div data-model="" data-active="{{ m.a }}" onClick="{{ m.pick }}" style="border:1.5px solid #ECECEC;border-radius:14px;padding:14px;background:#fff;">
+              <div style="display:flex;align-items:center;gap:8px;"><span data-radio="" style="width:18px;height:18px;border-radius:50%;border:2px solid #CCC;flex:none;transition:all .3s;"></span><span style="font-size:14px;font-weight:800;color:#141414;">{{ m.t }}</span></div>
+              <div style="margin-top:6px;font-size:12px;line-height:1.8;color:#777;">{{ m.d }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <label style="display:block;margin-top:20px;font-size:13px;font-weight:800;color:#333;">حق‌العمل از مصالح‌فروش (درصد از فروش هر دسته)</label>
+        <div style="margin-top:8px;display:flex;flex-direction:column;gap:8px;">
+          <sc-for list="{{ cats }}" as="c" hint-placeholder-count="5">
+            <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #F4F4F4;">
+              <i class="ti ti-{{ c.icon }}" style="font-size:20px;color:#FF5B0F;"></i>
+              <span style="flex:1;font-size:14px;font-weight:700;color:#333;">{{ c.name }}</span>
+              <div style="display:flex;align-items:center;border:1.5px solid #ECECEC;border-radius:10px;overflow:hidden;">
+                <button data-btn="" onClick="{{ c.dec }}" style="width:34px;height:34px;border:none;background:#F7F7F7;color:#333;font-size:16px;"><i class="ti ti-minus"></i></button>
+                <span style="width:58px;text-align:center;font-size:14px;font-weight:900;color:#141414;">{{ c.v }}٪</span>
+                <button data-btn="" onClick="{{ c.inc }}" style="width:34px;height:34px;border:none;background:#F7F7F7;color:#333;font-size:16px;"><i class="ti ti-plus"></i></button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div data-g2="" style="margin-top:18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;">
+          <sc-for list="{{ nums }}" as="n" hint-placeholder-count="4">
+            <div>
+              <label style="display:block;font-size:13px;font-weight:800;color:#333;">{{ n.label }}</label>
+              <div style="margin-top:6px;display:flex;align-items:center;border:1.5px solid #ECECEC;border-radius:12px;overflow:hidden;background:#FAFAFA;">
+                <button data-btn="" onClick="{{ n.dec }}" style="width:40px;height:46px;border:none;background:#F1F1F1;color:#333;"><i class="ti ti-minus"></i></button>
+                <span style="flex:1;text-align:center;font-size:14px;font-weight:900;color:#141414;">{{ n.v }}</span>
+                <button data-btn="" onClick="{{ n.inc }}" style="width:40px;height:46px;border:none;background:#F1F1F1;color:#333;"><i class="ti ti-plus"></i></button>
+              </div>
+              <div style="margin-top:4px;font-size:11px;color:#999;">{{ n.hint }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="margin-top:18px;display:flex;flex-direction:column;gap:10px;">
+          <sc-for list="{{ toggles }}" as="t" hint-placeholder-count="3">
+            <div onClick="{{ t.flip }}" style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:12px 12px 14px;border-radius:12px;background:#FAFAFA;border:1px solid #F0F0F0;">
+              <span style="position:relative;margin-top:2px;width:42px;height:24px;flex:none;border-radius:999px;background:{{ t.track }};transition:background .3s;"><span style="position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.2);transform:{{ t.knob }};transition:transform .35s cubic-bezier(.2,.8,.2,1);"></span></span>
+              <span style="display:flex;flex-direction:column;"><span style="font-size:14px;font-weight:800;color:#222;">{{ t.t }}</span><span style="font-size:12px;color:#888;line-height:1.7;">{{ t.d }}</span></span>
+            </div>
+          </sc-for>
+        </div>
+        <button data-btn="" onClick="{{ save }}" style="margin-top:18px;width:100%;height:52px;border:none;border-radius:14px;background:#FF5B0F;color:#fff;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 12px 28px rgba(255,91,15,.3);"><i class="ti ti-device-floppy" style="font-size:19px;"></i>ذخیره و اعمال روی سفارش‌های جدید</button>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:20px;min-width:0;">
+        <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:22px;">
+          <div style="white-space:nowrap;font-size:17px;font-weight:900;color:#141414;display:flex;align-items:center;gap:8px;"><i class="ti ti-calculator" style="font-size:22px;color:#FF5B0F;"></i>ماشین‌حساب تقسیم پول سفارش</div>
+          <div data-g2="" style="margin-top:14px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;">
+            <div><label style="font-size:12px;font-weight:700;color:#666;">دسته کالا</label>
+              <div style="position:relative;margin-top:4px;"><select data-field="" value="{{ calcCat }}" onChange="{{ setCalcCat }}" style="appearance:none;-webkit-appearance:none;width:100%;height:44px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:10px;padding:0 12px 0 30px;font-size:13px;cursor:pointer;"><sc-for list="{{ cats }}" as="c" hint-placeholder-count="5"><option value="{{ c.k }}">{{ c.name }}</option></sc-for></select><i class="ti ti-chevron-down" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#999;pointer-events:none;"></i></div>
+            </div>
+            <div><label style="font-size:12px;font-weight:700;color:#666;">مبلغ کالا (میلیون تومان)</label><input data-field="" inputmode="numeric" value="{{ calcGoods }}" onChange="{{ setCalcGoods }}" style="margin-top:4px;width:100%;height:44px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:10px;padding:0 12px;font-size:14px;font-weight:700;"></div>
+            <div><label style="font-size:12px;font-weight:700;color:#666;">کرایه حمل (میلیون تومان)</label><input data-field="" inputmode="numeric" value="{{ calcFare }}" onChange="{{ setCalcFare }}" style="margin-top:4px;width:100%;height:44px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:10px;padding:0 12px;font-size:14px;font-weight:700;"></div>
+          </div>
+          <div style="margin-top:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px 12px;"><span style="font-size:13px;color:#888;white-space:nowrap;">مبلغ پرداختی مشتری</span><span style="font-size:20px;font-weight:900;color:#141414;white-space:nowrap;line-height:1.5;">{{ calc.total }}</span></div>
+          <div style="margin-top:10px;height:18px;border-radius:999px;overflow:hidden;display:flex;background:#F1F1F1;">
+            <sc-for list="{{ calc.parts }}" as="p" hint-placeholder-count="4"><div data-bar="" style="height:100%;width:{{ p.w }};background:{{ p.c }};"></div></sc-for>
+          </div>
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px;">
+            <sc-for list="{{ calc.parts }}" as="p" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:10px;font-size:14px;"><span style="width:12px;height:12px;border-radius:4px;background:{{ p.c }};flex:none;"></span><span style="flex:1;color:#444;">{{ p.label }}</span><span style="font-weight:900;color:#141414;white-space:nowrap;">{{ p.v }}</span></div>
+            </sc-for>
+          </div>
+          <div style="margin-top:16px;padding:14px;border-radius:14px;background:#FFF8F4;border:1px dashed #F1C3AC;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <span style="font-size:14px;font-weight:800;color:#141414;">درآمد های مصالح از این سفارش</span>
+            <span style="font-size:18px;font-weight:900;color:#FF5B0F;white-space:nowrap;">{{ calc.platform }}</span>
+          </div>
+          <div style="margin-top:8px;font-size:12px;color:#999;line-height:1.8;">{{ calc.note }}</div>
+        </div>
+
+        <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:22px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+            <div style="white-space:nowrap;font-size:17px;font-weight:900;color:#141414;display:flex;align-items:center;gap:8px;"><i class="ti ti-building-bank" style="font-size:22px;color:#FF5B0F;"></i>تسویه حساب</div>
+            <div style="display:flex;gap:4px;background:#F1F1F1;border-radius:10px;padding:4px;">
+              <button data-tab="" data-active="{{ tSup }}" onClick="{{ toSup }}" style="border:none;background:transparent;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:800;color:#666;cursor:pointer;">مصالح‌فروشان</button>
+              <button data-tab="" data-active="{{ tDrv }}" onClick="{{ toDrv }}" style="border:none;background:transparent;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:800;color:#666;cursor:pointer;">رانندگان</button>
+            </div>
+          </div>
+          <div data-pane="" style="margin-top:12px;display:flex;flex-direction:column;">
+            <sc-for list="{{ ledger }}" as="r" hint-placeholder-count="4">
+              <div data-tr="" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 6px;border-bottom:1px solid #F4F4F4;border-radius:10px;">
+                <div style="flex:1;min-width:150px;"><div style="font-size:14px;font-weight:800;color:#222;">{{ r.name }}</div><div style="font-size:12px;color:#999;">{{ r.meta }}</div></div>
+                <div style="text-align:left;"><div style="font-size:12px;color:#999;white-space:nowrap;">{{ r.k }}</div><div style="font-size:14px;font-weight:900;color:{{ r.color }};white-space:nowrap;">{{ r.v }}</div></div>
+                <span data-tone="{{ r.tone }}" style="font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px;">{{ r.st }}</span>
+                <sc-if value="{{ r.can }}" hint-placeholder-val="{{ false }}"><button data-btn="" onClick="{{ r.act }}" style="border:none;background:#141414;color:#fff;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:800;white-space:nowrap;">{{ r.actLabel }}</button></sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  DEF = { model: 'deduct', sup: { cement: 3, steel: 1.5, brick: 4, sand: 5, pipe: 4 }, drv: 8, min: 150, cust: 0, escrow: true, wallet: true, own: false, walletMin: 500 };
+  CATS = [['cement', 'package', 'سیمان و افزودنی‌ها'], ['steel', 'layout-columns', 'آهن آلات'], ['brick', 'wall', 'آجر و بلوک'], ['sand', 'shovel', 'شن و ماسه'], ['pipe', 'tools', 'لوله و اتصالات']];
+  state = { fee: null, saved: false, period: 2, calcCat: 'cement', calcGoods: '57', calcFare: '8.5', led: 'sup', done: {} };
+  componentDidMount() { let f = null; try { f = JSON.parse(localStorage.getItem('hm_fee') || 'null'); } catch (e) {} this.setState({ fee: { ...this.DEF, ...(f || {}), sup: { ...this.DEF.sup, ...((f && f.sup) || {}) } } }); }
+  upd(p) { this.setState(s => ({ fee: { ...(s.fee || this.DEF), ...p }, saved: false })); }
+  renderVals() {
+    const s = this.state, F = s.fee || this.DEF;
+    const fa = v => String(v).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]).replace('.', '٫');
+    const toman = n => fa(Math.round(n).toLocaleString('en-US').replace(/,/g, '٬')) + ' تومان';
+    const mil = n => n >= 1000 ? fa((n / 1000).toFixed(2).replace(/\.?0+$/, '')) + ' میلیارد' : fa(n.toFixed(1).replace(/\.0$/, '')) + ' میلیون';
+    const num = v => parseFloat(String(v).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace('٫', '.')) || 0;
+    const goods = num(s.calcGoods) * 1e6, fare = num(s.calcFare) * 1e6;
+    const supPct = F.own ? 0 : F.sup[s.calcCat], drvPct = F.drv;
+    let supCom = 0, drvCom = 0, custFee = 0, margin = 0;
+    if (F.own) margin = goods * 0.12;
+    if (F.model === 'deduct' || F.model === 'hybrid') { supCom = goods * supPct / 100; drvCom = fare * drvPct / 100; }
+    if (F.model === 'markup') custFee = (goods + fare) * Math.max(F.cust, 3) / 100;
+    if (F.model === 'hybrid') custFee = (goods + fare) * F.cust / 100;
+    const minC = F.min * 1000; if (!F.own && supCom + drvCom + custFee < minC && F.model !== 'markup') supCom = Math.max(supCom, minC - drvCom - custFee);
+    const total = goods + fare + custFee, platform = supCom + drvCom + custFee + margin;
+    const parts = [
+      { label: F.own ? 'بهای تمام‌شده کالا (انبار خودمان)' : 'سهم خالص مصالح‌فروش', v: toman(goods - supCom - margin), n: goods - supCom - margin, c: '#141414' },
+      { label: 'سهم خالص راننده', v: toman(fare - drvCom), n: fare - drvCom, c: '#8A8A8A' },
+      { label: F.own ? 'حاشیه سود فروش مستقیم (۱۲٪)' : `حق‌العمل از مصالح‌فروش (${fa(supPct)}٪)`, v: toman(F.own ? margin : supCom), n: F.own ? margin : supCom, c: '#FF5B0F' },
+      { label: `حق‌العمل از راننده (${fa(F.model === 'markup' ? 0 : drvPct)}٪)`, v: toman(drvCom), n: drvCom, c: '#FF9A3D' },
+      { label: 'کارمزد خدمات مشتری', v: toman(custFee), n: custFee, c: '#FFD2B8' }
+    ].filter(p => p.n > 0);
+    const step = (k, d, lo, hi) => ({ dec: () => this.upd({ [k]: Math.max(lo, +(F[k] - d).toFixed(1)) }), inc: () => this.upd({ [k]: Math.min(hi, +(F[k] + d).toFixed(1)) }) });
+    const SUPL = [['مصالح فروشی البرز', 'کرج — ۴۲ سفارش', 1840, 3], ['آهن‌فروشی شادآباد', 'تهران — ۱۸ سفارش', 2610, 1.5], ['شن و ماسه توس', 'مشهد — ۲۷ سفارش', 980, 5], ['مصالح سپاهان', 'اصفهان — ۱۱ سفارش', 520, 3]];
+    const DRVL = [['حسن کریمی', 'ده‌چرخ — ۲۳ سفر', 48.6, 1.2], ['رضا نوری', 'خاور — ۱۷ سفر', 21.4, -0.4], ['جواد رحیمی', 'ده‌چرخ — ۱۹ سفر', 39.9, 0.3], ['علی احمدی', 'کامیونت — ۹ سفر', 14.2, 0.8]];
+    const ledger = s.led === 'sup'
+      ? SUPL.map(([name, meta, gmv, pct], i) => { const done = s.done['s' + i]; const net = gmv * (1 - pct / 100); return { name, meta: `${meta} — فروش ${mil(gmv)}`, k: `خالص (−${fa(pct)}٪)`, v: mil(net) + ' تومان', color: '#141414', st: done ? 'تسویه شد' : 'آماده تسویه', tone: done ? 'green' : 'orange', can: !done, actLabel: 'واریز به شبا', act: () => this.setState(st => ({ done: { ...st.done, ['s' + i]: 1 } })) }; })
+      : DRVL.map(([name, meta, fareM, wallet], i) => { const done = s.done['d' + i]; const debt = wallet < 0; return { name, meta: `${meta} — کرایه ${mil(fareM)}`, k: debt ? 'بدهی کیف پول' : 'موجودی کیف پول', v: mil(Math.abs(wallet)) + ' تومان', color: debt ? '#C8341E' : '#178A48', st: done ? (debt ? 'پیامک ارسال شد' : 'تسویه شد') : debt ? 'بدهکار — حساب محدود' : 'قابل برداشت', tone: done ? 'gray' : debt ? 'red' : 'green', can: !done, actLabel: debt ? 'ارسال یادآوری' : 'واریز', act: () => this.setState(st => ({ done: { ...st.done, ['d' + i]: 1 } })) }; });
+    return {
+      nav: [['layout-dashboard', 'داشبورد', 'admin.dc.html'], ['route', 'تخصیص بار', 'admin.dc.html'], ['truck', 'رانندگان', 'admin.dc.html'], ['building-store', 'مصالح‌فروشی‌ها', 'supplier-panel.dc.html'], ['cash', 'مالی و حق‌العمل', '#'], ['file-invoice', 'بارنامه‌ها', 'admin.dc.html'], ['gift', 'پاداش و کش‌بک', 'admin-rewards.dc.html'], ['users-plus', 'معرفی (Referral)', 'admin-referral.dc.html'], ['shield-lock', 'کارکنان و دسترسی', 'admin-team.dc.html'], ['building-warehouse', 'انبار خودمان', 'admin-inventory.dc.html'], ['layout-board', 'محتوای سایت', 'admin-cms.dc.html']].map(([icon, label, href], i) => ({ icon, label, href, a: i === 4 ? '1' : '0' })),
+      periods: ['امروز', 'این هفته', 'این ماه'].map((label, i) => ({ label, a: s.period === i ? '1' : '0', pick: () => this.setState({ period: i }) })),
+      stats: [
+        { k: 'گردش مالی (GMV)', v: ['۱۸۴ میلیون', '۱٫۱ میلیارد', '۴٫۲ میلیارد'][s.period], sub: 'کل پرداخت مشتریان', icon: 'chart-line', tone: 'blue' },
+        { k: 'درآمد حق‌العمل', v: ['۵٫۶ میلیون', '۳۴ میلیون', '۱۲۸ میلیون'][s.period], sub: 'میانگین ۳٫۰۵٪ از GMV', icon: 'coin', tone: 'orange' },
+        { k: 'در انتظار تسویه', v: '۳۱۲ میلیون', sub: 'مصالح‌فروشان و رانندگان', icon: 'hourglass', tone: 'gray' },
+        { k: 'مانده حساب امانی', v: '۵۴۰ میلیون', sub: 'سفارش‌های تحویل‌نشده', icon: 'lock-dollar', tone: 'green' }
+      ],
+      flow: [
+        ['credit-card', 'پرداخت مشتری', 'کالا + کرایه به حساب امانی'], ['building-store', 'بارگیری', 'مصالح‌فروش بار را تحویل راننده می‌دهد'], ['file-check', 'تحویل و امضا', 'بارنامه امضا و تحویل تایید می‌شود'],
+        ['percentage', 'کسر حق‌العمل', 'سهم های مصالح خودکار کسر می‌شود'], ['building-bank', 'تسویه', 'واریز به شبا مصالح‌فروش و کیف پول راننده']
+      ].map(([icon, t, d], i) => ({ icon, t, d, arrow: i === 4 ? 'none' : 'block' })),
+      saved: s.saved,
+      models: [['deduct', 'کسر از فروشنده و راننده', 'قیمت مشتری دست نمی‌خورد؛ درصد از سهم مصالح‌فروش و راننده کسر می‌شود.'], ['markup', 'کارمزد روی فاکتور مشتری', 'مصالح‌فروش و راننده کامل دریافت می‌کنند؛ کارمزد به مشتری اضافه می‌شود.'], ['hybrid', 'ترکیبی', 'درصد کمتر از هر دو طرف و کارمزد کم برای مشتری.']]
+        .map(([k, t, d]) => ({ t, d, a: F.model === k ? '1' : '0', pick: () => this.upd({ model: k }) })),
+      cats: this.CATS.map(([k, icon, name]) => ({ k, icon, name, v: fa(F.sup[k]), dec: () => this.upd({ sup: { ...F.sup, [k]: Math.max(0, +(F.sup[k] - .5).toFixed(1)) } }), inc: () => this.upd({ sup: { ...F.sup, [k]: Math.min(15, +(F.sup[k] + .5).toFixed(1)) } }) })),
+      nums: [
+        { label: 'حق‌العمل از راننده', v: fa(F.drv) + '٪ از کرایه', hint: 'از کرایه هر سفر کسر می‌شود', ...step('drv', 1, 0, 20) },
+        { label: 'حداقل حق‌العمل هر سفارش', v: fa(F.min) + ' هزار تومان', hint: 'برای سفارش‌های کوچک', ...step('min', 50, 0, 1000) },
+        { label: 'کارمزد خدمات مشتری', v: fa(F.cust) + '٪', hint: 'در مدل ترکیبی یا کارمزد مشتری', ...step('cust', .5, 0, 10) },
+        { label: 'حداقل موجودی کیف پول راننده', v: fa(F.walletMin) + ' هزار تومان', hint: 'برای قبول بار پس‌کرایه', ...step('walletMin', 100, 0, 5000) }
+      ],
+      toggles: [
+        ['escrow', 'پرداخت امانی اجباری', 'مشتری مبلغ را به حساب امانی می‌پردازد و پس از تحویل آزاد می‌شود.'],
+        ['wallet', 'کسر از کیف پول در بارهای پس‌کرایه', 'وقتی راننده کرایه را نقد می‌گیرد، حق‌العمل از کیف پول او کسر می‌شود.'],
+        ['own', 'فروش از انبار های مصالح', 'برای آینده: کالا از موجودی خودمان با حاشیه سود فروخته می‌شود.']
+      ].map(([k, t, d]) => ({ t, d, track: F[k] ? '#FF5B0F' : '#D5D5D5', knob: F[k] ? 'none' : 'translateX(-18px)', flip: () => this.upd({ [k]: !F[k] }) })),
+      save: () => { try { localStorage.setItem('hm_fee', JSON.stringify(F)); } catch (e) {} this.setState({ saved: true }); },
+      calcCat: s.calcCat, setCalcCat: e => this.setState({ calcCat: e.target.value }),
+      calcGoods: fa(s.calcGoods), setCalcGoods: e => this.setState({ calcGoods: e.target.value }),
+      calcFare: fa(s.calcFare), setCalcFare: e => this.setState({ calcFare: e.target.value }),
+      calc: { total: toman(total), platform: toman(platform), parts: parts.map(p => ({ ...p, w: total > 0 ? (p.n / total * 100).toFixed(2) + '%' : '0%' })),
+        note: F.model === 'markup' ? 'در این مدل حداقل ۳٪ کارمزد روی فاکتور مشتری محاسبه می‌شود.' : F.own ? 'در فروش از انبار خودمان، حق‌العمل مصالح‌فروش حذف و حاشیه سود جایگزین می‌شود.' : `اگر مجموع حق‌العمل کمتر از ${fa(F.min)} هزار تومان باشد، حداقل حق‌العمل اعمال می‌شود.` },
+      tSup: s.led === 'sup' ? '1' : '0', tDrv: s.led === 'drv' ? '1' : '0', toSup: () => this.setState({ led: 'sup' }), toDrv: () => this.setState({ led: 'drv' }),
+      ledger
+    };
+  }
+}
+</script>
+</body>
+</html>

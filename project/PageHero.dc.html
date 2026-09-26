@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@media (max-width:900px){[data-phero]{padding:150px 0 100px !important;border-bottom-left-radius:50% 60px !important;}[data-phero-img]{width:100% !important;opacity:.28 !important;}[data-phero-inner]{text-align:center;}[data-phero-crumb]{justify-content:center;}}
+</style>
+</helmet>
+<section dir="rtl" data-phero="" style="position:relative;background:#121212;color:#fff;border-bottom-left-radius:62% 120px;overflow:hidden;padding:200px 0 130px;font-family:'Vazirmatn',Tahoma,sans-serif;">
+  <div data-phero-img="" style="position:absolute;left:0;top:0;bottom:0;width:55%;opacity:.6;background:url('{{ imgUrl }}') center/cover no-repeat;-webkit-mask-image:linear-gradient(to left,transparent 0%,#000 55%);mask-image:linear-gradient(to left,transparent 0%,#000 55%);"></div>
+  <div style="position:absolute;left:0;right:0;top:0;height:180px;background:linear-gradient(#121212,rgba(18,18,18,0));"></div>
+  <div style="position:absolute;right:-8%;top:-30%;width:50%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(255,91,15,.16),transparent 62%);pointer-events:none;"></div>
+  <div data-wrap="" data-phero-inner="" style="position:relative;max-width:1280px;margin:0 auto;padding:0 40px;">
+    <div data-reveal="" data-phero-crumb="" style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#bbb;">
+      <a href="index.dc.html" style="color:#bbb;display:flex;align-items:center;gap:6px;" style-hover="color:#FF5B0F;"><i class="ti ti-home" style="font-size:16px;"></i>خانه</a>
+      <i class="ti ti-chevron-left" style="font-size:14px;color:#666;"></i>
+      <span style="color:#FF5B0F;">{{ crumb }}</span>
+    </div>
+    <h1 data-reveal="" data-delay="1" style="margin:22px 0 0;font-size:clamp(34px,4vw,56px);font-weight:900;line-height:1.35;">{{ title }}</h1>
+    <p data-reveal="" data-delay="2" style="margin:20px 0 0;font-size:clamp(15px,1.4vw,19px);line-height:2;color:#D8D8D8;max-width:560px;text-wrap:pretty;">{{ subtitle }}</p>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;520px&quot;},&quot;title&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;محصولات&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;subtitle&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;انواع مصالح ساختمانی با کیفیت بالا&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;crumb&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;محصولات&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;img&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;assets/hero.jpg&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const K = { 'محصولات': 'products', 'دسته‌بندی‌ها': 'categories', 'درباره ما': 'about', 'تماس با ما': 'contact' }[this.props.crumb];
+    const cms = (() => { try { return JSON.parse(localStorage.getItem('hm_cms') || 'null'); } catch (e) { return null; } })(), pg = (cms && cms.pages && cms.pages[K]) || {};
+    return { imgUrl: pg.heroImg || this.props.img || 'assets/hero.jpg', crumb: this.props.crumb ?? this.props.title, title: pg.heroTitle || this.props.title, subtitle: pg.heroSub || this.props.subtitle };
+  }
+}
+</script>
+</body>
+</html>

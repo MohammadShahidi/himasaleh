@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+@keyframes hmspin{to{transform:rotate(360deg);}}
+[data-mp-btn]{cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.2,1),background-color .3s,box-shadow .3s;}
+[data-mp-btn]:active{transform:scale(.94);}
+[data-mp-res]:hover{background:#FFF6F1 !important;}
+[data-mp-pin]{transition:transform .25s cubic-bezier(.2,.8,.2,1);}
+.leaflet-container{font-family:'Vazirmatn',Tahoma,sans-serif;background:#EEE;}
+</style>
+</helmet>
+<div dir="rtl" style="font-family:'Vazirmatn',Tahoma,sans-serif;">
+  <div style="position:relative;">
+    <i class="ti ti-search" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:20px;color:#999;"></i>
+    <input value="{{ q }}" onChange="{{ setQ }}" onKeyDown="{{ onKey }}" placeholder="جستجوی محله یا خیابان…" style="width:100%;height:54px;border:1.5px solid #E2E2E2;background:#fff;border-radius:16px;padding:0 48px 0 96px;font-size:16px;color:#141414;outline:none;">
+    <button data-mp-btn="" onClick="{{ search }}" style="position:absolute;left:6px;top:6px;height:42px;border:none;border-radius:12px;background:#141414;color:#fff;padding:0 16px;font-size:15px;font-weight:800;font-family:inherit;">پیدا کن</button>
+    <sc-if value="{{ hasRes }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:60px;right:0;left:0;z-index:1000;background:#fff;border-radius:16px;box-shadow:0 18px 40px rgba(0,0,0,.18);overflow:hidden;">
+        <sc-for list="{{ results }}" as="r" hint-placeholder-count="3">
+          <div data-mp-res="" onClick="{{ r.go }}" style="display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid #F2F2F2;cursor:pointer;font-size:15px;color:#222;line-height:1.7;"><i class="ti ti-map-pin" style="font-size:20px;color:#FF5B0F;flex:none;"></i>{{ r.t }}</div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="position:relative;margin-top:10px;height:{{ h }};border-radius:20px;overflow:hidden;border:1.5px solid #E2E2E2;background:#EEE;touch-action:none;">
+    <div ref="{{ mapRef }}" dir="ltr" style="position:absolute;inset:0;"></div>
+    <div style="position:absolute;left:50%;top:50%;z-index:500;pointer-events:none;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;">
+      <i data-mp-pin="" ref="{{ pinRef }}" class="ti ti-map-pin-filled" style="font-size:52px;color:#FF5B0F;filter:drop-shadow(0 6px 8px rgba(0,0,0,.3));line-height:1;"></i>
+    </div>
+    <div style="position:absolute;left:50%;top:50%;z-index:499;pointer-events:none;width:16px;height:6px;border-radius:50%;background:rgba(0,0,0,.3);transform:translate(-50%,-50%);"></div>
+    <div style="position:absolute;top:12px;right:12px;left:12px;z-index:600;pointer-events:none;display:flex;justify-content:center;">
+      <span style="background:rgba(20,20,20,.82);color:#fff;border-radius:999px;padding:8px 14px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px;white-space:nowrap;"><i class="ti ti-hand-finger" style="font-size:17px;"></i>{{ hint }}</span>
+    </div>
+    <div style="position:absolute;left:12px;bottom:12px;z-index:600;display:flex;flex-direction:column;gap:8px;">
+      <button data-mp-btn="" onClick="{{ zoomIn }}" aria-label="بزرگ‌نمایی" style="width:48px;height:48px;border:none;border-radius:14px;background:#fff;color:#141414;box-shadow:0 6px 16px rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;"><i class="ti ti-plus" style="font-size:22px;"></i></button>
+      <button data-mp-btn="" onClick="{{ zoomOut }}" aria-label="کوچک‌نمایی" style="width:48px;height:48px;border:none;border-radius:14px;background:#fff;color:#141414;box-shadow:0 6px 16px rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;"><i class="ti ti-minus" style="font-size:22px;"></i></button>
+    </div>
+    <button data-mp-btn="" onClick="{{ locate }}" style="position:absolute;right:12px;bottom:12px;z-index:600;height:56px;border:none;border-radius:16px;background:#1E4FD8;color:#fff;padding:0 16px;font-size:16px;font-weight:900;font-family:inherit;display:flex;align-items:center;gap:8px;box-shadow:0 10px 24px rgba(30,79,216,.35);white-space:nowrap;">
+      <sc-if value="{{ locating }}" hint-placeholder-val="{{ false }}"><i class="ti ti-loader-2" style="font-size:22px;animation:hmspin .8s linear infinite;"></i></sc-if>
+      <sc-if value="{{ notLocating }}" hint-placeholder-val="{{ true }}"><i class="ti ti-current-location" style="font-size:22px;"></i></sc-if>
+      جای من کجاست؟
+    </button>
+  </div>
+  <sc-if value="{{ geoErr }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:8px;font-size:14px;color:#C8341E;display:flex;align-items:center;gap:6px;"><i class="ti ti-alert-circle" style="font-size:17px;"></i>{{ geoErr }}</div>
+  </sc-if>
+
+  <div style="margin-top:10px;display:flex;align-items:center;gap:12px;background:#F6F6F6;border-radius:16px;padding:14px 16px;">
+    <i class="ti ti-{{ addrIcon }}" style="font-size:26px;color:#FF5B0F;flex:none;animation:{{ addrAnim }};"></i>
+    <span style="font-size:16px;font-weight:700;color:#222;line-height:1.8;">{{ addrText }}</span>
+  </div>
+  <button data-mp-btn="" onClick="{{ confirm }}" style="margin-top:10px;width:100%;height:64px;border:none;border-radius:18px;background:{{ okBg }};color:#fff;font-size:19px;font-weight:900;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 12px 26px rgba(34,164,93,.3);"><i class="ti ti-{{ okIcon }}" style="font-size:26px;"></i>{{ okText }}</button>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;480px&quot;,&quot;height&quot;:&quot;620px&quot;},&quot;onPick&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;(p:{lat:number,lng:number,address:string})=&gt;void&quot;},&quot;lat&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:35.6997,&quot;tsType&quot;:&quot;number&quot;},&quot;lng&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:51.338,&quot;tsType&quot;:&quot;number&quot;},&quot;height&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;320px&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;hint&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;نقشه را بکشید تا سوزن روی مکان شما بیفتد&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;confirmLabel&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;همین‌جاست، ثبت کن&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { q: '', results: [], addr: '', loading: false, locating: false, geoErr: '', confirmed: false, lat: null, lng: null };
+  mapRef = React.createRef(); pinRef = React.createRef();
+  componentDidMount() {
+    const init = () => {
+      if (!window.L || !this.mapRef.current) { this.initT = setTimeout(init, 120); return; }
+      const lat = this.props.lat ?? 35.6997, lng = this.props.lng ?? 51.3380;
+      const L = window.L, map = L.map(this.mapRef.current, { zoomControl: false, attributionControl: true, tap: true }).setView([lat, lng], this.props.lat ? 17 : 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
+      map.attributionControl.setPrefix(false);
+      map.on('movestart', () => { this.pinRef.current && (this.pinRef.current.style.transform = 'translateY(-14px)'); this.setState({ confirmed: false }); });
+      map.on('moveend', () => { this.pinRef.current && (this.pinRef.current.style.transform = 'none'); const c = map.getCenter(); this.setState({ lat: c.lat, lng: c.lng }); this.reverse(c.lat, c.lng); });
+      this.map = map; this.setState({ lat, lng }); if (this.props.lat) this.reverse(lat, lng);
+      setTimeout(() => map.invalidateSize(), 250);
+      if (window.ResizeObserver) { this.ro = new ResizeObserver(() => map.invalidateSize()); this.ro.observe(this.mapRef.current); }
+    };
+    init();
+  }
+  componentWillUnmount() { clearTimeout(this.initT); clearTimeout(this.revT); this.ro && this.ro.disconnect(); this.map && this.map.remove(); }
+  reverse(lat, lng) {
+    clearTimeout(this.revT); this.setState({ loading: true });
+    this.revT = setTimeout(async () => {
+      try {
+        const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&accept-language=fa`);
+        const d = await r.json(), a = d.address || {};
+        const parts = [a.city || a.town || a.village || a.county, a.suburb || a.neighbourhood || a.quarter, a.road].filter(Boolean);
+        this.setState({ addr: parts.length ? parts.join('، ') : (d.display_name || ''), loading: false });
+      } catch (e) { this.setState({ addr: '', loading: false }); }
+    }, 550);
+  }
+  async doSearch() {
+    const q = this.state.q.trim(); if (!q) return;
+    try {
+      const r = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=5&countrycodes=ir&accept-language=fa&q=${encodeURIComponent(q)}`);
+      const d = await r.json();
+      this.setState({ results: d.map(x => ({ t: x.display_name.split(',').slice(0, 3).join('،'), lat: +x.lat, lng: +x.lon })) });
+    } catch (e) { this.setState({ results: [] }); }
+  }
+  renderVals() {
+    const s = this.state, fa = v => String(v).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    return {
+      mapRef: this.mapRef, pinRef: this.pinRef, h: this.props.height ?? '320px',
+      q: s.q, setQ: e => this.setState({ q: e.target.value }),
+      onKey: e => { if (e.key === 'Enter') { e.preventDefault(); this.doSearch(); } },
+      search: () => this.doSearch(),
+      hasRes: s.results.length > 0,
+      results: s.results.map(r => ({ t: r.t, go: () => { this.setState({ results: [], q: '' }); this.map && this.map.flyTo([r.lat, r.lng], 17, { duration: .8 }); } })),
+      hint: this.props.hint ?? 'نقشه را بکشید تا سوزن روی مکان شما بیفتد',
+      zoomIn: () => this.map && this.map.zoomIn(), zoomOut: () => this.map && this.map.zoomOut(),
+      locating: s.locating, notLocating: !s.locating, geoErr: s.geoErr,
+      locate: () => {
+        if (!navigator.geolocation) return this.setState({ geoErr: 'گوشی شما موقعیت را پشتیبانی نمی‌کند.' });
+        this.setState({ locating: true, geoErr: '' });
+        navigator.geolocation.getCurrentPosition(p => { this.setState({ locating: false }); this.map && this.map.flyTo([p.coords.latitude, p.coords.longitude], 17, { duration: .8 }); },
+          () => this.setState({ locating: false, geoErr: 'اجازه دسترسی به موقعیت داده نشد. نقشه را دستی بکشید.' }), { enableHighAccuracy: true, timeout: 12000 });
+      },
+      addrIcon: s.loading ? 'loader-2' : 'map-pin', addrAnim: s.loading ? 'hmspin .8s linear infinite' : 'none',
+      addrText: s.loading ? 'در حال پیدا کردن آدرس…' : (s.addr || (s.lat ? `${fa(s.lat.toFixed(5))}، ${fa(s.lng.toFixed(5))}` : 'مکان را روی نقشه انتخاب کنید')),
+      okBg: s.confirmed ? '#178A48' : '#22A45D', okIcon: s.confirmed ? 'circle-check' : 'check', okText: s.confirmed ? 'مکان ثبت شد' : (this.props.confirmLabel ?? 'همین‌جاست، ثبت کن'),
+      confirm: () => { if (s.lat == null) return; this.setState({ confirmed: true }); this.props.onPick && this.props.onPick({ lat: s.lat, lng: s.lng, address: s.addr }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

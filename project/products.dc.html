@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+html,body{margin:0;padding:0;background:#fff;}
+*{box-sizing:border-box;}
+body{font-family:'Vazirmatn',Tahoma,sans-serif;color:#1a1a1a;}
+a{color:inherit;text-decoration:none;}
+a:hover{color:#FF5B0F;}
+[data-cat-btn],[data-sub-btn],[data-chip]{transition:all .35s cubic-bezier(.2,.8,.2,1);}
+[data-cat-btn]:hover{background:#FFF6F1 !important;}
+[data-cat-btn][data-active="1"]{background:#FF5B0F !important;color:#fff !important;box-shadow:0 10px 24px rgba(255,91,15,.3);}
+[data-cat-btn][data-active="1"] [data-cnt]{background:rgba(255,255,255,.22) !important;color:#fff !important;}
+[data-cat-btn][data-active="1"] [data-ic]{color:#fff !important;}
+[data-sub-btn]:hover{color:#FF5B0F !important;}
+[data-sub-btn][data-active="1"]{color:#FF5B0F !important;font-weight:800 !important;}
+[data-sub-btn][data-active="1"] [data-dot]{background:#FF5B0F !important;box-shadow:0 0 0 4px #FFE3D5;}
+[data-chip][data-active="1"]{background:#FF5B0F !important;border-color:#FF5B0F !important;color:#fff !important;}
+@media (max-width:1150px){[data-pgrid]{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}}
+@media (max-width:900px){[data-shop]{grid-template-columns:1fr !important;gap:24px !important;}[data-side]{display:none !important;}[data-mfilter]{display:flex !important;}}
+@media (max-width:520px){[data-pgrid]{grid-template-columns:1fr !important;}[data-topbar]{flex-direction:column;align-items:stretch !important;}}
+</style>
+</helmet>
+<div dir="rtl" style="font-family:'Vazirmatn',Tahoma,sans-serif;background:#fff;min-width:0;overflow-x:clip;">
+  <dc-import name="SiteHeader" active="products" hint-size="100%,0px"></dc-import>
+  <dc-import name="PageHero" title="محصولات های مصالح" crumb="محصولات" subtitle="تمام مصالح مورد نیاز پروژه‌تان را بر اساس دسته‌بندی و زیرگروه پیدا کنید و قیمت روز را استعلام بگیرید." img="assets/hero.jpg" hint-size="100%,520px"></dc-import>
+
+  <section data-wrap="" data-screen-label="Shop" data-shop="" style="max-width:1280px;margin:0 auto;padding:64px 40px 0;display:grid;grid-template-columns:290px minmax(0,1fr);gap:36px;align-items:start;">
+    <aside data-side="" data-reveal="right" style="position:sticky;top:100px;display:flex;flex-direction:column;gap:20px;">
+      <div style="background:#fff;border:1px solid #F0F0F0;border-radius:20px;box-shadow:0 12px 34px rgba(0,0,0,.06);padding:18px;">
+        <div style="font-size:16px;font-weight:900;color:#141414;padding:6px 8px 14px;display:flex;align-items:center;gap:8px;"><i class="ti ti-category" style="font-size:20px;color:#FF5B0F;"></i>دسته‌بندی محصولات</div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <button data-cat-btn="" data-active="{{ allActive }}" onClick="{{ pickAll }}" style="display:flex;align-items:center;gap:10px;width:100%;border:none;background:transparent;padding:12px 12px;border-radius:12px;cursor:pointer;font-size:15px;font-weight:700;color:#222;text-align:right;"><i data-ic="" class="ti ti-layout-grid" style="font-size:20px;color:#FF5B0F;"></i><span style="flex:1;">همه محصولات</span><span data-cnt="" style="font-size:12px;background:#F4F4F4;color:#666;border-radius:999px;padding:2px 10px;">{{ totalFa }}</span></button>
+          <sc-for list="{{ cats }}" as="c" hint-placeholder-count="5">
+            <div>
+              <button data-cat-btn="" data-active="{{ c.a }}" onClick="{{ c.pick }}" style="display:flex;align-items:center;gap:10px;width:100%;border:none;background:transparent;padding:12px 12px;border-radius:12px;cursor:pointer;font-size:15px;font-weight:700;color:#222;text-align:right;"><i data-ic="" class="ti ti-{{ c.icon }}" style="font-size:20px;color:#FF5B0F;"></i><span style="flex:1;">{{ c.name }}</span><span data-cnt="" style="font-size:12px;background:#F4F4F4;color:#666;border-radius:999px;padding:2px 10px;">{{ c.count }}</span></button>
+              <sc-if value="{{ c.open }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:2px;padding:8px 22px 10px 8px;margin-right:21px;border-right:1.5px dashed #F1D6C8;">
+                  <sc-for list="{{ c.subs }}" as="s" hint-placeholder-count="4">
+                    <button data-sub-btn="" data-active="{{ s.a }}" onClick="{{ s.pick }}" style="display:flex;align-items:center;gap:10px;border:none;background:transparent;padding:8px 4px;cursor:pointer;font-size:14px;font-weight:500;color:#555;text-align:right;"><span data-dot="" style="width:7px;height:7px;border-radius:50%;background:#DDD;flex:none;transition:all .3s;"></span><span style="flex:1;">{{ s.label }}</span><span style="font-size:12px;color:#aaa;">{{ s.count }}</span></button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div onMouseMove="{{ spot }}" style="position:relative;overflow:hidden;border-radius:20px;background:radial-gradient(360px circle at var(--mx,50%) var(--my,30%),rgba(255,91,15,.22),transparent 55%),#161616;color:#fff;padding:24px;">
+        <i class="ti ti-headset" style="font-size:34px;color:#FF5B0F;"></i>
+        <div style="margin-top:12px;font-size:17px;font-weight:800;line-height:1.8;">در انتخاب مصالح مردد هستید؟</div>
+        <div style="margin-top:6px;font-size:14px;color:#BBB;line-height:1.9;">کارشناسان ما رایگان راهنمایی‌تان می‌کنند.</div>
+        <button data-btn="" onClick="{{ consult }}" style="margin-top:16px;width:100%;border:none;background:#FF5B0F;color:#fff;font-size:15px;font-weight:700;padding:13px 16px;border-radius:12px;display:flex;align-items:center;justify-content:space-between;">درخواست مشاوره<i class="ti ti-chevron-left" style="font-size:16px;"></i></button>
+      </div>
+    </aside>
+
+    <div style="min-width:0;">
+      <div data-mfilter="" style="display:none;flex-direction:column;gap:12px;margin-bottom:20px;">
+        <div data-hscroll="" style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:4px 20px;">
+          <button data-chip="" data-active="{{ allActive }}" onClick="{{ pickAll }}" style="flex:none;border:1.5px solid #E6E6E6;background:#fff;border-radius:999px;padding:10px 16px;font-size:14px;font-weight:700;color:#333;cursor:pointer;white-space:nowrap;">همه</button>
+          <sc-for list="{{ cats }}" as="c" hint-placeholder-count="5">
+            <button data-chip="" data-active="{{ c.a }}" onClick="{{ c.pick }}" style="flex:none;display:flex;align-items:center;gap:6px;border:1.5px solid #E6E6E6;background:#fff;border-radius:999px;padding:10px 16px;font-size:14px;font-weight:700;color:#333;cursor:pointer;white-space:nowrap;"><i class="ti ti-{{ c.icon }}" style="font-size:17px;"></i>{{ c.name }}</button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ hasSubs }}" hint-placeholder-val="{{ false }}">
+          <div data-hscroll="" style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:2px 20px;">
+            <button data-chip="" data-active="{{ subAll }}" onClick="{{ pickSubAll }}" style="flex:none;border:1.5px dashed #F1C3AC;background:#FFF8F4;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700;color:#FF5B0F;cursor:pointer;white-space:nowrap;">همه زیرگروه‌ها</button>
+            <sc-for list="{{ activeSubs }}" as="s" hint-placeholder-count="4">
+              <button data-chip="" data-active="{{ s.a }}" onClick="{{ s.pick }}" style="flex:none;border:1.5px dashed #F1C3AC;background:#FFF8F4;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700;color:#FF5B0F;cursor:pointer;white-space:nowrap;">{{ s.label }}</button>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+
+      <div data-topbar="" style="display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px;">
+        <div>
+          <div style="font-size:22px;font-weight:900;color:#141414;">{{ heading }}</div>
+          <div style="margin-top:4px;font-size:14px;color:#888;">{{ countText }}</div>
+        </div>
+        <div style="position:relative;width:min(320px,100%);">
+          <i class="ti ti-search" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:19px;color:#999;"></i>
+          <input data-field="" type="search" placeholder="جستجو در محصولات…" value="{{ q }}" onChange="{{ onQ }}" style="width:100%;height:50px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:14px;padding:0 46px 0 16px;font-size:15px;color:#141414;">
+        </div>
+      </div>
+
+      <div data-pgrid="" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;">
+        <sc-for list="{{ items }}" as="p" hint-placeholder-count="6">
+          <div data-reveal="" data-delay="{{ p.d }}">
+            <article data-card="" style="height:100%;display:flex;flex-direction:column;background:#fff;border-radius:18px;overflow:hidden;border:1px solid #F0F0F0;box-shadow:0 8px 24px rgba(0,0,0,.05);transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .5s;" style-hover="transform:translateY(-6px);box-shadow:0 22px 44px rgba(0,0,0,.12);">
+              <div style="position:relative;aspect-ratio:1.45;overflow:hidden;background:#222;">
+                <div data-zoom="" style="width:100%;height:100%;background-image:url('{{ p.img }}');background-size:cover;background-position:center;"></div>
+                <sc-if value="{{ p.hasTag }}" hint-placeholder-val="{{ false }}">
+                  <span style="position:absolute;top:14px;right:14px;background:#FF5B0F;color:#fff;font-size:12px;font-weight:800;padding:5px 12px;border-radius:999px;box-shadow:0 6px 16px rgba(255,91,15,.4);">{{ p.tag }}</span>
+                </sc-if>
+              </div>
+              <div style="padding:20px;display:flex;flex-direction:column;flex:1;">
+                <div style="font-size:13px;font-weight:700;color:#FF5B0F;">{{ p.catName }} · {{ p.sub }}</div>
+                <h3 style="margin:8px 0 0;font-size:18px;font-weight:800;color:#141414;line-height:1.6;">{{ p.name }}</h3>
+                <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;font-size:14px;color:#666;">
+                  <div style="display:flex;align-items:center;gap:8px;"><span style="width:6px;height:6px;border-radius:50%;background:#CCC;flex:none;"></span>{{ p.spec }}</div>
+                  <div style="display:flex;align-items:center;gap:8px;"><span style="width:6px;height:6px;border-radius:50%;background:#CCC;flex:none;"></span>واحد فروش: {{ p.unit }}</div>
+                </div>
+                <div style="margin-top:auto;padding-top:18px;">
+                  <div style="border-top:1px solid #F2F2F2;padding-top:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+                    <span style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#1F9D55;white-space:nowrap;"><span style="width:8px;height:8px;border-radius:50%;background:#22B35E;box-shadow:0 0 0 4px #E3F6EA;"></span>موجود در انبار</span>
+                    <button data-btn="" onClick="{{ p.ask }}" style="flex:1 0 auto;justify-content:center;border:1.5px solid #FF5B0F;background:#fff;color:#FF5B0F;font-size:14px;font-weight:800;padding:10px 16px;border-radius:10px;display:flex;align-items:center;gap:6px;white-space:nowrap;" style-hover="background:#FF5B0F;color:#fff;">استعلام قیمت<i class="ti ti-chevron-left" style="font-size:15px;"></i></button>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align:center;padding:70px 20px;border:1.5px dashed #E6E6E6;border-radius:20px;">
+          <i class="ti ti-mood-empty" style="font-size:52px;color:#FF5B0F;"></i>
+          <div style="margin-top:14px;font-size:19px;font-weight:800;color:#141414;">محصولی با این مشخصات پیدا نشد</div>
+          <button data-btn="" onClick="{{ pickAll }}" style="margin-top:20px;border:none;background:#FF5B0F;color:#fff;font-size:15px;font-weight:700;padding:13px 26px;border-radius:12px;">نمایش همه محصولات</button>
+        </div>
+      </sc-if>
+    </div>
+  </section>
+
+  <section data-wrap="" style="max-width:1280px;margin:0 auto;padding:70px 40px 0;">
+    <div data-reveal="" onMouseMove="{{ spot }}" style="position:relative;overflow:hidden;border-radius:22px;background:radial-gradient(520px circle at var(--mx,20%) var(--my,50%),rgba(255,91,15,.18),transparent 45%),#181818;padding:40px clamp(24px,5vw,64px);display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;border:1px solid #262626;">
+      <div>
+        <div style="font-size:clamp(20px,2.2vw,28px);font-weight:900;color:#fff;">محصول مورد نظرتان را پیدا نکردید؟</div>
+        <div style="margin-top:10px;font-size:15px;color:#BBB;">سفارش خود را ثبت کنید تا از طریق شبکه تامین‌کنندگان برایتان تهیه کنیم.</div>
+      </div>
+      <button data-btn="" onClick="{{ consult }}" style="border:none;background:#FF5B0F;color:#fff;font-size:16px;font-weight:800;padding:17px 30px;border-radius:12px;display:flex;align-items:center;gap:10px;white-space:nowrap;box-shadow:0 14px 30px rgba(255,91,15,.35);"><i class="ti ti-message-2" style="font-size:18px;"></i>درخواست مشاوره</button>
+    </div>
+  </section>
+
+  <dc-import name="SiteFooter" hint-size="100%,420px"></dc-import>
+  <dc-import name="ConsultModal" hint-size="0px,0px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { cat: 'all', sub: 'all', q: '' };
+  CATS = [
+    ['cement', 'c1', 'package', 'سیمان و افزودنی‌ها', ['سیمان پرتلند', 'سیمان سفید', 'چسب و ملات', 'افزودنی بتن']],
+    ['steel', 'c2', 'layout-columns', 'آهن آلات', ['میلگرد', 'تیرآهن', 'ناودانی و نبشی', 'ورق و پروفیل']],
+    ['brick', 'c3', 'wall', 'انواع آجر و بلوک', ['آجر فشاری و نما', 'آجر سفال', 'بلوک سیمانی', 'بلوک سبک']],
+    ['sand', 'c4', 'shovel', 'شن، ماسه و مصالح', ['ماسه', 'شن', 'پوکه و گچ']],
+    ['pipe', 'c5', 'tools', 'لوله و اتصالات', ['لوله پلی‌اتیلن', 'لوله پنج‌لایه', 'لوله PVC', 'اتصالات و شیرآلات']]
+  ];
+  P = [
+    ['cement', 'سیمان پرتلند', 'سیمان پرتلند تیپ ۲', 'مناسب بتن‌ریزی و فونداسیون', 'کیسه ۵۰ کیلوگرمی', 'پرفروش'],
+    ['cement', 'سیمان پرتلند', 'سیمان پرتلند تیپ ۱-۴۲۵', 'مقاومت بالا برای اجزای سازه', 'کیسه ۵۰ کیلوگرمی'],
+    ['cement', 'سیمان سفید', 'سیمان سفید', 'مناسب نما، بندکشی و تزئینات', 'کیسه ۴۰ کیلوگرمی'],
+    ['cement', 'چسب و ملات', 'چسب کاشی پودری', 'مناسب نصب کاشی و سرامیک', 'کیسه ۲۰ کیلوگرمی'],
+    ['cement', 'چسب و ملات', 'ملات آماده سیمانی', 'مناسب آجرچینی و بلوک‌چینی', 'کیسه ۲۵ کیلوگرمی'],
+    ['cement', 'افزودنی بتن', 'فوق روان‌کننده بتن', 'کاهش آب و افزایش مقاومت بتن', 'گالن ۲۰ لیتری'],
+    ['cement', 'افزودنی بتن', 'ضدیخ بتن', 'بتن‌ریزی در هوای سرد', 'گالن ۲۰ لیتری'],
+    ['steel', 'میلگرد', 'میلگرد آجدار A3', 'سایز ۸ تا ۳۲', 'شاخه ۱۲ متری', 'پرفروش'],
+    ['steel', 'میلگرد', 'میلگرد ساده A1', 'سایز ۶ تا ۱۴', 'شاخه ۱۲ متری'],
+    ['steel', 'تیرآهن', 'تیرآهن IPE', 'سایز ۱۴ تا ۳۰', 'شاخه ۱۲ متری'],
+    ['steel', 'ناودانی و نبشی', 'ناودانی UNP', 'سایز ۶ تا ۲۰', 'شاخه ۶ متری'],
+    ['steel', 'ناودانی و نبشی', 'نبشی فولادی', 'سایز ۳ تا ۱۰', 'شاخه ۶ متری'],
+    ['steel', 'ورق و پروفیل', 'ورق سیاه ST37', 'ضخامت ۲ تا ۵۰ میلی‌متر', 'برگ'],
+    ['steel', 'ورق و پروفیل', 'قوطی و پروفیل', 'ابعاد ۲۰×۲۰ تا ۱۰۰×۱۰۰', 'شاخه ۶ متری'],
+    ['brick', 'آجر فشاری و نما', 'آجر فشاری', 'ابعاد ۲۰×۱۰×۵ سانتی‌متر', 'قالب', 'پرفروش'],
+    ['brick', 'آجر فشاری و نما', 'آجر نما قزاقی', 'ابعاد ۲۰×۵×۵ سانتی‌متر', 'قالب'],
+    ['brick', 'آجر سفال', 'آجر سفال ۱۰ سوراخ', 'ابعاد ۲۰×۲۰×۱۰ سانتی‌متر', 'قالب'],
+    ['brick', 'بلوک سیمانی', 'بلوک سیمانی ۱۵', 'ابعاد ۴۰×۲۰×۱۵ سانتی‌متر', 'عدد'],
+    ['brick', 'بلوک سبک', 'بلوک هبلکس', 'ابعاد ۶۰×۲۵×۱۰ سانتی‌متر', 'عدد', 'جدید'],
+    ['brick', 'بلوک سبک', 'بلوک لیکا', 'ابعاد ۵۰×۲۰×۱۰ سانتی‌متر', 'عدد'],
+    ['sand', 'ماسه', 'ماسه شسته', 'مناسب بتن و ملات', 'متر مکعب', 'پرفروش'],
+    ['sand', 'ماسه', 'ماسه بادی', 'مناسب اندود و نازک‌کاری', 'متر مکعب'],
+    ['sand', 'شن', 'شن بادامی', 'دانه‌بندی ۶ تا ۱۹ میلی‌متر', 'متر مکعب'],
+    ['sand', 'شن', 'شن نخودی', 'دانه‌بندی ۶ تا ۱۲ میلی‌متر', 'متر مکعب'],
+    ['sand', 'پوکه و گچ', 'پوکه معدنی', 'سبک‌سازی کف و بام', 'متر مکعب'],
+    ['sand', 'پوکه و گچ', 'گچ ساختمانی', 'گیرش معمولی', 'کیسه ۴۰ کیلوگرمی'],
+    ['pipe', 'لوله پلی‌اتیلن', 'لوله پلی‌اتیلن', 'سایز ۲۰ تا ۱۱۰ میلی‌متر', 'رول / شاخه'],
+    ['pipe', 'لوله پنج‌لایه', 'لوله پنج‌لایه', 'سایز ۱۶ تا ۳۲ میلی‌متر', 'رول ۱۰۰ متری', 'پرفروش'],
+    ['pipe', 'لوله PVC', 'لوله PVC فاضلابی', 'سایز ۵۰ تا ۱۶۰ میلی‌متر', 'شاخه ۶ متری'],
+    ['pipe', 'اتصالات و شیرآلات', 'اتصالات پرسی', 'زانو، سه‌راه و بوشن', 'عدد'],
+    ['pipe', 'اتصالات و شیرآلات', 'شیر فلکه برنجی', 'سایز ½ تا ۲ اینچ', 'عدد']
+  ];
+  componentDidMount() {
+    const cms = (() => { try { return JSON.parse(localStorage.getItem('hm_cms') || 'null'); } catch (e) { return null; } })();
+    if (cms) { this.CATS = cms.categories.filter(c => c.on).map(c => [c.k, c.img, c.icon, c.name, c.subs]); this.P = cms.products.filter(x => x.on && this.CATS.some(c => c[0] === x.cat)).map(x => [x.cat, x.sub, x.name, x.spec, x.unit, x.tag, x.img]); this.forceUpdate(); }
+    const u = new URLSearchParams(location.search), cat = u.get('cat'), sub = u.get('sub');
+    if (cat && this.CATS.some(c => c[0] === cat)) this.setState({ cat, sub: sub || 'all' });
+  }
+  setF(patch) {
+    this.setState(patch, () => {
+      const { cat, sub } = this.state, u = new URLSearchParams();
+      if (cat !== 'all') u.set('cat', cat); if (cat !== 'all' && sub !== 'all') u.set('sub', sub);
+      try { history.replaceState(null, '', location.pathname + (u.toString() ? '?' + u : '')); } catch (e) {}
+    });
+  }
+  renderVals() {
+    const fa = n => String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    const s = this.state, catMap = {};
+    this.CATS.forEach(c => (catMap[c[0]] = c));
+    const q = s.q.trim();
+    const list = this.P.filter(p => (s.cat === 'all' || p[0] === s.cat) && (s.sub === 'all' || p[1] === s.sub) && (!q || (p[2] + p[3] + p[1]).includes(q)));
+    const cats = this.CATS.map(([k, img, icon, name, subs]) => ({
+      icon, name, a: s.cat === k ? '1' : '0', open: s.cat === k,
+      count: fa(this.P.filter(p => p[0] === k).length),
+      pick: () => this.setF({ cat: k, sub: 'all' }),
+      subs: subs.map(sb => ({ label: sb, a: s.sub === sb ? '1' : '0', count: fa(this.P.filter(p => p[0] === k && p[1] === sb).length), pick: () => this.setF({ sub: s.sub === sb ? 'all' : sb }) }))
+    }));
+    const active = cats.find(c => c.open);
+    const catName = s.cat === 'all' ? 'همه محصولات' : catMap[s.cat][3];
+    return {
+      cats, allActive: s.cat === 'all' ? '1' : '0', totalFa: fa(this.P.length),
+      hasSubs: !!active, activeSubs: active ? active.subs : [], subAll: s.sub === 'all' ? '1' : '0',
+      pickAll: () => this.setF({ cat: 'all', sub: 'all', q: '' }),
+      pickSubAll: () => this.setF({ sub: 'all' }),
+      heading: s.sub !== 'all' ? s.sub : catName,
+      countText: `${fa(list.length)} محصول${s.sub !== 'all' ? ' در ' + catName : ''}`,
+      q: s.q, onQ: e => this.setState({ q: e.target.value }),
+      empty: list.length === 0,
+      items: list.map((p, i) => {
+        const c = catMap[p[0]];
+        return { img: p[6] || ((String(c[1]).includes('/') || String(c[1]).startsWith('data:')) ? c[1] : `assets/${c[1]}.jpg`), catName: c[3], sub: p[1], name: p[2], spec: p[3], unit: p[4], tag: p[5] || '', hasTag: !!p[5], d: i % 3,
+          ask: () => window.dispatchEvent(new CustomEvent('hm:consult', { detail: { topic: 'استعلام قیمت', ctx: p[2] } })) };
+      }),
+      spot: e => { const r = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty('--mx', (e.clientX - r.left) + 'px'); e.currentTarget.style.setProperty('--my', (e.clientY - r.top) + 'px'); },
+      consult: () => window.dispatchEvent(new CustomEvent('hm:consult', { detail: {} }))
+    };
+  }
+}
+</script>
+</body>
+</html>

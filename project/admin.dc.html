@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#141414">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+html,body{margin:0;padding:0;background:#F4F4F5;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Vazirmatn',Tahoma,sans-serif;color:#1a1a1a;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+a:hover{color:#FF5B0F;}
+input,textarea,select,button{font-family:inherit;}
+@keyframes hmspin{to{transform:rotate(360deg);}}
+@keyframes hmpane{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+[data-btn]{cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,background-color .3s,color .3s,border-color .3s,opacity .3s;}
+[data-btn]:hover{transform:translateY(-2px);}
+[data-btn]:active{transform:scale(.97);}
+[data-field]:focus{outline:none;border-color:#FF5B0F !important;box-shadow:0 0 0 4px rgba(255,91,15,.14);background:#fff !important;}
+[data-nav-i]{transition:all .3s;}
+[data-nav-i]:hover{background:rgba(255,255,255,.06);color:#fff !important;}
+[data-nav-i][data-active="1"]{background:#FF5B0F !important;color:#fff !important;box-shadow:0 10px 24px rgba(255,91,15,.35);}
+[data-sel]{transition:all .35s cubic-bezier(.2,.8,.2,1);cursor:pointer;}
+[data-sel]:hover{border-color:#FFC9AE !important;}
+[data-sel][data-active="1"]{border-color:#FF5B0F !important;background:#FFF8F4 !important;box-shadow:0 12px 28px rgba(255,91,15,.12);}
+[data-tab]{transition:all .35s;}
+[data-tab][data-active="1"]{background:#141414 !important;color:#fff !important;}
+[data-seg][data-active="1"]{background:#fff !important;color:#141414 !important;box-shadow:0 4px 12px rgba(0,0,0,.08);}
+button,[data-seg],[data-tab]{white-space:nowrap;}
+[data-pane]{animation:hmpane .5s cubic-bezier(.2,.8,.2,1) both;}
+[data-lock="1"]{opacity:.45;pointer-events:none;filter:grayscale(.4);}
+[data-lock]{transition:opacity .4s,filter .4s;}
+[data-tone]{white-space:nowrap;flex:none;}
+span[dir="ltr"]{white-space:nowrap;flex:none;}
+[data-sel] span,[data-stat-k]{white-space:nowrap;}
+[data-tone="orange"]{background:#FFF0E8;color:#E4500A;}
+[data-tone="green"]{background:#E6F6EC;color:#178A48;}
+[data-tone="blue"]{background:#E8EFFD;color:#1E4FD8;}
+[data-tone="gray"]{background:#F0F0F0;color:#666;}
+[data-tone="red"]{background:#FDECEA;color:#C8341E;}
+@media (max-width:1180px){[data-cols]{grid-template-columns:1fr !important;}}
+@media (max-width:1000px){[data-side]{display:none !important;}[data-main]{padding-bottom:40px !important;}}
+@media (max-width:640px){[data-stats]{grid-template-columns:1fr 1fr !important;}[data-main]{padding:16px 14px 40px !important;}[data-g2]{grid-template-columns:1fr !important;}[data-docs]{grid-template-columns:1fr 1fr !important;}}
+</style>
+</helmet>
+<div dir="rtl" style="font-family:'Vazirmatn',Tahoma,sans-serif;background:#F4F4F5;min-height:100vh;display:flex;min-width:0;">
+  <aside data-side="" style="position:sticky;top:0;height:100vh;width:260px;flex:none;background:#141414;color:#fff;display:flex;flex-direction:column;padding:24px 18px;">
+    <a href="index.dc.html" style="display:flex;align-items:center;gap:10px;color:#fff;padding:0 6px;">
+      <img src="assets/logo-light.png" alt="" style="height:40px;width:auto;">
+      <span style="font-size:22px;font-weight:900;white-space:nowrap;"><span style="color:#FF5B0F;">های</span> مصالح</span>
+    </a>
+    <div style="margin-top:10px;padding:0 6px;font-size:12px;font-weight:700;color:#FF8A4F;display:flex;align-items:center;gap:6px;"><i class="ti ti-shield-lock" style="font-size:15px;"></i>پنل مدیریت</div>
+    <nav style="margin-top:24px;display:flex;flex-direction:column;gap:4px;">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="7">
+        <a data-nav-i="" data-active="{{ n.a }}" href="{{ n.href }}" onClick="{{ n.go }}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;font-size:15px;font-weight:600;color:#BDBDBD;"><i class="ti ti-{{ n.icon }}" style="font-size:20px;"></i><span style="flex:1;">{{ n.label }}</span><sc-if value="{{ n.hasBadge }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;font-weight:800;background:#FF5B0F;color:#fff;border-radius:999px;padding:1px 8px;">{{ n.badge }}</span></sc-if></a>
+      </sc-for>
+    </nav>
+    <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;background:rgba(255,255,255,.05);">
+      <span style="width:38px;height:38px;border-radius:50%;background:#333;display:flex;align-items:center;justify-content:center;font-weight:900;">م</span>
+      <div><div style="font-size:14px;font-weight:800;">مدیر عملیات</div><div style="font-size:12px;color:#999;">واحد حمل و تخصیص</div></div>
+    </div>
+  </aside>
+
+  <main data-main="" style="flex:1;min-width:0;padding:24px 32px 40px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+      <div>
+        <div style="font-size:14px;color:#888;">پنل مدیریت عملیات</div>
+        <h1 style="margin:2px 0 0;font-size:clamp(22px,2.4vw,28px);font-weight:900;color:#141414;">تخصیص بار و مدیریت رانندگان</h1>
+      </div>
+      <div style="display:flex;gap:6px;background:#E9E9EB;border-radius:14px;padding:5px;">
+        <button data-tab="" data-active="{{ tabD }}" onClick="{{ toDispatch }}" style="border:none;background:transparent;border-radius:10px;padding:10px 16px;font-size:14px;font-weight:800;color:#555;cursor:pointer;display:flex;align-items:center;gap:6px;"><i class="ti ti-route" style="font-size:17px;"></i>تخصیص بار</button>
+        <button data-tab="" data-active="{{ tabR }}" onClick="{{ toDrivers }}" style="border:none;background:transparent;border-radius:10px;padding:10px 16px;font-size:14px;font-weight:800;color:#555;cursor:pointer;display:flex;align-items:center;gap:6px;"><i class="ti ti-id-badge-2" style="font-size:17px;"></i>تایید رانندگان<span style="font-size:11px;background:#FF5B0F;color:#fff;border-radius:999px;padding:0 7px;">{{ pendingFa }}</span></button>
+      </div>
+    </div>
+
+    <div data-stats="" style="margin-top:20px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;">
+      <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+        <div style="background:#fff;border-radius:18px;padding:18px;border:1px solid #EFEFEF;display:flex;align-items:center;gap:14px;">
+          <span data-tone="{{ s.tone }}" style="width:48px;height:48px;flex:none;border-radius:14px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ s.icon }}" style="font-size:24px;"></i></span>
+          <div style="min-width:0;"><div style="font-size:24px;font-weight:900;color:#141414;line-height:1.2;">{{ s.v }}</div><div data-stat-k="" style="font-size:13px;color:#888;overflow:hidden;text-overflow:ellipsis;">{{ s.k }}</div></div>
+        </div>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ isDispatch }}" hint-placeholder-val="{{ true }}">
+      <div data-cols="" style="margin-top:20px;display:grid;grid-template-columns:320px minmax(0,1fr);gap:20px;align-items:start;">
+        <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:16px;">
+          <div style="padding:4px 6px 12px;font-size:16px;font-weight:900;color:#141414;">صف سفارش‌ها</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <sc-for list="{{ orders }}" as="o" hint-placeholder-count="3">
+              <div data-sel="" data-active="{{ o.a }}" onClick="{{ o.pick }}" style="border:1.5px solid #F0F0F0;border-radius:16px;padding:14px;background:#fff;">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;"><span dir="ltr" style="font-size:13px;font-weight:800;">{{ o.code }}</span><span data-tone="{{ o.tone }}" style="font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px;">{{ o.st }}</span></div>
+                <div style="margin-top:8px;font-size:14px;font-weight:700;color:#333;">{{ o.goods }}</div>
+                <div style="margin-top:6px;display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#999;"><span style="display:flex;align-items:center;gap:4px;"><i class="ti ti-map-pin" style="font-size:14px;"></i>{{ o.city }}</span><span>{{ o.cust }}</span></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div data-pane="" style="display:flex;flex-direction:column;gap:18px;min-width:0;">
+          <div style="background:#141414;color:#fff;border-radius:20px;padding:20px 22px;display:flex;flex-wrap:wrap;gap:18px 32px;align-items:center;">
+            <div style="flex:1;min-width:220px;"><div style="font-size:13px;color:#AAA;">سفارش <span dir="ltr" style="color:#fff;font-weight:800;">{{ o.code }}</span> — {{ o.custType }}</div><div style="margin-top:4px;font-size:19px;font-weight:900;">{{ o.goods }}</div></div>
+            <div><div style="font-size:12px;color:#AAA;">مقصد</div><div style="font-size:14px;font-weight:800;">{{ o.dest }}</div></div>
+            <div><div style="font-size:12px;color:#AAA;">وزن</div><div style="font-size:14px;font-weight:800;">{{ o.weightFa }}</div></div>
+            <div><div style="font-size:12px;color:#AAA;">مشتری</div><div style="font-size:14px;font-weight:800;">{{ o.cust }}</div></div>
+          </div>
+
+          <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:20px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;gap:10px;"><span style="width:32px;height:32px;border-radius:10px;background:{{ s1bg }};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;">۱</span><span style="font-size:16px;font-weight:900;color:#141414;white-space:nowrap;">استعلام موجودی از مصالح‌فروشی‌های {{ o.cityName }}</span></div>
+              <button data-btn="" onClick="{{ askAll }}" style="border:1.5px solid #141414;background:#fff;color:#141414;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:800;display:flex;align-items:center;gap:6px;" style-hover="background:#141414;color:#fff;"><i class="ti ti-send" style="font-size:15px;"></i>استعلام از همه</button>
+            </div>
+            <sc-if value="{{ own.show }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:14px;border:2px solid {{ own.border }};background:{{ own.bg }};border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                <span style="width:44px;height:44px;flex:none;border-radius:13px;background:#22A45D;color:#fff;display:flex;align-items:center;justify-content:center;"><i class="ti ti-building-warehouse" style="font-size:23px;"></i></span>
+                <div style="flex:1;min-width:200px;"><div style="font-size:14px;font-weight:900;color:#141414;">{{ own.title }}</div><div style="font-size:12px;color:#666;margin-top:2px;line-height:1.8;">{{ own.sub }}</div></div>
+                <sc-if value="{{ own.can }}" hint-placeholder-val="{{ false }}"><button data-btn="" onClick="{{ own.use }}" style="border:none;background:#22A45D;color:#fff;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:800;display:flex;align-items:center;gap:6px;box-shadow:0 8px 20px rgba(34,164,93,.3);"><i class="ti ti-check" style="font-size:15px;"></i>تامین از انبار خودمان</button></sc-if>
+                <sc-if value="{{ own.chosen }}" hint-placeholder-val="{{ false }}"><span data-tone="green" style="font-size:12px;font-weight:800;padding:6px 12px;border-radius:999px;">انتخاب شد — بدون استعلام</span></sc-if>
+              </div>
+            </sc-if>
+            <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px;opacity:{{ own.supOp }};">
+              <sc-for list="{{ sups }}" as="p" hint-placeholder-count="3">
+                <div data-sel="" data-active="{{ p.a }}" onClick="{{ p.pick }}" style="border:1.5px solid #F0F0F0;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#fff;">
+                  <span style="width:40px;height:40px;flex:none;border-radius:12px;background:#F4F4F4;color:#555;display:flex;align-items:center;justify-content:center;"><i class="ti ti-building-store" style="font-size:20px;"></i></span>
+                  <div style="flex:1;min-width:160px;"><div style="font-size:14px;font-weight:800;color:#222;">{{ p.name }}</div><div style="font-size:12px;color:#999;">{{ p.meta }}</div></div>
+                  <sc-if value="{{ p.idle }}" hint-placeholder-val="{{ true }}"><button data-btn="" onClick="{{ p.ask }}" style="border:1.5px solid #FF5B0F;background:#fff;color:#FF5B0F;border-radius:10px;padding:7px 14px;font-size:13px;font-weight:800;">استعلام</button></sc-if>
+                  <sc-if value="{{ p.wait }}" hint-placeholder-val="{{ false }}"><span data-tone="gray" style="font-size:12px;font-weight:800;padding:5px 12px;border-radius:999px;display:flex;align-items:center;gap:6px;"><i class="ti ti-loader-2" style="font-size:14px;animation:hmspin .8s linear infinite;"></i>در انتظار پاسخ</span></sc-if>
+                  <sc-if value="{{ p.ok }}" hint-placeholder-val="{{ false }}"><span data-tone="green" style="font-size:12px;font-weight:800;padding:5px 12px;border-radius:999px;">موجود — {{ p.price }}</span></sc-if>
+                  <sc-if value="{{ p.no }}" hint-placeholder-val="{{ false }}"><span data-tone="red" style="font-size:12px;font-weight:800;padding:5px 12px;border-radius:999px;">ناموجود</span></sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div data-lock="{{ lock2 }}" style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:20px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="width:32px;height:32px;border-radius:10px;background:{{ s2bg }};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;">۲</span><span style="font-size:16px;font-weight:900;color:#141414;white-space:nowrap;">انتخاب راننده در {{ o.cityName }}</span></div>
+            <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px;">
+              <sc-for list="{{ drivers }}" as="d" hint-placeholder-count="3">
+                <div style="border:1.5px solid {{ d.border }};border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:{{ d.bg }};opacity:{{ d.op }};">
+                  <span style="width:40px;height:40px;flex:none;border-radius:50%;background:#141414;color:#fff;display:flex;align-items:center;justify-content:center;"><i class="ti ti-steering-wheel" style="font-size:20px;"></i></span>
+                  <div style="flex:1;min-width:180px;"><div style="font-size:14px;font-weight:800;color:#222;">{{ d.name }} <span style="font-size:12px;color:#E4A10A;">★ {{ d.rate }}</span></div><div style="font-size:12px;color:#999;">{{ d.meta }}</div></div>
+                  <span data-tone="{{ d.tone }}" style="font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px;">{{ d.st }}</span>
+                  <sc-if value="{{ d.can }}" hint-placeholder-val="{{ false }}"><button data-btn="" onClick="{{ d.assign }}" style="border:none;background:#FF5B0F;color:#fff;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:800;">تخصیص</button></sc-if>
+                  <sc-if value="{{ d.chosen }}" hint-placeholder-val="{{ false }}"><span data-tone="green" style="font-size:12px;font-weight:800;padding:6px 12px;border-radius:999px;display:flex;align-items:center;gap:4px;"><i class="ti ti-check" style="font-size:14px;"></i>تخصیص داده شد</span></sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div data-lock="{{ lock3 }}" style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:20px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="width:32px;height:32px;border-radius:10px;background:{{ s3bg }};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;">۳</span><span style="font-size:16px;font-weight:900;color:#141414;white-space:nowrap;">صدور بارنامه و نکات بار</span></div>
+            <sc-if value="{{ notIssued }}" hint-placeholder-val="{{ true }}">
+              <div data-g2="" style="margin-top:16px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;">
+                <div><label style="display:block;font-size:13px;font-weight:700;color:#333;">کرایه حمل (تومان)</label><input data-field="" inputmode="numeric" value="{{ fare }}" onChange="{{ setFare }}" style="margin-top:6px;width:100%;height:48px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:0 14px;font-size:15px;font-weight:700;"></div>
+                <div><label style="display:block;font-size:13px;font-weight:700;color:#333;">مهلت تحویل</label><input data-field="" value="{{ due }}" onChange="{{ setDue }}" style="margin-top:6px;width:100%;height:48px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:0 14px;font-size:14px;"></div>
+                <div><label style="display:block;font-size:13px;font-weight:700;color:#333;">نوع پرداخت کرایه</label>
+                  <div style="margin-top:6px;display:grid;grid-template-columns:1fr 1fr;gap:4px;background:#F1F1F1;border-radius:12px;padding:4px;height:48px;">
+                    <button data-seg="" data-active="{{ payPre }}" onClick="{{ setPre }}" style="border:none;background:transparent;border-radius:9px;font-size:13px;font-weight:800;color:#777;cursor:pointer;">پیش‌کرایه</button>
+                    <button data-seg="" data-active="{{ payPost }}" onClick="{{ setPost }}" style="border:none;background:transparent;border-radius:9px;font-size:13px;font-weight:800;color:#777;cursor:pointer;">پس‌کرایه</button>
+                  </div>
+                </div>
+              </div>
+              <label style="display:block;margin-top:16px;font-size:13px;font-weight:700;color:#333;">نکات بارنامه (برای راننده، مشتری و مصالح‌فروشی نمایش داده می‌شود)</label>
+              <div style="margin-top:8px;display:flex;flex-direction:column;gap:8px;">
+                <sc-for list="{{ noteOpts }}" as="n" hint-placeholder-count="5">
+                  <label style="display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#333;cursor:pointer;line-height:1.8;"><input type="checkbox" checked="{{ n.on }}" onChange="{{ n.toggle }}" style="width:18px;height:18px;accent-color:#FF5B0F;margin-top:4px;flex:none;">{{ n.t }}</label>
+                </sc-for>
+              </div>
+              <div data-g2="" style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                <div><label style="display:block;font-size:13px;font-weight:700;color:#333;">نکته اضافه</label><textarea data-field="" rows="2" value="{{ extra }}" onChange="{{ setExtra }}" placeholder="مثلاً ورود کامیون از درب شمالی" style="margin-top:6px;width:100%;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:10px 14px;font-size:14px;resize:vertical;"></textarea></div>
+                <div><label style="display:block;font-size:13px;font-weight:700;color:#333;">یادداشت داخلی (فقط مدیر)</label><textarea data-field="" rows="2" value="{{ inote }}" onChange="{{ setInote }}" placeholder="مثلاً کمیسیون و توافق با مصالح‌فروشی" style="margin-top:6px;width:100%;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:10px 14px;font-size:14px;resize:vertical;"></textarea></div>
+              </div>
+              <button data-btn="" onClick="{{ issue }}" style="margin-top:18px;width:100%;height:54px;border:none;border-radius:14px;background:#FF5B0F;color:#fff;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 14px 30px rgba(255,91,15,.3);"><i class="ti ti-file-invoice" style="font-size:20px;"></i>صدور و ارسال بارنامه</button>
+            </sc-if>
+            <sc-if value="{{ issued }}" hint-placeholder-val="{{ false }}">
+              <div data-pane="" style="margin-top:14px;display:flex;align-items:center;gap:10px;background:#F2FBF5;border:1px solid #BFE6CD;border-radius:14px;padding:12px 14px;font-size:14px;color:#178A48;font-weight:700;"><i class="ti ti-circle-check" style="font-size:20px;"></i>بارنامه صادر شد و برای راننده، مشتری و مصالح‌فروشی ارسال شد.</div>
+            </sc-if>
+          </div>
+
+          <sc-if value="{{ issued }}" hint-placeholder-val="{{ false }}">
+            <dc-import name="WaybillCard" data="{{ wb }}" hint-size="100%,780px"></dc-import>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isDrivers }}" hint-placeholder-val="{{ false }}">
+      <div data-cols="" style="margin-top:20px;display:grid;grid-template-columns:320px minmax(0,1fr);gap:20px;align-items:start;">
+        <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:16px;">
+          <div style="padding:4px 6px 12px;font-size:16px;font-weight:900;color:#141414;">درخواست‌های ثبت‌نام راننده</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <sc-for list="{{ apps }}" as="a" hint-placeholder-count="3">
+              <div data-sel="" data-active="{{ a.a }}" onClick="{{ a.pick }}" style="border:1.5px solid #F0F0F0;border-radius:16px;padding:14px;background:#fff;">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;"><span style="font-size:14px;font-weight:800;color:#222;">{{ a.name }}</span><span data-tone="{{ a.tone }}" style="font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px;">{{ a.st }}</span></div>
+                <div style="margin-top:6px;font-size:12px;color:#999;display:flex;justify-content:space-between;"><span>{{ a.vt }} — {{ a.city }}</span><span>{{ a.when }}</span></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div data-pane="" style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:22px;min-width:0;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:12px;"><span style="width:52px;height:52px;border-radius:50%;background:#141414;color:#fff;display:flex;align-items:center;justify-content:center;"><i class="ti ti-user" style="font-size:26px;"></i></span><div><div style="font-size:19px;font-weight:900;color:#141414;">{{ app.name }}</div><div style="font-size:13px;color:#888;">{{ app.vt }} — {{ app.city }}</div></div></div>
+            <span data-tone="{{ app.tone }}" style="font-size:13px;font-weight:800;padding:5px 14px;border-radius:999px;">{{ app.st }}</span>
+          </div>
+          <div style="margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;">
+            <sc-for list="{{ app.info }}" as="r" hint-placeholder-count="6">
+              <div style="background:#FAFAFA;border:1px solid #F0F0F0;border-radius:12px;padding:10px 12px;"><div style="font-size:12px;color:#999;">{{ r.k }}</div><div style="margin-top:2px;font-size:14px;font-weight:800;color:#222;">{{ r.v }}</div></div>
+            </sc-for>
+          </div>
+          <div style="margin-top:20px;font-size:15px;font-weight:900;color:#141414;">مدارک و ویدیو</div>
+          <div data-docs="" style="margin-top:10px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;">
+            <sc-for list="{{ app.docs }}" as="d" hint-placeholder-count="7">
+              <div>
+                <div style="position:relative;aspect-ratio:1.5;border-radius:12px;overflow:hidden;border:1px solid #EAEAEA;background:repeating-linear-gradient(135deg,#F3F3F3 0 10px,#EBEBEB 10px 20px);display:flex;align-items:center;justify-content:center;">
+                  <span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#888;background:#fff;padding:3px 8px;border-radius:6px;display:flex;align-items:center;gap:4px;"><i class="ti ti-{{ d.icon }}" style="font-size:14px;"></i>{{ d.kind }}</span>
+                  <span style="position:absolute;top:6px;left:6px;width:22px;height:22px;border-radius:50%;background:#22B35E;color:#fff;display:flex;align-items:center;justify-content:center;"><i class="ti ti-check" style="font-size:13px;"></i></span>
+                </div>
+                <div style="margin-top:6px;font-size:13px;font-weight:700;color:#333;">{{ d.label }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ app.pending }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-top:22px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+              <button data-btn="" onClick="{{ approve }}" style="border:none;background:#22B35E;color:#fff;border-radius:12px;padding:14px 22px;font-size:15px;font-weight:800;display:flex;align-items:center;gap:8px;box-shadow:0 10px 24px rgba(34,179,94,.3);"><i class="ti ti-circle-check" style="font-size:19px;"></i>تایید و فعال‌سازی راننده</button>
+              <div style="position:relative;">
+                <select data-field="" value="{{ reason }}" onChange="{{ setReason }}" style="appearance:none;-webkit-appearance:none;height:50px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:0 14px 0 36px;font-size:14px;cursor:pointer;">
+                  <sc-for list="{{ reasons }}" as="r" hint-placeholder-count="4"><option value="{{ r }}">{{ r }}</option></sc-for>
+                </select>
+                <i class="ti ti-chevron-down" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#999;pointer-events:none;"></i>
+              </div>
+              <button data-btn="" onClick="{{ reject }}" style="border:1.5px solid #C8341E;background:#fff;color:#C8341E;border-radius:12px;padding:13px 20px;font-size:15px;font-weight:800;display:flex;align-items:center;gap:8px;"><i class="ti ti-x" style="font-size:18px;"></i>رد درخواست</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { tab: 'dispatch', sel: 0, flows: {}, appSel: 0, appSt: {}, reason: 'تصویر مدارک ناخوانا است', local: null };
+  ORD = [
+    { code: 'HM-10244', goods: 'میلگرد آجدار A3 سایز ۱۴', w: 6, city: 'tehran', cityName: 'تهران', dest: 'تهران، پردیس، فاز ۵', cust: 'مهندس رضایی', custType: 'پیمانکار' },
+    { code: 'HM-10252', goods: 'سیمان پرتلند تیپ ۲ — ۱۵۰ کیسه', w: 7.5, city: 'isf', cityName: 'اصفهان', dest: 'اصفهان، شاهین‌شهر، خیابان عطار', cust: 'علی محمدی', custType: 'شخصی' },
+    { code: 'HM-10257', goods: 'ماسه شسته — ۱۰ متر مکعب', w: 15, city: 'msh', cityName: 'مشهد', dest: 'مشهد، طرقبه، جاده شاندیز', cust: 'آرمان سازه', custType: 'پیمانکار' }
+  ];
+  SUP = {
+    tehran: [['آهن‌فروشی شادآباد', 'تهران، شادآباد — ۲۲ کیلومتر تا مقصد', 1, '۳۲٬۵۰۰ تومان/کیلو'], ['فولاد بازار آهن', 'تهران، بازار آهن — ۲۶ کیلومتر', 1, '۳۲٬۲۰۰ تومان/کیلو'], ['آهن‌آلات شرق', 'تهران، جاجرود — ۱۱ کیلومتر', 0]],
+    isf: [['مصالح فروشی سپاهان', 'اصفهان، خیابان کاوه — ۱۴ کیلومتر', 1, '۲۸۵٬۰۰۰ تومان/کیسه'], ['نمایندگی سیمان اصفهان', 'اصفهان، جاده نجف‌آباد — ۳۰ کیلومتر', 0], ['مصالح شاهین', 'شاهین‌شهر — ۳ کیلومتر', 1, '۲۹۰٬۰۰۰ تومان/کیسه']],
+    msh: [['شن و ماسه توس', 'مشهد، جاده سرخس — ۳۵ کیلومتر', 1, '۶۵۰٬۰۰۰ تومان/متر'], ['معدن ماسه طرقبه', 'طرقبه — ۶ کیلومتر', 1, '۶۲۰٬۰۰۰ تومان/متر'], ['مصالح رضوی', 'مشهد، بلوار توس — ۱۸ کیلومتر', 0]]
+  };
+  DRV = {
+    tehran: [['حسن کریمی', 'کامیون ده‌چرخ کفی', 18, ['۱۲', 'ع', '۳۴۵', '۶۷'], '۴٫۸', 'آزاد', '۴ کیلومتر تا مبدا'], ['رضا نوری', 'خاور بغل‌دار', 5, ['۲۲', 'ب', '۱۱۴', '۱۰'], '۴٫۶', 'آزاد', '۲ کیلومتر'], ['محمد صادقی', 'کامیون تک', 12, ['۶۸', 'ج', '۹۰۱', '۴۴'], '۴٫۹', 'در سفر', 'تا ساعت ۱۵']],
+    isf: [['علی احمدی', 'کامیونت', 8, ['۱۳', 'د', '۵۵۲', '۵۳'], '۴٫۷', 'آزاد', '۶ کیلومتر'], ['سعید مرادی', 'خاور', 5, ['۴۳', 'ص', '۲۱۸', '۶۷'], '۴٫۵', 'آزاد', '۳ کیلومتر'], ['مجید حیدری', 'ده‌چرخ کمپرسی', 18, ['۲۳', 'ق', '۶۶۰', '۵۳'], '۴٫۸', 'آزاد', '۱۱ کیلومتر']],
+    msh: [['جواد رحیمی', 'ده‌چرخ کمپرسی', 18, ['۱۲', 'ط', '۳۳۰', '۳۶'], '۴٫۹', 'آزاد', '۸ کیلومتر'], ['امیر قاسمی', 'کامیون تک کمپرسی', 12, ['۷۴', 'ل', '۴۴۱', '۱۲'], '۴٫۶', 'آزاد', '۵ کیلومتر'], ['حمید کاظمی', 'تریلی کفی', 25, ['۵۵', 'م', '۱۰۲', '۳۲'], '۴٫۷', 'در سفر', 'تا فردا']]
+  };
+  NOTES = ['بار باید با برزنت پوشانده و مهار شود.', 'تخلیه بار به عهده گیرنده است؛ مسئولیت راننده تا درب کارگاه است.', 'کسری یا آسیب بار هنگام تحویل در بارنامه ثبت و امضا شود.', 'مهر و امضای تحویل‌گیرنده روی بارنامه الزامی است.', 'راننده عکس بارنامه امضاشده را در پنل بارگذاری کند.', 'بیمه باربری برای این محموله فعال است.'];
+  APPS = [
+    { name: 'سعید جعفری', vt: 'کامیونت', city: 'کرج', when: '۲ ساعت پیش', nid: '۰۰۱۲۳۴۵۶۷۸', phone: '۰۹۱۲۴۴۵۶۶۷۷', plate: '۳۸ ن ۴۵۱ - ایران ۶۸', bt: 'بغل‌دار', cap: '۸ تن', serve: 'کرج، فردیس، نظرآباد' },
+    { name: 'بهروز فتحی', vt: 'ده‌چرخ', city: 'تبریز', when: 'دیروز', nid: '۱۳۶۲۲۲۰۰۹۱', phone: '۰۹۱۴۳۳۲۱۱۰۰', plate: '۱۵ و ۷۲۳ - ایران ۱۵', bt: 'کمپرسی', cap: '۱۸ تن', serve: 'تبریز، مرند', owner: 'حمید فتحی — پدر' },
+    { name: 'کامران یزدانی', vt: 'تریلی', city: 'شیراز', when: '۳ روز پیش', nid: '۲۲۹۱۴۴۸۸۱۰', phone: '۰۹۱۷۱۱۲۲۳۳۴', plate: '۶۳ ع ۲۲۰ - ایران ۶۳', bt: 'کفی', cap: '۲۵ تن', serve: 'شیراز، مرودشت' }
+  ];
+  componentDidMount() { try { const d = JSON.parse(localStorage.getItem('hm_driver') || 'null'); if (d && d.name) this.setState({ local: d }); const v = JSON.parse(localStorage.getItem('hm_inv') || 'null'); if (v) this.setState({ inv: v }); } catch (e) {} }
+  INV0 = { rule: { own: true, sameCity: true, radius: 50, partial: true }, stock: [{ sku: 'rebar14', name: 'میلگرد آجدار A3 سایز ۱۴', wh: 'thr', qty: 40, unit: 'تن', cost: 30800000, price: 32100000 }, { sku: 'cement2', name: 'سیمان پرتلند تیپ ۲', wh: 'krj', qty: 1200, unit: 'کیسه', cost: 262000, price: 282000 }] };
+  WHS = { thr: ['انبار مرکزی تهران', 'تهران', 'تهران، جاده خاوران، کیلومتر ۸'], krj: ['انبار کرج', 'کرج', 'کرج، جاده ملارد'] };
+  ORD_SKU = [['rebar14', 6], ['cement2', 150], ['sand', 10]];
+  flow() { return this.state.flows[this.state.sel] || { sup: {}, pick: null, drv: null, fare: '', due: '', pay: 'post', notes: [0, 1, 2, 3, 4], extra: '', inote: '', issued: false }; }
+  setFlow(p) { this.setState(s => { const cur = s.flows[s.sel] || this.flow(); return { flows: { ...s.flows, [s.sel]: { ...cur, ...p } } }; }); }
+  ask(i) {
+    const f = this.flow(), o = this.ORD[this.state.sel];
+    if (f.sup[i]) return;
+    this.setFlow({ sup: { ...f.sup, [i]: 'wait' } });
+    setTimeout(() => { const f2 = this.flow(); this.setFlow({ sup: { ...f2.sup, [i]: this.SUP[o.city][i][2] ? 'ok' : 'no' } }); }, 900 + i * 450);
+  }
+  renderVals() {
+    const s = this.state, fa = v => String(v).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]).replace('.', '٫');
+    const o = this.ORD[s.sel], f = this.flow();
+    const sups = this.SUP[o.city], drvs = this.DRV[o.city];
+    const stOf = (i) => { const fl = s.flows[i]; if (!fl) return ['در انتظار استعلام', 'gray']; if (fl.issued) return ['بارنامه صادر شد', 'green']; if (fl.pick === 'own' && fl.drv == null) return ['از انبار خودمان', 'green']; if (fl.drv != null) return ['آماده صدور بارنامه', 'blue']; if (fl.pick != null) return ['انتخاب راننده', 'orange']; return ['در حال استعلام', 'orange']; };
+    const apps = (s.local ? [{ name: s.local.name, vt: s.local.vt, city: s.local.city, when: 'همین حالا', nid: '—', phone: '—', plate: s.local.plate ? `${fa(s.local.plate[0])} ${s.local.plate[1]} ${fa(s.local.plate[2])} - ایران ${fa(s.local.plate[3])}` : '—', bt: s.local.bt, cap: '—', serve: (s.local.serve || []).join('، '), owner: s.local.owner ? `${s.local.owner.name} — ${s.local.owner.rel}` : '' }] : []).concat(this.APPS);
+    const appSt = i => s.appSt[i] || 'pending';
+    const stLabel = { pending: ['در انتظار بررسی', 'orange'], ok: ['تایید شده', 'green'], rej: ['رد شده', 'red'] };
+    const a = apps[Math.min(s.appSel, apps.length - 1)], aSt = appSt(s.appSel);
+    const inv = s.inv || this.INV0, [osku, oq] = this.ORD_SKU[s.sel], oit = inv.stock.find(x => x.sku === osku), owh = oit ? this.WHS[oit.wh] : null;
+    const ownOk = inv.rule.own && oit && oit.qty >= oq && owh && (!inv.rule.sameCity || owh[1] === o.cityName);
+    const ownMsg = !inv.rule.own ? null : !oit || !oit.qty ? null : !(owh && (!inv.rule.sameCity || owh[1] === o.cityName)) ? `موجودی در ${owh[0]} هست ولی خارج از محدوده ${o.cityName} است؛ استعلام لازم است.` : oit.qty < oq ? `فقط ${fa(oit.qty)} ${oit.unit} در ${owh[0]} موجود است؛ بقیه با استعلام تامین شود.` : null;
+    const pickedSup = f.pick === 'own' ? [owh[0] + ' (خودمان)', owh[2] + ' — انبار های مصالح', 1, ''] : f.pick != null ? sups[f.pick] : null, pickedDrv = f.drv != null ? drvs[f.drv] : null;
+    const fareNum = f.fare || (o.w >= 12 ? '۶٬۴۰۰٬۰۰۰' : o.w >= 7 ? '۵٬۲۰۰٬۰۰۰' : '۴٬۸۰۰٬۰۰۰');
+    const noteList = f.notes.map(i => this.NOTES[i]).concat(f.extra.trim() ? [f.extra.trim()] : []).concat([f.pay === 'pre' ? 'کرایه به صورت پیش‌کرایه پرداخت شده است.' : 'کرایه به صورت پس‌کرایه در مقصد از گیرنده دریافت شود.']);
+    const pendingCount = apps.filter((x, i) => appSt(i) === 'pending').length;
+    return {
+      nav: [['layout-dashboard', 'داشبورد'], ['route', 'تخصیص بار', '۳'], ['truck', 'رانندگان', fa(pendingCount)], ['building-store', 'مصالح‌فروشی‌ها'], ['cash', 'مالی و حق‌العمل'], ['gift', 'پاداش و کش‌بک'], ['shield-lock', 'کارکنان و دسترسی'], ['building-warehouse', 'انبار خودمان'], ['layout-board', 'محتوای سایت'], ['users-plus', 'معرفی (Referral)']].map(([icon, label, badge], i) => ({ icon, label, href: i === 4 ? 'admin-finance.dc.html' : i === 5 ? 'admin-rewards.dc.html' : i === 6 ? 'admin-team.dc.html' : i === 7 ? 'admin-inventory.dc.html' : i === 8 ? 'admin-cms.dc.html' : i === 9 ? 'admin-referral.dc.html' : i === 3 ? 'supplier-panel.dc.html' : '#', badge: badge || '', hasBadge: !!badge && badge !== '۰', a: (s.tab === 'dispatch' && i === 1) || (s.tab === 'drivers' && i === 2) ? '1' : '0', go: e => { if (i >= 3) return; e.preventDefault(); if (i === 1) this.setState({ tab: 'dispatch' }); if (i === 2) this.setState({ tab: 'drivers' }); } })),
+      tabD: s.tab === 'dispatch' ? '1' : '0', tabR: s.tab === 'drivers' ? '1' : '0', pendingFa: fa(pendingCount),
+      toDispatch: () => this.setState({ tab: 'dispatch' }), toDrivers: () => this.setState({ tab: 'drivers' }),
+      isDispatch: s.tab === 'dispatch', isDrivers: s.tab === 'drivers',
+      stats: [
+        { icon: 'package', k: 'در انتظار تخصیص', v: fa(this.ORD.filter((x, i) => !(s.flows[i] && s.flows[i].issued)).length), tone: 'orange' },
+        { icon: 'steering-wheel', k: 'راننده فعال', v: '۱۲۸', tone: 'blue' },
+        { icon: 'id-badge-2', k: 'درخواست راننده', v: fa(pendingCount), tone: 'gray' },
+        { icon: 'file-invoice', k: 'بارنامه امروز', v: fa(14 + Object.values(s.flows).filter(x => x.issued).length), tone: 'green' }
+      ],
+      orders: this.ORD.map((x, i) => ({ code: x.code, goods: x.goods, city: x.cityName, cust: x.cust, st: stOf(i)[0], tone: stOf(i)[1], a: s.sel === i ? '1' : '0', pick: () => this.setState({ sel: i }) })),
+      o: { ...o, weightFa: fa(o.w) + ' تن' },
+      s1bg: f.pick != null ? '#141414' : '#FF5B0F', s2bg: f.drv != null ? '#141414' : (f.pick != null ? '#FF5B0F' : '#CCC'), s3bg: f.issued ? '#141414' : (f.drv != null ? '#FF5B0F' : '#CCC'),
+      askAll: () => { if (f.pick === 'own') return; sups.forEach((_, i) => this.ask(i)); },
+      own: { show: !!(ownOk || ownMsg), can: ownOk && f.pick !== 'own' && !f.issued, chosen: f.pick === 'own',
+        title: ownOk ? `موجود در ${owh[0]}: ${fa(oit.qty)} ${oit.unit}` : 'موجودی انبار خودمان کافی نیست',
+        sub: ownOk ? `نیازی به استعلام از مصالح‌فروش نیست. سود فروش مستقیم: ${fa(Math.round((oit.price - oit.cost) * oq / 1e6))} میلیون تومان.` : ownMsg,
+        border: ownOk ? '#BFE6CD' : '#FFE0CF', bg: ownOk ? '#F2FBF5' : '#FFF8F4', supOp: f.pick === 'own' ? .4 : 1,
+        use: () => this.setFlow({ pick: 'own' }) },
+      sups: sups.map(([name, meta, , price], i) => { const st = f.sup[i]; return { name, meta, price: price || '', idle: !st, wait: st === 'wait', ok: st === 'ok', no: st === 'no', a: f.pick === i ? '1' : '0', ask: e => { e.stopPropagation(); this.ask(i); }, pick: () => { if (st === 'ok' && !f.issued) this.setFlow({ pick: i }); } }; }),
+      lock2: f.pick == null ? '1' : '0', lock3: f.drv == null ? '1' : '0',
+      drivers: drvs.map(([name, vt, cap, pl, rate, st, dist], i) => { const fit = cap >= o.w, free = st === 'آزاد', chosen = f.drv === i; return {
+        name, rate, meta: `${vt} — ظرفیت ${fa(cap)} تن — پلاک ${pl[0]} ${pl[1]} ${pl[2]} - ${pl[3]} — ${dist}`,
+        st: !fit ? 'ظرفیت ناکافی' : st, tone: !fit ? 'red' : free ? 'green' : 'gray', can: fit && free && !chosen && !f.issued, chosen,
+        border: chosen ? '#FF5B0F' : '#F0F0F0', bg: chosen ? '#FFF8F4' : '#fff', op: fit && free ? 1 : .55,
+        assign: () => this.setFlow({ drv: i }) }; }),
+      notIssued: !f.issued, issued: f.issued,
+      fare: fareNum, setFare: e => this.setFlow({ fare: e.target.value }), due: f.due || 'فردا تا ساعت ۱۶:۰۰', setDue: e => this.setFlow({ due: e.target.value }),
+      payPre: f.pay === 'pre' ? '1' : '0', payPost: f.pay === 'post' ? '1' : '0', setPre: () => this.setFlow({ pay: 'pre' }), setPost: () => this.setFlow({ pay: 'post' }),
+      noteOpts: this.NOTES.map((t, i) => ({ t, on: f.notes.includes(i), toggle: () => this.setFlow({ notes: f.notes.includes(i) ? f.notes.filter(x => x !== i) : [...f.notes, i].sort() }) })),
+      extra: f.extra, setExtra: e => this.setFlow({ extra: e.target.value }), inote: f.inote, setInote: e => this.setFlow({ inote: e.target.value }),
+      issue: () => this.setFlow({ issued: true }),
+      wb: pickedSup && pickedDrv ? { no: `۱۴۰۵۰۷۱۳-${fa(9100 + s.sel * 37)}`, status: 'صادر شده — منتظر بارگیری', track: `HM-${fa(59000 + s.sel * 41)}`,
+        fromTitle: pickedSup[0], fromAddr: pickedSup[1].split(' — ')[0], toTitle: `کارگاه ${o.cust}`, toAddr: o.dest, distance: pickedSup[1].split(' — ')[1] || '',
+        rows: [{ k: 'کالا', v: o.goods }, { k: 'وزن', v: fa(o.w) + ' تن' }, { k: 'فرستنده', v: pickedSup[0] }, { k: 'گیرنده', v: `${o.cust} (${o.custType})` }, { k: 'تاریخ صدور', v: '۱۳ مهر ۱۴۰۵' }, { k: 'مهلت تحویل', v: f.due || 'فردا تا ساعت ۱۶:۰۰' }, { k: 'کرایه حمل', v: fareNum + ' تومان' }, { k: 'نوع پرداخت', v: f.pay === 'pre' ? 'پیش‌کرایه' : 'پس‌کرایه' }],
+        driverName: pickedDrv[0], vehicle: pickedDrv[1], p1: pickedDrv[3][0], pl: pickedDrv[3][1], p2: pickedDrv[3][2], p3: pickedDrv[3][3],
+        notes: noteList, hasAdmin: !!f.inote.trim(), adminNote: f.inote } : null,
+      apps: apps.map((x, i) => ({ name: x.name, vt: x.vt, city: x.city, when: x.when, st: stLabel[appSt(i)][0], tone: stLabel[appSt(i)][1], a: s.appSel === i ? '1' : '0', pick: () => this.setState({ appSel: i }) })),
+      app: { name: a.name, vt: a.vt, city: a.city, st: stLabel[aSt][0], tone: stLabel[aSt][1], pending: aSt === 'pending',
+        info: [{ k: 'کد ملی', v: a.nid }, { k: 'موبایل', v: a.phone }, { k: 'پلاک', v: a.plate }, { k: 'بارگیر', v: a.bt }, { k: 'ظرفیت', v: a.cap }, { k: 'شهرهای سرویس', v: a.serve }, { k: 'مالک خودرو', v: a.owner || 'خود راننده' }],
+        docs: [['id', 'کارت ملی (رو)', 'IMG'], ['id', 'کارت ملی (پشت)', 'IMG'], ['car', 'کارت ماشین (رو)', 'IMG'], ['car', 'کارت ماشین (پشت)', 'IMG'], ['file-certificate', 'برگ سبز', 'IMG'], ['license', 'گواهینامه', 'IMG'], ['video', 'ویدیو احراز هویت', 'VIDEO'], ['map-pin', 'موقعیت سکونت', 'MAP']].concat(a.owner ? [['id', 'کارت ملی مالک (رو)', 'IMG'], ['id', 'کارت ملی مالک (پشت)', 'IMG'], ['file-certificate', 'رضایت‌نامه مالک', 'IMG'], ['video', 'ویدیو رضایت مالک', 'VIDEO']] : []).map(([icon, label, kind]) => ({ icon, label, kind })) },
+      reasons: ['تصویر مدارک ناخوانا است', 'مغایرت نام با کارت ملی', 'برگ سبز به نام متقاضی نیست', 'ویدیو احراز هویت ناقص است'], reason: s.reason, setReason: e => this.setState({ reason: e.target.value }),
+      approve: () => { this.setState(st => ({ appSt: { ...st.appSt, [st.appSel]: 'ok' } })); if (s.local && s.appSel === 0) { try { localStorage.setItem('hm_driver', JSON.stringify({ ...s.local, approved: true })); } catch (e) {} } },
+      reject: () => this.setState(st => ({ appSt: { ...st.appSt, [st.appSel]: 'rej' } }))
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<sc-if value="{{ show }}" hint-placeholder-val="{{ true }}">
+<div dir="rtl" style="font-family:'Vazirmatn',Tahoma,sans-serif;background:#fff;border-radius:26px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.06);">
+  <div style="position:relative;overflow:hidden;background:linear-gradient(135deg,#141414,#2A2A2A);color:#fff;padding:20px;">
+    <i class="ti ti-users-plus" style="position:absolute;left:-10px;bottom:-24px;font-size:130px;opacity:.1;"></i>
+    <sc-if value="{{ fest }}" hint-placeholder-val="{{ false }}">
+      <div style="position:relative;display:inline-flex;align-items:center;gap:6px;background:#FF5B0F;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:900;margin-bottom:10px;white-space:nowrap;"><i class="ti ti-confetti" style="font-size:16px;"></i>{{ festTitle }}</div>
+    </sc-if>
+    <div style="position:relative;font-size:21px;font-weight:900;line-height:1.6;">{{ title }}</div>
+    <div style="position:relative;margin-top:4px;font-size:16px;color:#CCC;line-height:1.8;">{{ sub }}</div>
+    <div style="position:relative;margin-top:14px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;"><span style="font-size:15px;color:#BBB;">نفر بعدی:</span><span style="font-size:28px;font-weight:900;color:#FF8A4F;">{{ nextAmt }}</span></div>
+  </div>
+  <div style="padding:18px;">
+    <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;">
+      <sc-for list="{{ ladder }}" as="l" hint-placeholder-count="4">
+        <div style="flex:1 0 88px;border-radius:16px;padding:10px 8px;text-align:center;background:{{ l.bg }};color:{{ l.c }};border:2px solid {{ l.border }};">
+          <i class="ti ti-{{ l.icon }}" style="font-size:22px;"></i>
+          <div style="font-size:13px;font-weight:800;white-space:nowrap;">{{ l.n }}</div>
+          <div style="font-size:14px;font-weight:900;white-space:nowrap;">{{ l.amt }}</div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="margin-top:14px;display:flex;align-items:center;gap:10px;background:#F6F6F6;border-radius:16px;padding:12px 14px;">
+      <div style="flex:1;min-width:0;"><div style="font-size:14px;color:#888;">کد معرفی شما</div><div dir="ltr" style="font-size:24px;font-weight:900;letter-spacing:2px;color:#141414;text-align:right;">{{ code }}</div></div>
+      <button data-big="" onClick="{{ copy }}" style="height:52px;border:none;border-radius:14px;background:{{ copyBg }};color:#fff;padding:0 16px;font-size:16px;font-weight:900;display:flex;align-items:center;gap:6px;font-family:inherit;white-space:nowrap;cursor:pointer;"><i class="ti ti-{{ copyIcon }}" style="font-size:22px;"></i>{{ copyText }}</button>
+    </div>
+    <button data-big="" onClick="{{ share }}" style="margin-top:12px;width:100%;height:72px;border:none;border-radius:20px;background:#22A45D;color:#fff;font-size:21px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:10px;font-family:inherit;cursor:pointer;box-shadow:0 12px 26px rgba(34,164,93,.3);"><i class="ti ti-share" style="font-size:28px;"></i>فرستادن برای دوستم</button>
+    <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <a data-big="" href="{{ waHref }}" target="_blank" rel="noopener" style="height:56px;border-radius:16px;border:2px solid #E2E2E2;color:#141414;font-size:17px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;"><i class="ti ti-brand-whatsapp" style="font-size:24px;color:#22A45D;"></i>واتساپ</a>
+      <a data-big="" href="{{ smsHref }}" style="height:56px;border-radius:16px;border:2px solid #E2E2E2;color:#141414;font-size:17px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;"><i class="ti ti-message" style="font-size:24px;color:#1E4FD8;"></i>پیامک</a>
+    </div>
+    <div style="margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:4px 10px;flex-wrap:wrap;"><span style="font-size:18px;font-weight:900;white-space:nowrap;">دوستانی که آوردید</span><span style="font-size:15px;font-weight:800;color:#178A48;white-space:nowrap;">{{ earned }}</span></div>
+    <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;">
+      <sc-for list="{{ friends }}" as="f" hint-placeholder-count="2">
+        <div style="display:flex;align-items:center;gap:12px;background:#F6F6F6;border-radius:16px;padding:12px 14px;">
+          <span style="width:44px;height:44px;flex:none;border-radius:50%;background:{{ f.bg }};color:#fff;display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ f.icon }}" style="font-size:22px;"></i></span>
+          <div style="flex:1;min-width:0;"><div style="font-size:17px;font-weight:800;">{{ f.name }}</div><div style="font-size:14px;color:{{ f.c }};font-weight:700;">{{ f.st }}</div></div>
+          <span style="font-size:16px;font-weight:900;color:{{ f.c }};white-space:nowrap;">{{ f.amt }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="margin-top:12px;font-size:14px;color:#888;line-height:1.9;">{{ rule }}</div>
+  </div>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;480px&quot;,&quot;height&quot;:&quot;900px&quot;},&quot;role&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;driver&quot;,&quot;supplier&quot;,&quot;contractor&quot;,&quot;personal&quot;],&quot;default&quot;:&quot;driver&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;code&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;HM4821&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { copied: false };
+  DEF = { on: true, roles: ['driver', 'supplier', 'contractor', 'personal'], trigger: 'approved', mode: 'tier', fixed: 500000, tiers: [300000, 500000, 1000000], after: 500000, invitee: true, inviteeAmt: 200000, cap: 10, fest: { on: false, title: 'جشنواره معرفی مهر', x: 2 } };
+  renderVals() {
+    const s = this.state, fa = v => String(v).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    const words = n => { n = Math.round(n / 1000) * 1000; const m = Math.floor(n / 1e6), k = Math.round((n % 1e6) / 1000); return [m ? fa(m) + ' میلیون' : '', k ? fa(k) + ' هزار' : ''].filter(Boolean).join(' و ') + ' تومان'; };
+    let cfg = null; try { cfg = JSON.parse(localStorage.getItem('hm_ref') || 'null'); } catch (e) {}
+    const C = { ...this.DEF, ...(cfg || {}), fest: { ...this.DEF.fest, ...((cfg && cfg.fest) || {}) } };
+    const role = this.props.role ?? 'driver';
+    const mult = C.fest.on ? C.fest.x : 1;
+    const amtFor = n => (C.mode === 'fixed' ? C.fixed : (C.tiers[n - 1] ?? C.after)) * mult;
+    const done = [{ name: 'رضا نوری', st: 'پاداش به کیف پول واریز شد', icon: 'check', bg: '#22A45D', c: '#178A48' }, { name: 'علی احمدی', st: C.trigger === 'trip' ? 'منتظر اولین بار' : 'منتظر تایید مدارک', icon: 'hourglass', bg: '#E4A10A', c: '#B57F00', pending: true }];
+    const paid = done.filter(d => !d.pending).length, nextN = done.length + 1;
+    const code = this.props.code ?? ({ driver: 'HM4821', supplier: 'HM7310', contractor: 'HM2206', personal: 'HM9145' }[role]);
+    const link = `${location.origin}${location.pathname.replace(/[^/]*$/, '')}login.dc.html?mode=register&role=driver&ref=${code}`;
+    const msg = `سلام! با های مصالح در شهر خودت بار بزن. با کد معرف من ${code} ثبت‌نام کن${C.invitee ? ` و ${words(C.inviteeAmt)} هدیه بگیر` : ''}: ${link}`;
+    const trig = { signup: 'بعد از ثبت‌نام دوستتان', approved: 'بعد از تایید مدارک دوستتان', trip: 'بعد از اولین بار موفق دوستتان' }[C.trigger];
+    return {
+      show: C.on && C.roles.includes(role),
+      fest: C.fest.on, festTitle: `${C.fest.title} — پاداش ${fa(C.fest.x)} برابر`,
+      title: 'راننده معرفی کن، پول بگیر', sub: `هر راننده‌ای که با کد شما بیاید، ${trig} پول به کیف پول شما می‌آید.`,
+      nextAmt: words(amtFor(nextN)),
+      ladder: (C.mode === 'fixed' ? [1, 2, 3] : C.tiers.map((_, i) => i + 1)).map(n => { const got = n <= paid, cur = n === nextN;
+        return { n: `نفر ${fa(n)}`, amt: words(amtFor(n)).replace(' تومان', ''), icon: got ? 'circle-check' : cur ? 'arrow-down' : 'lock', bg: got ? '#E6F6EC' : cur ? '#FFF0E8' : '#F6F6F6', c: got ? '#178A48' : cur ? '#E4500A' : '#999', border: cur ? '#FF5B0F' : 'transparent' }; })
+        .concat(C.mode === 'fixed' ? [] : [{ n: 'بعد از آن', amt: words(C.after * mult).replace(' تومان', ''), icon: 'infinity', bg: '#F6F6F6', c: '#666', border: 'transparent' }]),
+      code, copyText: s.copied ? 'کپی شد' : 'کپی', copyIcon: s.copied ? 'check' : 'copy', copyBg: s.copied ? '#22A45D' : '#141414',
+      copy: () => { try { navigator.clipboard.writeText(link); } catch (e) {} this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 2000); },
+      share: () => { if (navigator.share) navigator.share({ title: 'های مصالح', text: msg, url: link }).catch(() => {}); else window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank'); },
+      waHref: `https://wa.me/?text=${encodeURIComponent(msg)}`, smsHref: `sms:?body=${encodeURIComponent(msg)}`,
+      earned: paid ? `تا حالا ${words(done.filter(d => !d.pending).reduce((a, _, i) => a + amtFor(i + 1), 0))}` : '',
+      friends: done.map((d, i) => ({ ...d, amt: words(amtFor(i + 1)).replace(' تومان', '') })),
+      rule: `حداکثر ${fa(C.cap)} معرفی در ماه. ${C.invitee ? `دوست شما هم ${words(C.inviteeAmt)} هدیه خوش‌آمد می‌گیرد.` : ''}`
+    };
+  }
+}
+</script>
+</body>
+</html>

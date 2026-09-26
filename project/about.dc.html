@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+html,body{margin:0;padding:0;background:#fff;}
+*{box-sizing:border-box;}
+body{font-family:'Vazirmatn',Tahoma,sans-serif;color:#1a1a1a;}
+a{color:inherit;text-decoration:none;}
+a:hover{color:#FF5B0F;}
+[data-tl-item]:hover [data-tl-dot]{background:#FF5B0F !important;box-shadow:0 0 0 8px rgba(255,91,15,.18) !important;}
+[data-tl-dot]{transition:all .45s cubic-bezier(.2,.8,.2,1);}
+@media (max-width:900px){[data-story]{grid-template-columns:1fr !important;gap:48px !important;}[data-values]{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}[data-stats-grid]{grid-template-columns:repeat(2,minmax(0,1fr)) !important;row-gap:34px;}[data-stat]:nth-child(2n){border-left:none !important;}[data-tl]{grid-template-columns:1fr !important;gap:0 !important;}[data-tl-line]{display:none !important;}[data-tl-item]{flex-direction:row !important;text-align:right !important;align-items:flex-start !important;gap:18px !important;padding-bottom:28px;border-right:2px solid #F0E0D6;margin-right:9px;padding-right:22px;}[data-tl-item] [data-tl-dot]{margin-right:-34px;}}
+@media (max-width:520px){[data-values]{grid-template-columns:1fr !important;}}
+</style>
+</helmet>
+<div dir="rtl" style="font-family:'Vazirmatn',Tahoma,sans-serif;background:#fff;min-width:0;overflow-x:clip;">
+  <dc-import name="SiteHeader" active="about" hint-size="100%,0px"></dc-import>
+  <dc-import name="PageHero" title="درباره های مصالح" crumb="درباره ما" subtitle="بیش از ۱۵ سال همراه سازندگان، پیمانکاران و انبوه‌سازان در تامین مصالح ساختمانی باکیفیت." img="assets/warehouse.jpg" hint-size="100%,520px"></dc-import>
+
+  <section data-wrap="" data-screen-label="Story" data-story="" style="max-width:1280px;margin:0 auto;padding:90px 40px 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:80px;align-items:center;">
+    <div>
+      <div data-reveal="right" style="display:inline-flex;color:#FF5B0F;font-size:14px;font-weight:700;background:#FFF0E8;padding:7px 16px;border-radius:999px;">داستان ما</div>
+      <h2 data-reveal="right" data-delay="1" style="margin:16px 0 0;font-size:clamp(28px,3vw,40px);line-height:1.6;font-weight:900;color:#141414;">{{ storyTitle }}</h2>
+      <p data-reveal="right" data-delay="2" style="margin:24px 0 0;font-size:16px;line-height:2.2;color:#666;text-wrap:pretty;">{{ storyP1 }}</p>
+      <p data-reveal="right" data-delay="3" style="margin:16px 0 0;font-size:16px;line-height:2.2;color:#666;text-wrap:pretty;">{{ storyP2 }}</p>
+      <div data-reveal="right" data-delay="4" style="margin-top:32px;display:flex;gap:14px;flex-wrap:wrap;">
+        <a data-btn="" href="products.dc.html" style="display:inline-flex;align-items:center;gap:10px;background:#FF5B0F;color:#fff;font-size:16px;font-weight:700;padding:16px 28px;border-radius:12px;" style-hover="box-shadow:0 14px 34px rgba(255,91,15,.45);color:#fff;">مشاهده محصولات<i class="ti ti-chevron-left" style="font-size:17px;"></i></a>
+        <button data-btn="" onClick="{{ consult }}" style="display:inline-flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #141414;color:#141414;font-size:16px;font-weight:700;padding:15px 26px;border-radius:12px;" style-hover="background:#141414;color:#fff;"><i class="ti ti-message-2" style="font-size:18px;"></i>درخواست مشاوره</button>
+      </div>
+    </div>
+    <div data-reveal="left" style="position:relative;">
+      <div data-card="" style="border-radius:24px;overflow:hidden;aspect-ratio:1.15;background:#222;box-shadow:0 24px 60px rgba(0,0,0,.16);">
+        <div data-zoom="" style="width:100%;height:100%;background:url('assets/hero.jpg') center/cover no-repeat;"></div>
+      </div>
+      <div ref="{{ badgeRef }}" style="position:absolute;right:-22px;bottom:34px;background:#fff;border-radius:20px;padding:20px 24px;box-shadow:0 20px 50px rgba(0,0,0,.14);display:flex;align-items:center;gap:14px;">
+        <div style="width:56px;height:56px;border-radius:16px;background:#FF5B0F;color:#fff;display:flex;align-items:center;justify-content:center;"><i class="ti ti-award" style="font-size:30px;"></i></div>
+        <div><div style="font-size:28px;font-weight:900;color:#141414;line-height:1.2;">۱۵+ سال</div><div style="font-size:14px;color:#777;">تجربه در بازار مصالح</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section data-wrap="" style="max-width:1280px;margin:0 auto;padding:90px 40px 0;">
+    <div data-reveal="scale" ref="{{ statsRef }}" onMouseMove="{{ spot }}" data-stats-grid="" style="background:radial-gradient(520px circle at var(--mx,50%) var(--my,50%),rgba(255,91,15,.16),transparent 45%),#161616;border-radius:22px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:50px 0;border:1px solid #242424;">
+      <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+        <div data-stat="" style="text-align:center;border-left:1px solid #3A3A3A;padding:6px 20px;">
+          <div style="font-size:clamp(34px,3.6vw,50px);font-weight:900;color:#FF5B0F;line-height:1.2;">{{ s.num }}</div>
+          <div style="margin-top:14px;font-size:clamp(14px,1.2vw,17px);font-weight:600;color:#fff;">{{ s.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section data-wrap="" data-screen-label="Values" style="max-width:1280px;margin:0 auto;padding:96px 40px 0;text-align:center;">
+    <div data-reveal="" style="display:inline-flex;color:#FF5B0F;font-size:14px;font-weight:700;background:#FFF0E8;padding:7px 16px;border-radius:999px;">ارزش‌های ما</div>
+    <h2 data-reveal="" data-delay="1" style="margin:18px 0 0;font-size:clamp(26px,3vw,38px);font-weight:900;color:#141414;">اصولی که به آن پایبندیم</h2>
+    <div data-values="" style="margin-top:50px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;">
+      <sc-for list="{{ values }}" as="v" hint-placeholder-count="4">
+        <div data-reveal="" data-delay="{{ $index }}">
+          <div data-feat="" style="height:100%;background:#fff;border:1px solid #F0F0F0;border-radius:22px;padding:34px 24px;box-shadow:0 10px 30px rgba(0,0,0,.05);transition:all .5s cubic-bezier(.2,.8,.2,1);" style-hover="transform:translateY(-8px);box-shadow:0 24px 50px rgba(0,0,0,.1);">
+            <div data-feat-ic="" style="width:70px;height:70px;margin:0 auto;border-radius:50%;background:#FFF0E8;color:#FF5B0F;display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ v.icon }}" style="font-size:34px;"></i></div>
+            <div style="margin-top:20px;font-size:19px;font-weight:800;color:#141414;">{{ v.title }}</div>
+            <div style="margin-top:10px;font-size:14px;line-height:2;color:#777;">{{ v.desc }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section data-wrap="" id="timeline" data-screen-label="Timeline" style="max-width:1280px;margin:0 auto;padding:96px 40px 0;scroll-margin-top:90px;">
+    <div style="text-align:center;">
+      <div data-reveal="" style="display:inline-flex;color:#FF5B0F;font-size:14px;font-weight:700;background:#FFF0E8;padding:7px 16px;border-radius:999px;">مسیر رشد</div>
+      <h2 data-reveal="" data-delay="1" style="margin:18px 0 0;font-size:clamp(26px,3vw,38px);font-weight:900;color:#141414;">نقاط عطف های مصالح</h2>
+    </div>
+    <div style="position:relative;margin-top:60px;">
+      <div data-tl-line="" ref="{{ lineRef }}" style="position:absolute;top:10px;right:10%;left:10%;height:2px;background:linear-gradient(to left,#FF5B0F,#FFC9AE);transform-origin:right;transform:scaleX(0);transition:transform 1.6s cubic-bezier(.2,.8,.2,1);"></div>
+      <div data-tl="" style="position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:20px;">
+        <sc-for list="{{ timeline }}" as="t" hint-placeholder-count="5">
+          <div data-reveal="" data-delay="{{ $index }}">
+            <div data-tl-item="" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;">
+              <span data-tl-dot="" style="width:22px;height:22px;flex:none;border-radius:50%;background:#fff;border:4px solid #FF5B0F;box-shadow:0 0 0 6px #FFF0E8;"></span>
+              <div>
+                <div style="font-size:24px;font-weight:900;color:#FF5B0F;">{{ t.y }}</div>
+                <div style="margin-top:6px;font-size:16px;font-weight:800;color:#141414;">{{ t.title }}</div>
+                <div style="margin-top:6px;font-size:14px;line-height:1.9;color:#777;">{{ t.desc }}</div>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section data-wrap="" style="max-width:1280px;margin:0 auto;padding:90px 40px 0;">
+    <div data-reveal="" onMouseMove="{{ spot }}" style="position:relative;overflow:hidden;border-radius:22px;background:radial-gradient(520px circle at var(--mx,20%) var(--my,50%),rgba(255,91,15,.18),transparent 45%),#181818;padding:44px clamp(24px,5vw,64px);display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;border:1px solid #262626;">
+      <div style="font-size:clamp(20px,2.4vw,30px);font-weight:900;color:#fff;line-height:1.7;">پروژه بعدی شما را<br>با هم می‌سازیم</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <a data-btn="" href="contact.dc.html" style="background:#FF5B0F;color:#fff;font-size:16px;font-weight:800;padding:17px 28px;border-radius:12px;display:flex;align-items:center;gap:10px;white-space:nowrap;" style-hover="color:#fff;box-shadow:0 14px 34px rgba(255,91,15,.45);"><i class="ti ti-phone" style="font-size:18px;"></i>تماس با ما</a>
+        <button data-btn="" onClick="{{ consult }}" style="border:1.5px solid #fff;background:transparent;color:#fff;font-size:16px;font-weight:700;padding:16px 26px;border-radius:12px;display:flex;align-items:center;gap:10px;white-space:nowrap;" style-hover="background:#fff;color:#141414;"><i class="ti ti-message-2" style="font-size:18px;"></i>درخواست مشاوره</button>
+      </div>
+    </div>
+  </section>
+
+  <dc-import name="SiteFooter" hint-size="100%,420px"></dc-import>
+  <dc-import name="ConsultModal" hint-size="0px,0px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { counts: [0, 0, 0, 0] };
+  statsRef = React.createRef(); lineRef = React.createRef(); badgeRef = React.createRef();
+  targets = [15, 520, 3000, 1200];
+  componentDidMount() {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) { this.setState({ counts: this.targets.slice() }); if (this.lineRef.current) this.lineRef.current.style.transform = 'none'; return; }
+    this.io = new IntersectionObserver(ents => ents.forEach(en => {
+      if (!en.isIntersecting) return;
+      if (en.target === this.statsRef.current) this.countUp();
+      if (en.target === this.lineRef.current) en.target.style.transform = 'scaleX(1)';
+      this.io.unobserve(en.target);
+    }), { threshold: 0.4 });
+    this.statsRef.current && this.io.observe(this.statsRef.current);
+    this.lineRef.current && this.io.observe(this.lineRef.current);
+    this.badgeRef.current && this.badgeRef.current.animate && this.badgeRef.current.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-12px)' }], { duration: 3200, iterations: Infinity, direction: 'alternate', easing: 'ease-in-out' });
+  }
+  componentWillUnmount() { this.io && this.io.disconnect(); cancelAnimationFrame(this.raf); }
+  countUp() {
+    const st = performance.now(), dur = 2000;
+    const tick = now => { const k = Math.min(1, (now - st) / dur), e = k === 1 ? 1 : 1 - Math.pow(2, -10 * k);
+      this.setState({ counts: this.targets.map(v => Math.round(v * e)) }); if (k < 1) this.raf = requestAnimationFrame(tick); };
+    this.raf = requestAnimationFrame(tick);
+  }
+  renderVals() {
+    const fa = n => String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    const labels = ['سال تجربه', 'پروژه موفق', 'مشتری رضایتمند', 'محصول متنوع'];
+    return {
+      ...(() => { const CM = (() => { try { return JSON.parse(localStorage.getItem('hm_cms') || 'null'); } catch (e) { return null; } })(), PG = (CM && CM.pages && CM.pages.about) || {}; return { storyTitle: PG.storyTitle || 'از بازار آهن تهران تا کارگاه‌های سراسر کشور', storyP1: PG.storyP1 || 'های مصالح با یک هدف ساده شروع شد: مصالح اصل، با قیمت منصفانه و تحویل به‌موقع. امروز با همکاری مستقیم با تولیدکنندگان معتبر، زنجیره‌ای بدون واسطه ساخته‌ایم که کیفیت را از کارخانه تا کارگاه تضمین می‌کند.', storyP2: PG.storyP2 || 'تیم فنی ما پیش از خرید در کنار شماست تا مصالح مناسب پروژه انتخاب شود و پس از تحویل هم پاسخگوی هر پرسشی هستیم.' }; })(),
+      statsRef: this.statsRef, lineRef: this.lineRef, badgeRef: this.badgeRef,
+      stats: this.state.counts.map((c, i) => ({ num: fa(c) + '+', label: labels[i] })),
+      values: [
+        { icon: 'shield-check', title: 'کیفیت اصل', desc: 'فقط کالای استاندارد و دارای ضمانت اصالت عرضه می‌کنیم.' },
+        { icon: 'scale', title: 'صداقت در قیمت', desc: 'قیمت روز شفاف و بدون هزینه پنهان یا واسطه.' },
+        { icon: 'clock-bolt', title: 'سرعت در تحویل', desc: 'ناوگان حمل اختصاصی برای تحویل به‌موقع در کارگاه.' },
+        { icon: 'heart-handshake', title: 'همراهی تا پایان', desc: 'مشاوره فنی از انتخاب تا اتمام پروژه.' }
+      ],
+      timeline: [
+        ['۱۳۹۰', 'تاسیس', 'آغاز فعالیت با اولین فروشگاه در بازار آهن تهران'],
+        ['۱۳۹۴', 'همکاری مستقیم', 'قرارداد تامین با تولیدکنندگان معتبر سیمان و فولاد'],
+        ['۱۳۹۸', 'ناوگان اختصاصی', 'راه‌اندازی ناوگان حمل برای تحویل سریع‌تر'],
+        ['۱۴۰۲', 'پوشش سراسری', 'ارسال مصالح به پروژه‌ها در سراسر کشور'],
+        ['۱۴۰۵', 'فروشگاه آنلاین', 'راه‌اندازی اپلیکیشن و استعلام آنلاین قیمت']
+      ].map(([y, title, desc]) => ({ y, title, desc })),
+      spot: e => { const r = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty('--mx', (e.clientX - r.left) + 'px'); e.currentTarget.style.setProperty('--my', (e.clientY - r.top) + 'px'); },
+      consult: () => window.dispatchEvent(new CustomEvent('hm:consult', { detail: {} }))
+    };
+  }
+}
+</script>
+</body>
+</html>

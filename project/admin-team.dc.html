@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+html,body{margin:0;padding:0;background:#F4F4F5;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Vazirmatn',Tahoma,sans-serif;color:#1a1a1a;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+a:hover{color:#FF5B0F;}
+input,textarea,select,button{font-family:inherit;}
+button{white-space:nowrap;}
+@keyframes hmpane{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+[data-btn]{cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,background-color .3s,color .3s,border-color .3s;}
+[data-btn]:hover{transform:translateY(-2px);}
+[data-btn]:active{transform:scale(.97);}
+[data-field]:focus{outline:none;border-color:#FF5B0F !important;box-shadow:0 0 0 4px rgba(255,91,15,.14);background:#fff !important;}
+[data-nav-i]{transition:all .3s;}
+[data-nav-i]:hover{background:rgba(255,255,255,.06);color:#fff !important;}
+[data-nav-i][data-active="1"]{background:#FF5B0F !important;color:#fff !important;box-shadow:0 10px 24px rgba(255,91,15,.35);}
+[data-tab]{transition:all .3s;}
+[data-tab][data-active="1"]{background:#141414 !important;color:#fff !important;}
+[data-role-i]{transition:all .3s;cursor:pointer;}
+[data-role-i]:hover{background:#FAFAFA;}
+[data-role-i][data-active="1"]{background:#FFF8F4 !important;border-color:#FF5B0F !important;}
+[data-cell]{transition:all .25s;cursor:pointer;}
+[data-cell]:hover{transform:scale(1.08);}
+[data-cell][data-v="1"]{background:#FF5B0F !important;border-color:#FF5B0F !important;color:#fff !important;}
+[data-cell][data-v="inh"]{background:#141414 !important;border-color:#141414 !important;color:#fff !important;}
+[data-cell][data-v="add"]{background:#22A45D !important;border-color:#22A45D !important;color:#fff !important;}
+[data-cell][data-v="rem"]{background:#FDECEA !important;border-color:#E0371F !important;color:#E0371F !important;}
+[data-cell][data-v="na"]{opacity:.25;pointer-events:none;}
+[data-chip]{white-space:nowrap;}
+[data-chip][data-active="1"]{background:#141414 !important;color:#fff !important;border-color:#141414 !important;}
+[data-tr]{transition:background .25s;}
+[data-tr]:hover{background:#FAFAFA;}
+[data-pane]{animation:hmpane .45s cubic-bezier(.2,.8,.2,1) both;}
+[data-tone]{white-space:nowrap;flex:none;}
+[data-tone="orange"]{background:#FFF0E8;color:#E4500A;}
+[data-tone="green"]{background:#E6F6EC;color:#178A48;}
+[data-tone="blue"]{background:#E8EFFD;color:#1E4FD8;}
+[data-tone="gray"]{background:#F0F0F0;color:#666;}
+[data-tone="red"]{background:#FDECEA;color:#C8341E;}
+[data-tone="purple"]{background:#F1EAFD;color:#6D3FD1;}
+@media (max-width:1180px){[data-cols]{grid-template-columns:1fr !important;}}
+@media (max-width:1000px){[data-side]{display:none !important;}}
+@media (max-width:640px){[data-main]{padding:16px 14px 40px !important;}[data-g2]{grid-template-columns:1fr !important;}[data-modal-panel]{border-radius:24px 24px 0 0 !important;}[data-modal-root]{align-items:flex-end !important;padding:0 !important;}}
+</style>
+</helmet>
+<div dir="rtl" style="font-family:'Vazirmatn',Tahoma,sans-serif;background:#F4F4F5;min-height:100vh;display:flex;min-width:0;">
+  <aside data-side="" style="position:sticky;top:0;height:100vh;width:260px;flex:none;background:#141414;color:#fff;display:flex;flex-direction:column;padding:24px 18px;">
+    <a href="index.dc.html" style="display:flex;align-items:center;gap:10px;color:#fff;padding:0 6px;">
+      <img src="assets/logo-light.png" alt="" style="height:40px;width:auto;">
+      <span style="font-size:22px;font-weight:900;white-space:nowrap;"><span style="color:#FF5B0F;">های</span> مصالح</span>
+    </a>
+    <div style="margin-top:10px;padding:0 6px;font-size:12px;font-weight:700;color:#FF8A4F;display:flex;align-items:center;gap:6px;"><i class="ti ti-shield-lock" style="font-size:15px;"></i>پنل مدیریت</div>
+    <nav style="margin-top:24px;display:flex;flex-direction:column;gap:4px;">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="7">
+        <a data-nav-i="" data-active="{{ n.a }}" href="{{ n.href }}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;font-size:15px;font-weight:600;color:#BDBDBD;white-space:nowrap;"><i class="ti ti-{{ n.icon }}" style="font-size:20px;"></i>{{ n.label }}</a>
+      </sc-for>
+    </nav>
+  </aside>
+
+  <main data-main="" style="flex:1;min-width:0;padding:24px 32px 40px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+      <div>
+        <div style="font-size:14px;color:#888;">مدیریت تیم داخلی</div>
+        <h1 style="margin:2px 0 0;font-size:clamp(22px,2.4vw,28px);font-weight:900;color:#141414;">کارکنان و سطح دسترسی</h1>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <div style="display:flex;gap:4px;background:#E9E9EB;border-radius:12px;padding:4px;">
+          <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+            <button data-tab="" data-active="{{ t.a }}" onClick="{{ t.go }}" style="border:none;background:transparent;border-radius:9px;padding:9px 14px;font-size:13px;font-weight:800;color:#555;cursor:pointer;display:flex;align-items:center;gap:6px;"><i class="ti ti-{{ t.icon }}" style="font-size:16px;"></i>{{ t.t }}</button>
+          </sc-for>
+        </div>
+        <button data-btn="" onClick="{{ openNew }}" style="height:44px;border:none;border-radius:12px;background:#FF5B0F;color:#fff;padding:0 18px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px;box-shadow:0 10px 24px rgba(255,91,15,.3);"><i class="ti ti-user-plus" style="font-size:18px;"></i>افزودن نیرو</button>
+      </div>
+    </div>
+
+    <sc-if value="{{ tabStaff }}" hint-placeholder-val="{{ true }}">
+      <div data-pane="" style="margin-top:20px;display:flex;flex-direction:column;gap:16px;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;">
+          <sc-for list="{{ roleCounts }}" as="r" hint-placeholder-count="6">
+            <div style="background:#fff;border:1px solid #EFEFEF;border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;">
+              <span data-tone="{{ r.tone }}" style="width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ r.icon }}" style="font-size:21px;"></i></span>
+              <div style="min-width:0;"><div style="font-size:20px;font-weight:900;color:#141414;line-height:1.2;">{{ r.n }}</div><div style="font-size:12px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ r.name }}</div></div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:10px 12px;">
+          <sc-for list="{{ staff }}" as="p" hint-placeholder-count="6">
+            <div data-tr="" style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 10px;border-bottom:1px solid #F4F4F4;border-radius:12px;opacity:{{ p.op }};">
+              <span style="width:46px;height:46px;flex:none;border-radius:50%;background:{{ p.avBg }};color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;">{{ p.initial }}</span>
+              <div style="flex:1;min-width:170px;">
+                <div style="font-size:15px;font-weight:800;color:#222;white-space:nowrap;">{{ p.name }}</div>
+                <div style="font-size:12px;color:#999;white-space:nowrap;"><span dir="ltr">{{ p.phone }}</span> — {{ p.scope }}</div>
+              </div>
+              <span data-tone="{{ p.roleTone }}" style="font-size:12px;font-weight:800;padding:5px 12px;border-radius:999px;display:flex;align-items:center;gap:5px;"><i class="ti ti-{{ p.roleIcon }}" style="font-size:14px;"></i>{{ p.role }}</span>
+              <sc-if value="{{ p.hasOv }}" hint-placeholder-val="{{ false }}"><span data-tone="purple" style="font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px;">دسترسی سفارشی</span></sc-if>
+              <span style="font-size:12px;color:#999;white-space:nowrap;min-width:92px;">{{ p.last }}</span>
+              <span data-tone="{{ p.stTone }}" style="font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px;">{{ p.st }}</span>
+              <div style="display:flex;gap:6px;flex:none;margin-inline-start:auto;">
+                <button data-btn="" onClick="{{ p.edit }}" aria-label="ویرایش" style="width:38px;height:38px;border-radius:10px;border:1.5px solid #E6E6E6;background:#fff;color:#333;display:flex;align-items:center;justify-content:center;"><i class="ti ti-pencil" style="font-size:17px;"></i></button>
+                <button data-btn="" onClick="{{ p.suspend }}" aria-label="{{ p.suspLabel }}" style="width:38px;height:38px;border-radius:10px;border:1.5px solid #E6E6E6;background:#fff;color:#333;display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ p.suspIcon }}" style="font-size:17px;"></i></button>
+                <button data-btn="" onClick="{{ p.remove }}" aria-label="حذف" style="width:38px;height:38px;border-radius:10px;border:1.5px solid #F6CFC8;background:#fff;color:#C8341E;display:flex;align-items:center;justify-content:center;"><i class="ti ti-trash" style="font-size:17px;"></i></button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ tabRoles }}" hint-placeholder-val="{{ false }}">
+      <div data-pane="" data-cols="" style="margin-top:20px;display:grid;grid-template-columns:290px minmax(0,1fr);gap:20px;align-items:start;">
+        <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:14px;display:flex;flex-direction:column;gap:6px;">
+          <sc-for list="{{ roleList }}" as="r" hint-placeholder-count="6">
+            <div data-role-i="" data-active="{{ r.a }}" onClick="{{ r.pick }}" style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;border:1.5px solid transparent;">
+              <span data-tone="{{ r.tone }}" style="width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ r.icon }}" style="font-size:20px;"></i></span>
+              <div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:800;color:#222;white-space:nowrap;">{{ r.name }}</div><div style="font-size:12px;color:#999;white-space:nowrap;">{{ r.meta }}</div></div>
+            </div>
+          </sc-for>
+          <div style="margin-top:6px;display:flex;gap:6px;">
+            <input data-field="" value="{{ newRole }}" onChange="{{ setNewRole }}" placeholder="نام نقش جدید" style="flex:1;min-width:0;height:44px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:0 12px;font-size:14px;">
+            <button data-btn="" onClick="{{ addRole }}" style="width:44px;height:44px;border:none;border-radius:12px;background:#141414;color:#fff;display:flex;align-items:center;justify-content:center;"><i class="ti ti-plus" style="font-size:18px;"></i></button>
+          </div>
+        </div>
+
+        <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:20px;min-width:0;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+            <div><div style="font-size:18px;font-weight:900;color:#141414;white-space:nowrap;">{{ cur.name }}</div><div style="font-size:13px;color:#888;margin-top:2px;">{{ cur.desc }}</div></div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <sc-if value="{{ savedRole }}" hint-placeholder-val="{{ false }}"><span data-tone="green" style="font-size:12px;font-weight:800;padding:5px 12px;border-radius:999px;">ذخیره شد</span></sc-if>
+              <sc-if value="{{ cur.locked }}" hint-placeholder-val="{{ false }}"><span data-tone="gray" style="font-size:12px;font-weight:800;padding:5px 12px;border-radius:999px;display:flex;align-items:center;gap:4px;"><i class="ti ti-lock" style="font-size:14px;"></i>همه دسترسی‌ها — غیرقابل تغییر</span></sc-if>
+              <sc-if value="{{ cur.editable }}" hint-placeholder-val="{{ true }}"><button data-btn="" onClick="{{ saveRole }}" style="height:42px;border:none;border-radius:12px;background:#FF5B0F;color:#fff;padding:0 16px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:6px;"><i class="ti ti-device-floppy" style="font-size:17px;"></i>ذخیره نقش</button></sc-if>
+            </div>
+          </div>
+          <div style="margin-top:16px;overflow-x:auto;">
+            <div style="min-width:620px;">
+              <div style="display:grid;grid-template-columns:minmax(200px,1.6fr) repeat(4,minmax(70px,1fr)) 60px;gap:6px;align-items:center;padding:8px 10px;background:#F6F6F6;border-radius:12px;font-size:12px;font-weight:800;color:#666;">
+                <span>بخش</span><span style="text-align:center;">مشاهده</span><span style="text-align:center;">ایجاد / ویرایش</span><span style="text-align:center;">تایید</span><span style="text-align:center;">حذف</span><span style="text-align:center;">همه</span>
+              </div>
+              <sc-for list="{{ matrix }}" as="m" hint-placeholder-count="12">
+                <div data-tr="" style="display:grid;grid-template-columns:minmax(200px,1.6fr) repeat(4,minmax(70px,1fr)) 60px;gap:6px;align-items:center;padding:10px;border-bottom:1px solid #F4F4F4;">
+                  <span style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#222;"><i class="ti ti-{{ m.icon }}" style="font-size:18px;color:#999;"></i>{{ m.name }}<sc-if value="{{ m.sens }}" hint-placeholder-val="{{ false }}"><i class="ti ti-alert-triangle" style="font-size:15px;color:#E4A10A;" title="حساس"></i></sc-if></span>
+                  <sc-for list="{{ m.cells }}" as="c" hint-placeholder-count="4">
+                    <span style="display:flex;justify-content:center;"><span data-cell="" data-v="{{ c.v }}" onClick="{{ c.flip }}" style="width:30px;height:30px;border-radius:9px;border:2px solid #DDD;background:#fff;color:transparent;display:flex;align-items:center;justify-content:center;"><i class="ti ti-check" style="font-size:17px;"></i></span></span>
+                  </sc-for>
+                  <span style="display:flex;justify-content:center;"><button data-btn="" onClick="{{ m.all }}" style="border:1px solid #E6E6E6;background:#fff;border-radius:8px;padding:4px 8px;font-size:11px;font-weight:800;color:#555;">{{ m.allLabel }}</button></span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="margin-top:12px;display:flex;align-items:center;gap:8px;font-size:12px;color:#888;"><i class="ti ti-alert-triangle" style="font-size:15px;color:#E4A10A;"></i>بخش‌های حساس: دسترسی به اطلاعات مالی، مدارک هویتی و کارکنان را فقط به افراد مورد اعتماد بدهید.</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ tabLog }}" hint-placeholder-val="{{ false }}">
+      <div data-pane="" style="margin-top:20px;background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:10px 12px;">
+        <sc-for list="{{ logs }}" as="l" hint-placeholder-count="8">
+          <div data-tr="" style="display:flex;align-items:center;gap:12px;padding:12px 10px;border-bottom:1px solid #F4F4F4;border-radius:12px;">
+            <span data-tone="{{ l.tone }}" style="width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ l.icon }}" style="font-size:19px;"></i></span>
+            <div style="flex:1;min-width:0;"><div style="font-size:14px;color:#222;line-height:1.8;"><b>{{ l.who }}</b> {{ l.what }}</div><div style="font-size:12px;color:#999;">{{ l.when }}</div></div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </main>
+
+  <div data-modal-root="" style="position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;pointer-events:{{ mPe }};">
+    <div onClick="{{ closeM }}" style="position:absolute;inset:0;background:rgba(10,10,10,.55);backdrop-filter:blur(5px);opacity:{{ mOp }};transition:opacity .4s;"></div>
+    <div data-modal-panel="" style="position:relative;width:min(760px,100%);max-height:92vh;overflow-y:auto;background:#fff;border-radius:24px;padding:26px;box-shadow:0 40px 100px rgba(0,0,0,.35);opacity:{{ mOp }};transform:{{ mTf }};transition:opacity .4s,transform .55s cubic-bezier(.2,.8,.2,1);">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        <div style="font-size:20px;font-weight:900;color:#141414;white-space:nowrap;">{{ mTitle }}</div>
+        <button data-btn="" onClick="{{ closeM }}" aria-label="بستن" style="width:40px;height:40px;border-radius:12px;border:1px solid #EAEAEA;background:#fff;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x" style="font-size:18px;"></i></button>
+      </div>
+      <div data-g2="" style="margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div><label style="font-size:13px;font-weight:800;color:#333;">نام و نام خانوادگی</label><input data-field="" value="{{ f.name }}" onChange="{{ setFName }}" placeholder="مثلاً سارا نیک‌نام" style="margin-top:6px;width:100%;height:48px;border:1.5px solid {{ nameB }};background:#FAFAFA;border-radius:12px;padding:0 14px;font-size:15px;"></div>
+        <div><label style="font-size:13px;font-weight:800;color:#333;">شماره موبایل (برای ورود)</label><input data-field="" inputmode="numeric" dir="ltr" value="{{ f.phone }}" onChange="{{ setFPhone }}" placeholder="0912 345 6789" style="margin-top:6px;width:100%;height:48px;border:1.5px solid {{ phoneB }};background:#FAFAFA;border-radius:12px;padding:0 14px;font-size:15px;text-align:left;"></div>
+      </div>
+      <label style="display:block;margin-top:16px;font-size:13px;font-weight:800;color:#333;">نقش</label>
+      <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:8px;">
+        <sc-for list="{{ roleChips }}" as="r" hint-placeholder-count="6">
+          <span data-chip="" data-active="{{ r.a }}" onClick="{{ r.pick }}" style="cursor:pointer;border:1.5px solid #E6E6E6;background:#fff;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:800;color:#333;display:flex;align-items:center;gap:6px;"><i class="ti ti-{{ r.icon }}" style="font-size:15px;"></i>{{ r.name }}</span>
+        </sc-for>
+      </div>
+      <label style="display:block;margin-top:16px;font-size:13px;font-weight:800;color:#333;">محدوده کاری (شهرها)</label>
+      <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:8px;">
+        <sc-for list="{{ cityChips }}" as="c" hint-placeholder-count="6">
+          <span data-chip="" data-active="{{ c.a }}" onClick="{{ c.toggle }}" style="cursor:pointer;border:1.5px solid #E6E6E6;background:#fff;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700;color:#333;">{{ c.name }}</span>
+        </sc-for>
+      </div>
+      <div style="margin-top:18px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+        <label style="font-size:13px;font-weight:800;color:#333;white-space:nowrap;">دسترسی‌های این نفر</label>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:#666;">
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;border-radius:4px;background:#141414;"></span>از نقش</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;border-radius:4px;background:#22A45D;"></span>اضافه‌شده</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;border-radius:4px;background:#FDECEA;border:1.5px solid #E0371F;"></span>گرفته‌شده</span>
+        </div>
+      </div>
+      <div style="margin-top:8px;overflow-x:auto;border:1px solid #F0F0F0;border-radius:14px;">
+        <div style="min-width:520px;">
+          <div style="display:grid;grid-template-columns:minmax(180px,1.6fr) repeat(4,minmax(60px,1fr));gap:6px;padding:8px 10px;background:#F6F6F6;font-size:12px;font-weight:800;color:#666;"><span>بخش</span><span style="text-align:center;">مشاهده</span><span style="text-align:center;">ویرایش</span><span style="text-align:center;">تایید</span><span style="text-align:center;">حذف</span></div>
+          <sc-for list="{{ pMatrix }}" as="m" hint-placeholder-count="12">
+            <div style="display:grid;grid-template-columns:minmax(180px,1.6fr) repeat(4,minmax(60px,1fr));gap:6px;align-items:center;padding:8px 10px;border-top:1px solid #F4F4F4;">
+              <span style="font-size:13px;font-weight:700;color:#222;display:flex;align-items:center;gap:6px;"><i class="ti ti-{{ m.icon }}" style="font-size:16px;color:#999;"></i>{{ m.name }}</span>
+              <sc-for list="{{ m.cells }}" as="c" hint-placeholder-count="4">
+                <span style="display:flex;justify-content:center;"><span data-cell="" data-v="{{ c.v }}" onClick="{{ c.flip }}" style="width:28px;height:28px;border-radius:8px;border:2px solid #DDD;background:#fff;color:transparent;display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ c.ic }}" style="font-size:16px;"></i></span></span>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div onClick="{{ flipInvite }}" style="margin-top:16px;display:flex;align-items:center;gap:12px;cursor:pointer;padding:12px;border-radius:14px;background:#FAFAFA;border:1px solid #F0F0F0;">
+        <span style="position:relative;width:42px;height:24px;flex:none;border-radius:999px;background:{{ invTrack }};transition:background .3s;"><span style="position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.2);transform:{{ invKnob }};transition:transform .35s cubic-bezier(.2,.8,.2,1);"></span></span>
+        <span style="font-size:14px;font-weight:800;color:#222;">ارسال پیامک دعوت با لینک ورود به پنل</span>
+      </div>
+      <button data-btn="" onClick="{{ saveStaff }}" style="margin-top:18px;width:100%;height:54px;border:none;border-radius:14px;background:#FF5B0F;color:#fff;font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 12px 28px rgba(255,91,15,.3);"><i class="ti ti-{{ saveIcon }}" style="font-size:20px;"></i>{{ saveLabel }}</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  MODS = [['orders', 'package', 'سفارش‌ها'], ['dispatch', 'route', 'تخصیص بار'], ['inquiry', 'message-question', 'استعلام از مصالح‌فروشی‌ها'], ['drivers', 'truck', 'رانندگان و تایید مدارک', 1], ['suppliers', 'building-store', 'مصالح‌فروشان'], ['waybills', 'file-invoice', 'بارنامه‌ها'], ['customers', 'users', 'مشتریان و پیمانکاران'], ['support', 'headset', 'تیکت و پشتیبانی'], ['finance', 'cash', 'مالی و تسویه', 1], ['fees', 'percentage', 'قوانین حق‌العمل', 1], ['rewards', 'gift', 'پاداش و کش‌بک', 1], ['sms', 'message', 'ارسال پیامک'], ['reports', 'chart-bar', 'گزارش‌ها'], ['team', 'shield-lock', 'کارکنان و دسترسی‌ها', 1]];
+  ACTS = ['view', 'edit', 'approve', 'delete'];
+  NA = { reports: ['edit', 'approve', 'delete'], sms: ['approve'], customers: ['approve'], support: ['approve'] };
+  P = (list) => { const o = {}; list.split(' ').forEach(t => { const [m, a] = t.split(':'); o[m] = a.split(''); }); return o; };
+  ROLES0 = [
+    { k: 'owner', name: 'مدیر کل', icon: 'crown', tone: 'orange', desc: 'مالک سیستم؛ همه دسترسی‌ها', locked: true, perm: 'all' },
+    { k: 'sales', name: 'کارشناس فروش', icon: 'shopping-cart', tone: 'blue', desc: 'پیگیری سفارش مشتریان و پیمانکاران', perm: 'orders:vea inquiry:v customers:ve waybills:v sms:v reports:v' },
+    { k: 'support', name: 'کارشناس پشتیبانی', icon: 'headset', tone: 'green', desc: 'پاسخ به تماس‌ها و پیگیری مشکلات', perm: 'orders:v waybills:v customers:v support:ved drivers:v suppliers:v sms:ve' },
+    { k: 'drivers', name: 'کارشناس امور رانندگان', icon: 'steering-wheel', tone: 'purple', desc: 'بررسی مدارک، تایید و مدیریت رانندگان', perm: 'drivers:vea dispatch:ve waybills:ve sms:ve orders:v' },
+    { k: 'inquiry', name: 'کارشناس استعلامات', icon: 'message-question', tone: 'gray', desc: 'استعلام موجودی و قیمت از مصالح‌فروشی‌ها', perm: 'inquiry:vea suppliers:ve orders:v dispatch:v' },
+    { k: 'finance', name: 'مدیر مالی', icon: 'cash', tone: 'red', desc: 'تسویه، حق‌العمل و طرح‌های تشویقی', perm: 'finance:vead fees:vea rewards:vead reports:v waybills:v orders:v suppliers:v drivers:v' }
+  ];
+  STAFF0 = [
+    { id: 1, name: 'مدیر سیستم', phone: '09120000000', role: 'owner', cities: [], st: 'active', last: 'همین حالا', ov: {} },
+    { id: 2, name: 'سارا نیک‌نام', phone: '09123456789', role: 'sales', cities: ['تهران', 'کرج'], st: 'active', last: '۱۰ دقیقه پیش', ov: {} },
+    { id: 3, name: 'امیر رضوانی', phone: '09351112233', role: 'drivers', cities: [], st: 'active', last: '۱ ساعت پیش', ov: { 'finance:view': 'add' } },
+    { id: 4, name: 'نگار صادقی', phone: '09198887766', role: 'support', cities: [], st: 'active', last: 'دیروز', ov: {} },
+    { id: 5, name: 'بهنام کریمی', phone: '09124445566', role: 'inquiry', cities: ['اصفهان', 'شیراز'], st: 'active', last: '۳ ساعت پیش', ov: {} },
+    { id: 6, name: 'فرزانه موسوی', phone: '09127778899', role: 'finance', cities: [], st: 'invited', last: 'هنوز وارد نشده', ov: {} }
+  ];
+  CITIES = ['تهران', 'کرج', 'اصفهان', 'مشهد', 'شیراز', 'تبریز'];
+  state = { tab: 0, roles: null, staff: null, sel: 'sales', draft: null, saved: false, newRole: '', m: false, f: null, err: false, logs: [] };
+  componentDidMount() {
+    let t = null; try { t = JSON.parse(localStorage.getItem('hm_team') || 'null'); } catch (e) {}
+    const roles = (t && t.roles) || this.ROLES0.map(r => ({ ...r, perm: r.perm === 'all' ? 'all' : this.P(r.perm) }));
+    this.setState({ roles, staff: (t && t.staff) || this.STAFF0 });
+  }
+  persist(p) { this.setState(p, () => { try { localStorage.setItem('hm_team', JSON.stringify({ roles: this.state.roles, staff: this.state.staff })); } catch (e) {} }); }
+  has(perm, m, a) { if (perm === 'all') return true; return !!(perm[m] && perm[m].includes(a[0])); }
+  log(what, icon, tone) { this.setState(s => ({ logs: [{ who: 'مدیر سیستم', what, when: 'همین حالا', icon, tone }, ...s.logs] })); }
+  renderVals() {
+    const s = this.state, fa = v => String(v).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    const roles = s.roles || [], staff = s.staff || [];
+    const rOf = k => roles.find(r => r.k === k) || roles[0] || { name: '', icon: 'user', tone: 'gray', perm: {} };
+    const curR = rOf(s.sel), draft = s.draft && s.draft.k === s.sel ? s.draft.perm : curR.perm;
+    const na = (m, a) => (this.NA[m] || []).includes(a);
+    const setDraft = fn => { const base = draft === 'all' ? {} : JSON.parse(JSON.stringify(draft)); fn(base); this.setState({ draft: { k: s.sel, perm: base }, saved: false }); };
+    const f = s.f;
+    const fRole = f ? rOf(f.role) : null;
+    const eff = (m, a) => { if (!f) return false; const k = `${m}:${a}`, o = f.ov[k]; if (o === 'add') return true; if (o === 'rem') return false; return this.has(fRole.perm, m, a); };
+    const avC = ['#FF5B0F', '#1E4FD8', '#22A45D', '#6D3FD1', '#141414', '#C8341E'];
+    const defLogs = [
+      { who: 'امیر رضوانی', what: 'مدارک راننده «سعید جعفری» را تایید کرد', when: 'امروز ۱۱:۴۰', icon: 'id-badge-2', tone: 'purple' },
+      { who: 'بهنام کریمی', what: 'از ۳ مصالح‌فروشی اصفهان استعلام گرفت (سفارش HM-10252)', when: 'امروز ۱۰:۱۵', icon: 'message-question', tone: 'gray' },
+      { who: 'سارا نیک‌نام', what: 'سفارش HM-10263 را برای مهندس رضایی ثبت کرد', when: 'امروز ۰۹:۵۰', icon: 'package', tone: 'blue' },
+      { who: 'مدیر سیستم', what: 'به «امیر رضوانی» دسترسی مشاهده مالی داد', when: 'دیروز ۱۸:۲۰', icon: 'shield-check', tone: 'orange' },
+      { who: 'نگار صادقی', what: 'تیکت راننده «رضا نوری» را بست', when: 'دیروز ۱۶:۰۵', icon: 'headset', tone: 'green' },
+      { who: 'مدیر سیستم', what: 'از «فرزانه موسوی» با نقش مدیر مالی دعوت کرد', when: 'دیروز ۱۲:۳۰', icon: 'user-plus', tone: 'orange' }
+    ];
+    return {
+      nav: [['layout-dashboard', 'داشبورد', 'admin.dc.html'], ['route', 'تخصیص بار', 'admin.dc.html'], ['truck', 'رانندگان', 'admin.dc.html'], ['cash', 'مالی و حق‌العمل', 'admin-finance.dc.html'], ['gift', 'پاداش و کش‌بک', 'admin-rewards.dc.html'], ['users-plus', 'معرفی (Referral)', 'admin-referral.dc.html'], ['shield-lock', 'کارکنان و دسترسی', '#'], ['building-warehouse', 'انبار خودمان', 'admin-inventory.dc.html'], ['layout-board', 'محتوای سایت', 'admin-cms.dc.html']].map(([icon, label, href], i) => ({ icon, label, href, a: i === 5 ? '1' : '0' })),
+      tabs: [['users', 'کارکنان'], ['shield-check', 'نقش‌ها و دسترسی'], ['history', 'گزارش فعالیت']].map(([icon, t], i) => ({ icon, t, a: s.tab === i ? '1' : '0', go: () => this.setState({ tab: i }) })),
+      tabStaff: s.tab === 0, tabRoles: s.tab === 1, tabLog: s.tab === 2,
+      roleCounts: roles.map(r => ({ name: r.name, icon: r.icon, tone: r.tone, n: fa(staff.filter(p => p.role === r.k && p.st !== 'removed').length) })),
+      staff: staff.map((p, i) => { const r = rOf(p.role); const st = { active: ['فعال', 'green'], invited: ['دعوت‌شده', 'orange'], suspended: ['غیرفعال', 'gray'] }[p.st];
+        return { name: p.name, initial: p.name.trim()[0], avBg: avC[i % avC.length], phone: fa(p.phone.replace(/^(\d{4})(\d{3})(\d{4})$/, '$1 $2 $3')), scope: p.cities.length ? p.cities.join('، ') : 'همه شهرها',
+          role: r.name, roleIcon: r.icon, roleTone: r.tone, hasOv: Object.keys(p.ov || {}).length > 0, last: p.last, st: st[0], stTone: st[1], op: p.st === 'suspended' ? .55 : 1,
+          suspIcon: p.st === 'suspended' ? 'player-play' : 'player-pause', suspLabel: p.st === 'suspended' ? 'فعال‌سازی' : 'غیرفعال‌سازی',
+          edit: () => this.setState({ m: true, err: false, f: { ...p, ov: { ...(p.ov || {}) }, invite: false } }),
+          suspend: () => { if (p.role === 'owner') return; this.persist({ staff: staff.map(x => x.id === p.id ? { ...x, st: x.st === 'suspended' ? 'active' : 'suspended' } : x) }); this.log(`${p.name} را ${p.st === 'suspended' ? 'فعال' : 'غیرفعال'} کرد`, 'player-pause', 'gray'); },
+          remove: () => { if (p.role === 'owner') return; if (!window.confirm(`«${p.name}» حذف شود؟ دسترسی او فوراً قطع می‌شود.`)) return; this.persist({ staff: staff.filter(x => x.id !== p.id) }); this.log(`${p.name} را از تیم حذف کرد`, 'trash', 'red'); } }; }),
+      roleList: roles.map(r => { const n = r.perm === 'all' ? this.MODS.length * 4 : Object.values(r.perm).reduce((a, v) => a + v.length, 0); return { name: r.name, icon: r.icon, tone: r.tone, a: s.sel === r.k ? '1' : '0', meta: `${fa(staff.filter(p => p.role === r.k).length)} نفر — ${fa(n)} دسترسی`, pick: () => this.setState({ sel: r.k, draft: null, saved: false }) }; }),
+      newRole: s.newRole, setNewRole: e => this.setState({ newRole: e.target.value }),
+      addRole: () => { const n = s.newRole.trim(); if (!n) return; const k = 'r' + Date.now(); this.persist({ roles: [...roles, { k, name: n, icon: 'user-cog', tone: 'gray', desc: 'نقش سفارشی', perm: {} }], sel: k, newRole: '', draft: null }); this.log(`نقش جدید «${n}» را ساخت`, 'shield-plus', 'orange'); },
+      cur: { name: curR.name, desc: curR.desc, locked: !!curR.locked, editable: !curR.locked },
+      savedRole: s.saved,
+      saveRole: () => { this.persist({ roles: roles.map(r => r.k === s.sel ? { ...r, perm: draft } : r), draft: null, saved: true }); this.log(`دسترسی‌های نقش «${curR.name}» را تغییر داد`, 'shield-check', 'orange'); },
+      matrix: this.MODS.map(([m, icon, name, sens]) => { const allOn = this.ACTS.filter(a => !na(m, a)).every(a => this.has(draft, m, a));
+        return { icon, name, sens: !!sens, allLabel: allOn ? 'هیچ' : 'همه',
+          cells: this.ACTS.map(a => ({ v: na(m, a) ? 'na' : this.has(draft, m, a) ? '1' : '0', flip: () => { if (curR.locked) return; setDraft(p => { const arr = p[m] || []; const c = a[0]; p[m] = arr.includes(c) ? arr.filter(x => x !== c) : [...arr, c]; if (c !== 'v' && !arr.includes(c) && !p[m].includes('v')) p[m].push('v'); }); } })),
+          all: () => { if (curR.locked) return; setDraft(p => { p[m] = allOn ? [] : this.ACTS.filter(a => !na(m, a)).map(a => a[0]); }); } }; }),
+      logs: [...s.logs, ...defLogs],
+      mPe: s.m ? 'auto' : 'none', mOp: s.m ? 1 : 0, mTf: s.m ? 'none' : 'translateY(30px) scale(.97)',
+      closeM: () => this.setState({ m: false }),
+      openNew: () => this.setState({ m: true, err: false, f: { id: null, name: '', phone: '', role: 'sales', cities: [], ov: {}, invite: true } }),
+      mTitle: f && f.id ? `ویرایش دسترسی ${f.name}` : 'افزودن نیروی جدید',
+      f: { name: f ? f.name : '', phone: f ? fa(f.phone) : '' },
+      nameB: s.err && f && !f.name.trim() ? '#E0371F' : '#ECECEC', phoneB: s.err && f && !/^09\d{9}$/.test(f.phone) ? '#E0371F' : '#ECECEC',
+      setFName: e => this.setState({ f: { ...f, name: e.target.value } }),
+      setFPhone: e => this.setState({ f: { ...f, phone: String(e.target.value).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/\D/g, '').slice(0, 11) } }),
+      roleChips: roles.filter(r => !r.locked).map(r => ({ name: r.name, icon: r.icon, a: f && f.role === r.k ? '1' : '0', pick: () => this.setState({ f: { ...f, role: r.k, ov: {} } }) })),
+      cityChips: [{ name: 'همه شهرها', a: f && !f.cities.length ? '1' : '0', toggle: () => this.setState({ f: { ...f, cities: [] } }) }].concat(this.CITIES.map(c => ({ name: c, a: f && f.cities.includes(c) ? '1' : '0', toggle: () => this.setState({ f: { ...f, cities: f.cities.includes(c) ? f.cities.filter(x => x !== c) : [...f.cities, c] } }) }))),
+      pMatrix: f ? this.MODS.map(([m, icon, name]) => ({ icon, name, cells: this.ACTS.map(a => { const k = `${m}:${a}`, base = this.has(fRole.perm, m, a), o = f.ov[k];
+        const v = na(m, a) ? 'na' : o === 'add' ? 'add' : o === 'rem' ? 'rem' : base ? 'inh' : '0';
+        return { v, ic: v === 'rem' ? 'x' : 'check', flip: () => { if (fRole.locked) return; const ov = { ...f.ov }; if (base) { ov[k] = o === 'rem' ? undefined : 'rem'; } else { ov[k] = o === 'add' ? undefined : 'add'; } if (!ov[k]) delete ov[k]; this.setState({ f: { ...f, ov } }); } }; }) })) : [],
+      invTrack: f && f.invite ? '#FF5B0F' : '#D5D5D5', invKnob: f && f.invite ? 'none' : 'translateX(-18px)', flipInvite: () => this.setState({ f: { ...f, invite: !f.invite } }),
+      saveIcon: f && f.id ? 'device-floppy' : 'send', saveLabel: f && f.id ? 'ذخیره تغییرات' : (f && f.invite ? 'افزودن و ارسال پیامک دعوت' : 'افزودن نیرو'),
+      saveStaff: () => { if (!f.name.trim() || !/^09\d{9}$/.test(f.phone)) return this.setState({ err: true });
+        if (f.id) { this.persist({ staff: staff.map(x => x.id === f.id ? { ...x, name: f.name, phone: f.phone, role: f.role, cities: f.cities, ov: f.ov } : x), m: false }); this.log(`دسترسی‌های ${f.name} را ویرایش کرد`, 'shield-check', 'orange'); }
+        else { this.persist({ staff: [...staff, { id: Date.now(), name: f.name, phone: f.phone, role: f.role, cities: f.cities, ov: f.ov, st: f.invite ? 'invited' : 'active', last: 'هنوز وارد نشده' }], m: false }); this.log(`«${f.name}» را با نقش ${rOf(f.role).name} اضافه کرد${f.invite ? ' و پیامک دعوت فرستاد' : ''}`, 'user-plus', 'orange'); } }
+    };
+  }
+}
+</script>
+</body>
+</html>
