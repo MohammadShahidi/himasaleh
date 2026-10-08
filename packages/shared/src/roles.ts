@@ -11,5 +11,5 @@ export const ROLE_LABELS: Record<Role, string> = {
   contractor: 'پیمانکار',
   driver: 'راننده',
   supplier: 'مصالح‌فروش',
-  staff: 'کارشناس',
+  staff: 'مدیریت',
 };

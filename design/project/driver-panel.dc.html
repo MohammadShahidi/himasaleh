@@ -34,6 +34,7 @@ button{font-family:inherit;}
 <div dir="rtl" style="font-family:'Vazirmatn',Tahoma,sans-serif;background:#EDEDED;min-height:100vh;">
   <div style="max-width:560px;margin:0 auto;min-height:100vh;background:#F6F6F6;position:relative;padding-bottom:calc(110px + env(safe-area-inset-bottom));">
 
+    <div style="padding:calc(8px + env(safe-area-inset-top)) 10px 0;background:#141414;"><dc-import name="RoleSwitch" current="driver" radius="16px" hint-size="100%,0px"></dc-import></div>
     <header style="position:sticky;top:0;z-index:20;background:#141414;color:#fff;padding:calc(14px + env(safe-area-inset-top)) 18px 14px;display:flex;align-items:center;gap:12px;">
       <span style="width:52px;height:52px;flex:none;border-radius:50%;background:#FF5B0F;display:flex;align-items:center;justify-content:center;"><i class="ti ti-steering-wheel" style="font-size:28px;"></i></span>
       <div style="flex:1;min-width:0;">
@@ -121,7 +122,7 @@ button{font-family:inherit;}
                 </div>
               </sc-for>
             </div>
-            <a href="{{ fullWb }}" style="margin-top:14px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:16px;font-weight:800;color:#1E4FD8;padding:10px;"><i class="ti ti-file-invoice" style="font-size:20px;"></i>دیدن برگ حمل کامل</a>
+            <button data-big="" onClick="{{ openWb }}" style="margin-top:14px;width:100%;height:60px;border:2px solid #E2E2E2;background:#fff;border-radius:18px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:18px;font-weight:900;color:#1E4FD8;"><i class="ti ti-file-invoice" style="font-size:24px;"></i>دیدن برگ حمل کامل</button>
           </div>
 
           <div style="background:#141414;color:#fff;border-radius:26px;padding:20px;">
@@ -243,8 +244,7 @@ button{font-family:inherit;}
         <a data-big="" href="tel:02117245678" style="height:96px;border-radius:24px;background:#22A45D;color:#fff;font-size:24px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:12px;"><i class="ti ti-phone-call" style="font-size:40px;"></i>زنگ به پشتیبانی</a>
         <a data-big="" href="https://wa.me/989121734567" target="_blank" rel="noopener" style="height:84px;border-radius:24px;background:#fff;color:#141414;font-size:21px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:12px;border:2px solid #E2E2E2;"><i class="ti ti-brand-whatsapp" style="font-size:34px;color:#22A45D;"></i>پیام در واتساپ</a>
         <a data-big="" href="driver-register.dc.html" style="height:84px;border-radius:24px;background:#fff;color:#141414;font-size:21px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:12px;border:2px solid #E2E2E2;"><i class="ti ti-id" style="font-size:34px;color:#FF5B0F;"></i>عوض کردن مدارک</a>
-        <a href="driver-panel-advanced.dc.html" style="margin-top:6px;text-align:center;font-size:15px;color:#888;padding:10px;">نمایش نسخه کامل پنل</a>
-        <a href="login.dc.html" style="text-align:center;font-size:15px;color:#888;padding:6px;">خروج از حساب</a>
+                <a href="login.dc.html" style="text-align:center;font-size:15px;color:#888;padding:6px;">خروج از حساب</a>
       </div>
     </sc-if>
 
@@ -256,12 +256,26 @@ button{font-family:inherit;}
         </button>
       </sc-for>
     </nav>
+  
+    <sc-if value="{{ wbOpen }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closeWb }}" style="position:fixed;inset:0;z-index:200;background:rgba(10,10,10,.55);display:flex;align-items:flex-end;justify-content:center;">
+        <div data-pane="" onClick="{{ stop }}" style="width:100%;max-width:560px;max-height:92vh;overflow-y:auto;background:#F6F6F6;border-radius:26px 26px 0 0;padding:12px 12px calc(20px + env(safe-area-inset-bottom));">
+          <div style="display:flex;align-items:center;gap:10px;padding:4px 6px 12px;">
+            <span style="flex:1;font-size:21px;font-weight:900;">برگ حمل</span>
+            <button data-big="" onClick="{{ closeWb }}" aria-label="بستن" style="width:52px;height:52px;border:none;border-radius:16px;background:#141414;color:#fff;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x" style="font-size:26px;"></i></button>
+          </div>
+          <dc-import name="WaybillCard" data="{{ wbData }}" hint-size="100%,760px"></dc-import>
+          <button data-big="" onClick="{{ closeWb }}" style="margin-top:12px;width:100%;height:64px;border:none;border-radius:18px;background:#141414;color:#fff;font-size:19px;font-weight:900;">بستن</button>
+        </div>
+      </div>
+    </sc-if>
   </div>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
   state = { loc: null, tab: 0, on: true, pending: false, trip: 1, photo: false, err: false, offers: {}, tick: 0, drv: null, fee: null, wallet: 1200000 };
+  WB = {"no":"۱۴۰۵۰۷۱۲-۸۸۴۱","status":"در مسیر","track":"HM-58213","fromTitle":"مصالح فروشی البرز — کرج","fromAddr":"کرج، جاده ملارد، بعد از پل فردیس","distance":"۴۲ کیلومتر","toTitle":"کارگاه پروژه ونک","toAddr":"تهران، ونک، خیابان ملاصدرا، پلاک ۱۸","rows":[{"k":"کالا","v":"سیمان پرتلند تیپ ۲ — ۲۰۰ کیسه"},{"k":"وزن","v":"۱۰ تن"},{"k":"کرایه","v":"۸٬۵۰۰٬۰۰۰ تومان"},{"k":"نوع پرداخت","v":"پرداخت‌شده به حساب های مصالح — نقد نگیرید"}],"driverName":"حسن کریمی","vehicle":"کامیون ۱۰ چرخ کفی","p1":"۱۲","pl":"ع","p2":"۳۴۵","p3":"۶۷","notes":["با فروشنده بار را بشمارید و عکس بگیرید","پوشاندن بار با برزنت الزامی است","هنگام تحویل، برگ حمل را صاحب بار امضا کند"],"hasAdmin":false,"adminNote":""};
   STEPS = [
     { icon: 'navigation', short: 'برو بار', title: 'برو سر بار', placeIcon: 'building-store', placeColor: '#FF5B0F', place: 'مصالح فروشی البرز', addr: 'کرج، جاده ملارد، بعد از پل فردیس', tel: 'tel:02636124500', telLabel: 'زنگ به انبار', btn: 'رسیدم سر بار', say: 'قدم اول. برو سر بار. مصالح فروشی البرز، کرج، جاده ملارد. وقتی رسیدی دکمه سبز را بزن.' },
     { icon: 'packages', short: 'بار بزن', title: 'با فروشنده بار را بشمار، عکس بگیر', placeIcon: 'building-store', placeColor: '#FF5B0F', place: 'مصالح فروشی البرز', addr: '۲۰۰ کیسه سیمان — با فروشنده بشمار، عکس بگیر، برزنت بکش، برگ حمل بگیر', tel: 'tel:02636124500', telLabel: 'زنگ به انبار', btn: 'بار زدم، راه افتادم', say: 'قدم دوم. دویست کیسه سیمان بار بزن. با فروشنده کیسه‌ها را بشمار و از بار عکس بگیر. روی بار برزنت بکش و برگ حمل بگیر.' },
@@ -318,7 +332,7 @@ class Component extends DCLogic {
           { icon: 'cash', t: 'نقد نگیرید؛ مشتری قبلاً پرداخت کرده', bg: '#E6F6EC', c: '#178A48' },
           { icon: 'signature', t: 'از صاحب بار امضا بگیرید و عکس بفرستید', bg: '#F0F0F0', c: '#444' }
         ] },
-      fullWb: 'driver-panel-advanced.dc.html',
+      wbOpen: !!this.state.wbOpen, openWb: () => this.setState({ wbOpen: true }), closeWb: () => this.setState({ wbOpen: false }), stop: e => e.stopPropagation(), wbData: this.WB,
       money: { net: words(8500000 * (1 - pct / 100)), gross: words(8500000), fee: words(8500000 * pct / 100) },
       goOffers: () => this.setState({ tab: 1 }),
       locked, showOffers: !locked, offDuty: !s.pending && !s.on,

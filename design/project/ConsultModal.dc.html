@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@keyframes hmcm-fade{from{opacity:0}to{opacity:1}}
+@keyframes hmcm-up{from{opacity:0;transform:translateY(40px) scale(.98)}to{opacity:1;transform:none}}
+[data-cm-wrap]{align-items:center;}
+@media (max-width:640px){[data-cm-wrap]{align-items:flex-end !important;padding:0 !important;}[data-cm-box]{border-radius:26px 26px 0 0 !important;max-height:92vh !important;padding-bottom:calc(22px + env(safe-area-inset-bottom)) !important;}[data-cm-grip]{display:block !important;}}
+[data-cm-field]:focus{outline:none;border-color:#FF5B0F !important;background:#fff !important;}
+[data-cm-chip]{transition:all .25s;cursor:pointer;}
+[data-cm-chip][data-active="1"]{background:#141414 !important;color:#fff !important;border-color:#141414 !important;}
+</style>
+</helmet>
+<sc-if value="{{ open }}" hint-placeholder-val="{{ false }}">
+  <div data-cm-wrap="" dir="rtl" onClick="{{ close }}" style="position:fixed;inset:0;z-index:1000;background:rgba(10,10,10,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;justify-content:center;padding:20px;font-family:'Vazirmatn',Tahoma,sans-serif;animation:hmcm-fade .3s ease both;">
+    <div data-cm-box="" onClick="{{ stop }}" role="dialog" aria-modal="true" aria-label="درخواست مشاوره" style="position:relative;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;background:#fff;border-radius:26px;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.3);animation:hmcm-up .45s cubic-bezier(.2,.8,.2,1) both;color:#141414;">
+      <span data-cm-grip="" style="display:none;width:44px;height:5px;border-radius:99px;background:#E2E2E2;margin:-8px auto 14px;"></span>
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <span style="width:48px;height:48px;flex:none;border-radius:14px;background:#FFF0E8;color:#FF5B0F;display:flex;align-items:center;justify-content:center;"><i class="ti ti-headset" style="font-size:26px;"></i></span>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:20px;font-weight:900;">درخواست مشاوره</div>
+          <div style="font-size:14px;color:#888;line-height:1.8;">شماره و موضوع را بنویسید؛ با شما تماس می‌گیریم.</div>
+        </div>
+        <button onClick="{{ close }}" aria-label="بستن" style="width:40px;height:40px;flex:none;border:none;border-radius:12px;background:#F3F3F3;color:#555;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x" style="font-size:20px;"></i></button>
+      </div>
+
+      <sc-if value="{{ notDone }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top:18px;display:flex;flex-direction:column;gap:14px;">
+          <sc-if value="{{ hasCtx }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:10px;background:#FAFAFA;border:1px solid #EFEFEF;border-radius:14px;padding:10px 12px;">
+              <i class="ti ti-package" style="font-size:22px;color:#FF5B0F;flex:none;"></i>
+              <div style="flex:1;min-width:0;"><div style="font-size:12px;color:#999;">محصول</div><div style="font-size:15px;font-weight:800;">{{ ctx }}</div></div>
+            </div>
+          </sc-if>
+          <label style="display:flex;flex-direction:column;gap:6px;">
+            <span style="font-size:14px;font-weight:800;">شماره موبایل</span>
+            <input data-cm-field="" value="{{ phone }}" onChange="{{ setPhone }}" inputmode="tel" autocomplete="tel" dir="ltr" placeholder="۰۹۱۲ ۳۴۵ ۶۷۸۹" style="height:54px;border:1.5px solid {{ phoneBorder }};background:#FAFAFA;border-radius:14px;padding:0 14px;font-size:18px;font-weight:700;text-align:right;font-family:inherit;letter-spacing:1px;">
+            <sc-if value="{{ phoneErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:#C8341E;font-weight:700;">شماره موبایل ۱۱ رقمی را درست بنویسید (مثل ۰۹۱۲۳۴۵۶۷۸۹).</span></sc-if>
+          </label>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <span style="font-size:14px;font-weight:800;">موضوع</span>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              <sc-for list="{{ topics }}" as="t" hint-placeholder-count="5">
+                <span data-cm-chip="" data-active="{{ t.a }}" onClick="{{ t.pick }}" role="button" style="border:1.5px solid #E6E6E6;background:#fff;border-radius:12px;padding:10px 14px;font-size:14px;font-weight:700;color:#333;">{{ t.t }}</span>
+              </sc-for>
+            </div>
+            <sc-if value="{{ topicErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:#C8341E;font-weight:700;">یک موضوع انتخاب کنید.</span></sc-if>
+          </div>
+          <label style="display:flex;flex-direction:column;gap:6px;">
+            <span style="font-size:14px;font-weight:800;">توضیح <span style="font-weight:500;color:#999;">(اختیاری)</span></span>
+            <textarea data-cm-field="" value="{{ note }}" onChange="{{ setNote }}" rows="3" placeholder="مثلاً مقدار، شهر یا زمان تحویل" style="border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:14px;padding:12px 14px;font-size:15px;font-family:inherit;resize:vertical;"></textarea>
+          </label>
+          <button onClick="{{ submit }}" style="height:58px;border:none;border-radius:16px;background:#FF5B0F;color:#fff;font-size:18px;font-weight:900;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 12px 26px rgba(255,91,15,.3);"><i class="ti ti-send" style="font-size:20px;"></i>ثبت درخواست</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ done }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:22px;text-align:center;padding:10px 0 4px;">
+          <span style="width:76px;height:76px;margin:0 auto;border-radius:50%;background:#E6F6EC;color:#22A45D;display:flex;align-items:center;justify-content:center;"><i class="ti ti-circle-check" style="font-size:44px;"></i></span>
+          <div style="margin-top:14px;font-size:20px;font-weight:900;">درخواست ثبت شد</div>
+          <div style="margin-top:6px;font-size:15px;color:#666;line-height:1.9;">کارشناس ما تا ۲۴ ساعت با شماره <b dir="ltr">{{ phoneShow }}</b> تماس می‌گیرد.</div>
+          <button onClick="{{ close }}" style="margin-top:18px;width:100%;height:54px;border:1.5px solid #141414;background:#fff;color:#141414;border-radius:16px;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;">باشه</button>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  DEF = ['استعلام قیمت', 'خرید عمده پروژه', 'برآورد مصالح', 'پیگیری سفارش', 'همکاری راننده / فروشنده'];
+  state = { open: false, phone: '', topic: '', note: '', ctx: '', done: false, tried: false };
+  componentDidMount() {
+    this.on = e => { const d = (e && e.detail) || {}; this.setState({ open: true, done: false, tried: false, note: '', ctx: d.ctx || '', topic: d.topic || '' }); };
+    this.esc = e => { if (e.key === 'Escape') this.setState({ open: false }); };
+    window.addEventListener('hm:consult', this.on); window.addEventListener('keydown', this.esc);
+  }
+  componentWillUnmount() { window.removeEventListener('hm:consult', this.on); window.removeEventListener('keydown', this.esc); }
+  componentDidUpdate(_, p) { if (p.open !== this.state.open) document.body.style.overflow = this.state.open ? 'hidden' : ''; }
+  norm(v) { return String(v || '').replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/\D/g, '').replace(/^98/, '0').replace(/^9/, '09'); }
+  topicList() { try { const c = JSON.parse(localStorage.getItem('hm_ops') || 'null'); if (c && Array.isArray(c.topics) && c.topics.length) return c.topics; } catch (e) {} return this.DEF; }
+  renderVals() {
+    const s = this.state, digits = this.norm(s.phone), okPhone = /^09\d{9}$/.test(digits);
+    const list = this.topicList(); if (s.topic && !list.includes(s.topic)) list.unshift(s.topic);
+    return {
+      open: s.open, done: s.done, notDone: !s.done,
+      close: () => this.setState({ open: false }), stop: e => e.stopPropagation(),
+      hasCtx: !!s.ctx, ctx: s.ctx,
+      phone: s.phone, setPhone: e => this.setState({ phone: e.target.value }),
+      phoneErr: s.tried && !okPhone, phoneBorder: s.tried && !okPhone ? '#E5776A' : '#ECECEC',
+      topics: list.map(t => ({ t, a: s.topic === t ? '1' : '0', pick: () => this.setState({ topic: t }) })),
+      topicErr: s.tried && !s.topic,
+      note: s.note, setNote: e => this.setState({ note: e.target.value }),
+      phoneShow: digits.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]),
+      submit: () => {
+        if (!okPhone || !s.topic) return this.setState({ tried: true });
+        try { const q = JSON.parse(localStorage.getItem('hm_consults') || '[]'); q.unshift({ phone: digits, topic: s.topic, ctx: s.ctx, note: s.note, at: Date.now() }); localStorage.setItem('hm_consults', JSON.stringify(q.slice(0, 50))); } catch (e) {}
+        this.setState({ done: true });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>
