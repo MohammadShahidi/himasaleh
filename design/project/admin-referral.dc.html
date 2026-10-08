@@ -203,13 +203,13 @@ button{white-space:nowrap;}
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  DEF = { on: true, roles: ['driver', 'supplier', 'contractor', 'personal'], trigger: 'approved', mode: 'tier', fixed: 500000, tiers: [300000, 500000, 1000000], after: 500000, invitee: true, inviteeAmt: 200000, cap: 10, fest: { on: false, title: 'جشنواره معرفی مهر', dates: '۱ تا ۳۰ مهر ۱۴۰۵', x: 2 } };
+  DEF = { on: true, roles: ['driver', 'supplier', 'contractor', 'personal'], trigger: 'trip', mode: 'tier', fixed: 500000, tiers: [300000, 500000, 1000000], after: 500000, invitee: true, inviteeAmt: 200000, cap: 10, fest: { on: false, title: 'جشنواره معرفی مهر', dates: '۱ تا ۳۰ مهر ۱۴۰۵', x: 2 } };
   LOG0 = [
     { ref: 'حسن کریمی', role: 'راننده', inv: 'سعید جعفری', n: 3, when: 'امروز', st: 'wait' },
     { ref: 'مصالح فروشی البرز', role: 'مصالح‌فروش', inv: 'کاوه رستمی', n: 1, when: 'امروز', st: 'wait' },
     { ref: 'حسن کریمی', role: 'راننده', inv: 'علی احمدی', n: 2, when: 'دیروز', st: 'paid' },
     { ref: 'مهندس رضایی', role: 'پیمانکار', inv: 'بهروز فتحی', n: 1, when: '۲ روز پیش', st: 'paid' },
-    { ref: 'رضا نوری', role: 'راننده', inv: 'ناصر حیدری', n: 4, when: '۳ روز پیش', st: 'rej' }
+    { ref: 'رضا نوری', role: 'راننده', inv: 'ناصر حیدری', n: 4, when: '۳ روز پیش', st: 'rej' }, { ref: 'کاظم یوسفی', role: 'راننده', inv: 'مهدی یوسفی', n: 1, when: 'امروز', st: 'wait', flag: 'همان گوشی و همان شبا' }
   ];
   state = { cfg: null, saved: false, rev: 0, log: null, custom: {} };
   componentDidMount() { let c = null; try { c = JSON.parse(localStorage.getItem('hm_ref') || 'null'); } catch (e) {} this.setState({ cfg: { ...this.DEF, ...(c || {}), fest: { ...this.DEF.fest, ...((c && c.fest) || {}) } }, log: this.LOG0 }); }
@@ -224,7 +224,7 @@ class Component extends DCLogic {
     const step = 100000, log = s.log || this.LOG0;
     const setLog = (i, st) => this.setState({ log: log.map((x, j) => j === i ? { ...x, st } : x) });
     return {
-      nav: [['layout-dashboard', 'داشبورد', 'admin.dc.html'], ['route', 'تخصیص بار', 'admin.dc.html'], ['cash', 'مالی و حق‌العمل', 'admin-finance.dc.html'], ['gift', 'پاداش و کش‌بک', 'admin-rewards.dc.html'], ['users-plus', 'معرفی (Referral)', '#'], ['shield-lock', 'کارکنان و دسترسی', 'admin-team.dc.html'], ['layout-board', 'محتوای سایت', 'admin-cms.dc.html']].map(([icon, label, href], i) => ({ icon, label, href, a: i === 4 ? '1' : '0' })),
+      nav: [['layout-dashboard', 'داشبورد', 'admin.dc.html'], ['route', 'تخصیص بار', 'admin.dc.html'], ['adjustments', 'قوانین عملیاتی', 'admin-ops.dc.html'], ['building-store', 'فروشگاه‌ها و رسیدها', 'admin-partners.dc.html'], ['cash', 'مالی و حق‌العمل', 'admin-finance.dc.html'], ['gift', 'پاداش و کش‌بک', 'admin-rewards.dc.html'], ['users-plus', 'معرفی (Referral)', '#'], ['shield-lock', 'کارکنان و دسترسی', 'admin-team.dc.html'], ['layout-board', 'محتوای سایت', 'admin-cms.dc.html']].map(([icon, label, href], i) => ({ icon, label, href, a: i === 4 ? '1' : '0' })),
       saved: s.saved, rev: s.rev,
       onTrack: C.on ? '#22A45D' : '#D5D5D5', onKnob: C.on ? 'none' : 'translateX(-18px)', onText: C.on ? 'برنامه فعال است' : 'برنامه متوقف است', flipOn: () => this.up({ on: !C.on }),
       save: () => { try { localStorage.setItem('hm_ref', JSON.stringify(C)); } catch (e) {} this.setState({ saved: true, rev: s.rev + 1 }); },
@@ -233,7 +233,7 @@ class Component extends DCLogic {
         { icon: 'hourglass', k: 'در انتظار تایید', v: fa(log.filter(l => l.st === 'wait').length) + ' معرفی', tone: 'gray' }, { icon: 'percentage', k: 'تبدیل به راننده فعال', v: '۶۴٪', tone: 'blue' }
       ],
       roles: [['driver', 'truck', 'رانندگان'], ['supplier', 'building-store', 'مصالح‌فروشان'], ['contractor', 'helmet', 'پیمانکاران'], ['personal', 'user', 'اشخاص']].map(([k, icon, t]) => ({ icon, t, a: C.roles.includes(k) ? '1' : '0', toggle: () => this.up({ roles: C.roles.includes(k) ? C.roles.filter(x => x !== k) : [...C.roles, k] }) })),
-      triggers: [['signup', 'user-plus', 'بعد از ثبت‌نام', 'سریع، ولی احتمال ثبت‌نام جعلی'], ['approved', 'id-badge-2', 'بعد از تایید مدارک', 'پیشنهادی — راننده واقعی است'], ['trip', 'truck-delivery', 'بعد از اولین بار موفق', 'مطمئن‌ترین؛ فقط راننده فعال']].map(([k, icon, t, d]) => ({ icon, t, d, a: C.trigger === k ? '1' : '0', pick: () => this.up({ trigger: k }) })),
+      triggers: [['signup', 'user-plus', 'بعد از ثبت‌نام', 'سریع، ولی احتمال ثبت‌نام جعلی'], ['approved', 'id-badge-2', 'بعد از تایید مدارک', 'راننده واقعی است ولی شاید کار نکند'], ['trip', 'truck-delivery', 'بعد از سومین سفر یا سفارش موفق', 'پیش‌فرض — مطمئن‌ترین']].map(([k, icon, t, d]) => ({ icon, t, d, a: C.trigger === k ? '1' : '0', pick: () => this.up({ trigger: k }) })),
       modes: [['fixed', 'equal', 'مبلغ ثابت', 'برای هر معرفی یک مبلغ'], ['tier', 'stairs-up', 'پلکانی (نفر ۱، ۲، ۳…)', 'هر معرفی بعدی مبلغ متفاوت'], ['manual', 'hand-click', 'دلخواه', 'مبلغ را هنگام تایید تعیین کنید']].map(([k, icon, t, d]) => ({ icon, t, d, a: C.mode === k ? '1' : '0', pick: () => this.up({ mode: k }) })),
       mFixed: C.mode === 'fixed', mTier: C.mode === 'tier', mManual: C.mode === 'manual',
       fixedV: words(C.fixed), fixedDec: () => this.up({ fixed: Math.max(step, C.fixed - step) }), fixedInc: () => this.up({ fixed: C.fixed + step }),
@@ -250,7 +250,7 @@ class Component extends DCLogic {
       mults: [1.5, 2, 3].map(x => ({ t: '×' + fa(x), a: C.fest.x === x ? '1' : '0', pick: () => this.up({ fest: { ...C.fest, x } }) })),
       log: log.map((l, i) => { const st = { wait: ['در انتظار تایید', 'orange'], paid: ['واریز شد', 'green'], rej: ['رد شد', 'red'] }[l.st]; const manual = C.mode === 'manual' && l.st === 'wait';
         const amt = l.st === 'rej' ? '—' : manual ? '' : words(amtFor(l.n));
-        return { ref: l.ref, inv: l.inv, meta: `${l.role} — معرفی ${ord[l.n - 1] || fa(l.n)} این ماه — ${l.when}`, st: st[0], tone: st[1], amt, showAmt: !manual, manualInput: manual,
+        return { ref: l.ref, inv: l.inv, meta: `${l.role} — معرفی ${ord[l.n - 1] || fa(l.n)} این ماه — ${l.when}${l.flag ? ' — مشکوک به تقلب: ' + l.flag : ''}`, st: st[0], tone: st[1], amt, showAmt: !manual, manualInput: manual,
           custom: s.custom[i] ? fa(Number(s.custom[i]).toLocaleString('en-US')) : '', setCustom: e => this.setState({ custom: { ...s.custom, [i]: String(num(e.target.value)) } }),
           can: l.st === 'wait', pay: () => setLog(i, 'paid'), reject: () => setLog(i, 'rej') }; }),
       top: [['حسن کریمی', 7], ['مصالح فروشی البرز', 5], ['جواد رحیمی', 4], ['مهندس رضایی', 3], ['رضا نوری', 3]].map(([name, n], i) => ({ name, r: fa(i + 1), n: fa(n), bg: ['#E4A10A', '#9AA0A6', '#C47A3A', '#BBB', '#BBB'][i], amt: words(Array.from({ length: n }, (_, j) => amtFor(j + 1)).reduce((a, b) => a + b, 0)) }))

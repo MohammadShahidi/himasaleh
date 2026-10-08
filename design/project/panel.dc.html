@@ -44,7 +44,7 @@ span[dir="ltr"]{white-space:nowrap;flex:none;}
 [data-tone="gray"]{background:#F0F0F0;color:#666;}
 [data-st="done"] [data-st-dot]{background:#141414 !important;color:#fff !important;border-color:#141414 !important;}
 [data-st="cur"] [data-st-dot]{background:#FF5B0F !important;color:#fff !important;border-color:#FF5B0F !important;animation:hmpulse 1.6s infinite;}
-[data-st="done"] [data-st-line]{background:#141414 !important;}
+[data-st-line][data-on="1"]{background:#141414 !important;}
 [data-st="todo"] [data-st-txt]{color:#AAA !important;}
 @media (max-width:1180px){[data-cols]{grid-template-columns:1fr !important;}}
 @media (max-width:1000px){[data-side]{display:none !important;}[data-bnav]{display:flex !important;}[data-main]{padding-bottom:100px !important;}}
@@ -86,8 +86,20 @@ span[dir="ltr"]{white-space:nowrap;flex:none;}
       <div style="display:flex;align-items:center;gap:10px;">
         <div data-search="" style="position:relative;width:260px;">
           <i class="ti ti-search" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#999;font-size:18px;"></i>
-          <input data-field="" placeholder="جستجوی سفارش یا بارنامه…" style="width:100%;height:46px;border:1.5px solid #E8E8E8;background:#fff;border-radius:12px;padding:0 42px 0 14px;font-size:14px;">
+          <input data-field="" placeholder="جستجوی سفارش یا برگ حمل…" style="width:100%;height:46px;border:1.5px solid #E8E8E8;background:#fff;border-radius:12px;padding:0 42px 0 14px;font-size:14px;">
         </div>
+        <sc-if value="{{ multiRole }}" hint-placeholder-val="{{ false }}">
+          <div style="position:relative;">
+            <button data-btn="" onClick="{{ toggleRoles }}" style="height:46px;border-radius:12px;border:1.5px solid #141414;background:#fff;color:#141414;padding:0 14px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px;"><i class="ti ti-switch-horizontal" style="font-size:18px;"></i>عوض کردن نقش</button>
+            <sc-if value="{{ rolesOpen }}" hint-placeholder-val="{{ false }}">
+              <div data-pane="" style="position:absolute;top:54px;left:0;z-index:20;min-width:220px;background:#fff;border-radius:16px;box-shadow:0 18px 40px rgba(0,0,0,.14);padding:8px;display:flex;flex-direction:column;gap:4px;">
+                <sc-for list="{{ myRoles }}" as="r" hint-placeholder-count="2">
+                  <a href="{{ r.href }}" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;font-size:14px;font-weight:800;background:{{ r.bg }};color:#222;"><i class="ti ti-{{ r.icon }}" style="font-size:20px;color:#FF5B0F;"></i>{{ r.t }}<span style="margin-inline-start:auto;font-size:12px;color:#22A45D;">{{ r.cur }}</span></a>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
         <button data-btn="" aria-label="اعلان‌ها" style="position:relative;width:46px;height:46px;border-radius:12px;border:1.5px solid #E8E8E8;background:#fff;color:#333;display:flex;align-items:center;justify-content:center;"><i class="ti ti-bell" style="font-size:21px;"></i><span style="position:absolute;top:10px;left:11px;width:9px;height:9px;border-radius:50%;background:#FF5B0F;border:2px solid #fff;"></span></button>
         <a data-btn="" href="products.dc.html" style="height:46px;display:flex;align-items:center;gap:8px;background:#FF5B0F;color:#fff;border-radius:12px;padding:0 18px;font-size:14px;font-weight:800;white-space:nowrap;box-shadow:0 10px 24px rgba(255,91,15,.3);" style-hover="color:#fff;"><i class="ti ti-plus" style="font-size:18px;"></i>سفارش جدید</a>
       </div>
@@ -139,12 +151,14 @@ span[dir="ltr"]{white-space:nowrap;flex:none;}
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
               <sc-if value="{{ sel.hasDriver }}" hint-placeholder-val="{{ false }}"><a data-btn="" href="tel:09121112233" style="display:flex;align-items:center;gap:6px;border:1.5px solid #141414;color:#141414;border-radius:10px;padding:9px 14px;font-size:13px;font-weight:800;" style-hover="background:#141414;color:#fff;"><i class="ti ti-phone" style="font-size:16px;"></i>تماس با راننده</a></sc-if>
               <sc-if value="{{ sel.canConfirm }}" hint-placeholder-val="{{ false }}"><button data-btn="" onClick="{{ confirmDelivery }}" style="display:flex;align-items:center;gap:6px;border:none;background:#FF5B0F;color:#fff;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:800;"><i class="ti ti-circle-check" style="font-size:16px;"></i>تایید تحویل بار</button></sc-if>
+              <sc-if value="{{ sel.canConfirm }}" hint-placeholder-val="{{ false }}"><button data-btn="" onClick="{{ dispute }}" style="display:flex;align-items:center;gap:6px;border:1.5px solid #F6CFC8;background:#fff;color:#C8341E;border-radius:10px;padding:9px 14px;font-size:13px;font-weight:800;"><i class="ti ti-alert-triangle" style="font-size:16px;"></i>{{ disputeLabel }}</button></sc-if>
+              <sc-if value="{{ sel.canConfirm }}" hint-placeholder-val="{{ false }}"><span style="flex-basis:100%;font-size:12px;color:#888;">اگر تا ۲۴ ساعت تایید یا مشکلی ثبت نکنید، تحویل خودکار تایید می‌شود. ادعای کسری بعد از امضای برگ حمل پذیرفته نمی‌شود.</span></sc-if>
             </div>
           </div>
           <div data-tl="" style="margin-top:24px;display:flex;align-items:flex-start;">
             <sc-for list="{{ sel.timeline }}" as="t" hint-placeholder-count="7">
               <div data-st="{{ t.st }}" style="position:relative;flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;">
-                <span data-st-line="" style="position:absolute;top:17px;right:50%;width:100%;height:2px;background:#EAEAEA;z-index:0;display:{{ t.line }};"></span>
+                <span data-st-line="" data-on="{{ t.lineOn }}" style="position:absolute;top:17px;right:50%;width:100%;height:2px;background:#EAEAEA;z-index:0;display:{{ t.line }};"></span>
                 <span data-st-dot="" style="position:relative;z-index:1;width:36px;height:36px;flex:none;border-radius:50%;border:2px solid #E2E2E2;background:#fff;color:#AAA;display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ t.icon }}" style="font-size:17px;"></i></span>
                 <span data-st-txt="" style="font-size:12px;font-weight:700;color:#333;line-height:1.6;">{{ t.label }}</span>
               </div>
@@ -155,11 +169,63 @@ span[dir="ltr"]{white-space:nowrap;flex:none;}
         <sc-if value="{{ sel.hasWb }}" hint-placeholder-val="{{ true }}">
           <dc-import name="WaybillCard" data="{{ sel.wb }}" hint-size="100%,760px"></dc-import>
         </sc-if>
-        <sc-if value="{{ sel.noWb }}" hint-placeholder-val="{{ false }}">
-          <div style="background:#fff;border:1.5px dashed #F1C3AC;border-radius:20px;padding:30px;text-align:center;">
-            <i class="ti ti-file-time" style="font-size:44px;color:#FF5B0F;"></i>
-            <div style="margin-top:10px;font-size:17px;font-weight:800;color:#141414;">بارنامه هنوز صادر نشده است</div>
-            <div style="margin-top:6px;font-size:14px;color:#777;line-height:1.9;">{{ sel.wbWait }}</div>
+        
+        <sc-if value="{{ showOffers }}" hint-placeholder-val="{{ false }}">
+          <div data-pane="" style="background:#fff;border-radius:22px;border:1px solid #EFEFEF;padding:20px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+              <div style="font-size:18px;font-weight:900;color:#141414;white-space:nowrap;">پیشنهادهای HM-10244</div>
+              <span style="font-size:13px;font-weight:800;color:#E4500A;background:#FFF0E8;border-radius:999px;padding:5px 12px;white-space:nowrap;">به ترتیب قیمت تمام‌شده</span>
+            </div>
+            <div style="margin-top:6px;font-size:13px;color:#888;line-height:1.9;">قیمت مصالح با نرخ روز تغییر می‌کند؛ قیمت‌ها تا پایان مهلت پرداخت ثابت می‌مانند. شماره تماس فروشگاه بعد از پرداخت نمایش داده می‌شود.</div>
+            <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px;">
+              <sc-for list="{{ offers }}" as="o" hint-placeholder-count="3">
+                <div data-btn="" onClick="{{ o.pick }}" style="border:2px solid {{ o.border }};background:{{ o.bg }};border-radius:18px;padding:14px 16px;cursor:pointer;">
+                  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <span style="width:22px;height:22px;flex:none;border-radius:50%;border:2px solid {{ o.border }};background:{{ o.dot }};box-shadow:inset 0 0 0 4px #fff;"></span>
+                    <span style="font-size:16px;font-weight:900;color:#141414;">{{ o.name }}</span>
+                    <sc-if value="{{ o.own }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:800;color:#1E4FD8;background:#E8EFFD;border-radius:999px;padding:3px 10px;white-space:nowrap;">انبار های مصالح</span></sc-if>
+                    <span style="margin-inline-start:auto;font-size:13px;color:#888;white-space:nowrap;"><i class="ti ti-map-pin" style="font-size:14px;"></i> {{ o.dist }}</span>
+                  </div>
+                  <div style="margin-top:10px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;font-size:13px;color:#666;">
+                    <div><div>بهای کالا</div><b style="font-size:14px;color:#222;">{{ o.goods }}</b></div>
+                    <div><div>کرایه پیش‌بینی‌شده</div><b style="font-size:14px;color:#222;">{{ o.fare }}</b></div>
+                    <div><div>قیمت تمام‌شده</div><b style="font-size:15px;color:#FF5B0F;">{{ o.total }}</b></div>
+                  </div>
+                  <div style="margin-top:6px;font-size:12px;color:#999;">آماده شدن بار: {{ o.ready }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="margin-top:16px;font-size:15px;font-weight:900;color:#141414;">روش پرداخت</div>
+            <div style="margin-top:8px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;">
+              <sc-for list="{{ payMethods }}" as="m" hint-placeholder-count="2">
+                <div data-btn="" onClick="{{ m.pick }}" style="border:2px solid {{ m.border }};background:{{ m.bg }};border-radius:16px;padding:12px 14px;cursor:pointer;display:flex;gap:10px;align-items:flex-start;">
+                  <i class="ti ti-{{ m.icon }}" style="font-size:24px;color:#FF5B0F;flex:none;"></i>
+                  <div><div style="font-size:15px;font-weight:900;color:#141414;">{{ m.t }}</div><div style="font-size:12px;color:#888;line-height:1.8;">{{ m.d }}</div></div>
+                </div>
+              </sc-for>
+            </div>
+            
+            <sc-if value="{{ bigOrder }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:12px;display:flex;gap:8px;align-items:flex-start;font-size:13px;color:#1E4FD8;background:#E8EFFD;border-radius:14px;padding:10px 12px;line-height:1.9;"><i class="ti ti-phone-call" style="font-size:18px;flex:none;"></i>این سفارش مبلغ بالایی دارد؛ پیش از نهایی شدن، کارشناس ما برای تایید سفارش و اعلام شرایط لغو با شما تماس می‌گیرد.</div>
+            </sc-if>
+            <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+              <button data-btn="" onClick="{{ pay }}" style="flex:1;min-width:200px;height:56px;border:none;border-radius:16px;background:#FF5B0F;color:#fff;font-size:17px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 12px 26px rgba(255,91,15,.3);white-space:normal;"><i class="ti ti-lock" style="font-size:20px;"></i>{{ payLabel }}</button>
+              <button data-btn="" onClick="{{ cancelOrder }}" style="height:56px;border:1.5px solid #E6E6E6;background:#fff;color:#666;border-radius:16px;padding:0 16px;font-size:14px;font-weight:800;">لغو سفارش (رایگان قبل از پرداخت)</button>
+            </div>
+            <div style="margin-top:8px;font-size:12px;color:#999;text-align:center;">{{ payDeadline }}</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ showPaid }}" hint-placeholder-val="{{ false }}">
+          <div data-pane="" style="background:#F2FBF5;border:1px solid #CFEBD9;border-radius:22px;padding:18px 20px;display:flex;gap:12px;align-items:flex-start;">
+            <i class="ti ti-circle-check" style="font-size:30px;color:#22A45D;flex:none;"></i>
+            <div style="font-size:14px;color:#1F5B36;line-height:2;"><b style="font-size:16px;">{{ paidTitle }}</b><br>{{ paidText }}<br><sc-if value="{{ needReceipt }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ needReceipt }}" hint-placeholder-val="{{ false }}">
+              <div data-pane="" style="margin:10px 0;background:#fff;border:1px dashed #DDD;border-radius:16px;padding:14px;font-size:14px;line-height:2;color:#444;">
+                <div>واریز به حساب «های مصالح» — شبا: <b dir="ltr" style="white-space:nowrap;">IR12 0170 0000 0012 3456 7890 01</b></div>
+                <div style="font-size:12px;color:#888;">حواله باید از حساب خود شما یا شرکت شما باشد. مهلت: یک روز کاری.</div>
+                <label data-btn="" style="margin-top:8px;display:inline-flex;align-items:center;gap:8px;border:1.5px solid #141414;border-radius:12px;padding:8px 14px;font-weight:800;cursor:pointer;"><i class="ti ti-upload" style="font-size:18px;"></i>{{ receiptLabel }}<input type="file" accept="image/*,.pdf" onChange="{{ pickReceipt }}" style="display:none;"></label>
+              </div>
+            </sc-if></sc-if>
+              <span style="font-size:12px;color:#5C8A6C;">اگر کرایه واقعی راننده کمتر باشد، مابه‌التفاوت به کیف پول شما برمی‌گردد؛ اگر بیشتر باشد، ۲۵ دقیقه برای پرداخت آن با درگاه فرصت دارید.</span></div>
           </div>
         </sc-if>
         <div style="max-width:560px;"><dc-import name="ReferCard" role="{{ role }}" hint-size="100%,860px"></dc-import></div>
@@ -177,22 +243,45 @@ span[dir="ltr"]{white-space:nowrap;flex:none;}
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
   state = { sel: 0, nav: 0, role: 'contractor', name: '', confirmed: false };
-  TL = [['clipboard-list', 'ثبت سفارش'], ['building-store', 'استعلام از مصالح‌فروشی'], ['packages', 'تایید موجودی'], ['steering-wheel', 'تخصیص راننده'], ['file-invoice', 'بارگیری و بارنامه'], ['truck', 'در مسیر'], ['circle-check', 'تحویل']];
+  TL = [['clipboard-list', 'ثبت سفارش'], ['building-store', 'در انتظار قیمت'], ['credit-card', 'انتخاب پیشنهاد و پرداخت'], ['steering-wheel', 'تخصیص راننده'], ['file-invoice', 'بارگیری و برگ حمل'], ['truck', 'در مسیر'], ['circle-check', 'تحویل']];
   ORDERS = [
     { code: 'HM-10231', goods: 'سیمان پرتلند تیپ ۲ — ۲۰۰ کیسه', dest: 'تهران، ونک', date: '۱۲ مهر ۱۴۰۵', step: 5,
       wb: { no: '۱۴۰۵۰۷۱۲-۸۸۴۱', track: 'HM-58213', fromTitle: 'مصالح فروشی البرز — کرج', fromAddr: 'کرج، جاده ملارد، بعد از پل فردیس', toTitle: 'کارگاه پروژه ونک', toAddr: 'تهران، ونک، خیابان ملاصدرا، پلاک ۱۸', distance: '۴۲ کیلومتر',
-        items: 'سیمان پرتلند تیپ ۲ — ۲۰۰ کیسه ۵۰ کیلویی', weight: '۱۰ تن', fare: '۸٬۵۰۰٬۰۰۰ تومان', pay: 'پس‌کرایه (پرداخت در مقصد)', issued: '۱۲ مهر ۱۴۰۵ — ۱۰:۲۰', due: '۱۲ مهر، تا ساعت ۱۶:۰۰',
+        items: 'سیمان پرتلند تیپ ۲ — ۲۰۰ کیسه ۵۰ کیلویی', weight: '۱۰ تن', fare: '۸٬۵۰۰٬۰۰۰ تومان', pay: 'پرداخت‌شده به حساب های مصالح', issued: '۱۲ مهر ۱۴۰۵ — ۱۰:۲۰', due: '۱۲ مهر، تا ساعت ۱۶:۰۰',
         driverName: 'حسن کریمی', vehicle: 'کامیون ده‌چرخ کفی', plate: ['۱۲', 'ع', '۳۴۵', '۶۷'] } },
-    { code: 'HM-10244', goods: 'میلگرد آجدار A3 سایز ۱۴ — ۶ تن', dest: 'تهران، پردیس', date: '۱۳ مهر ۱۴۰۵', step: 3, wait: 'استعلام از آهن‌فروشی‌های تهران انجام شد و موجودی تایید شده است. پس از تخصیص راننده و بارگیری، بارنامه اینجا نمایش داده می‌شود.' },
+    { code: 'HM-10244', goods: 'میلگرد آجدار A3 سایز ۱۴ — ۶ تن', dest: 'تهران، پردیس', date: '۱۳ مهر ۱۴۰۵', step: 2, wait: 'قیمت‌ها آماده است. یکی از پیشنهادها را انتخاب و پرداخت کنید؛ بارگیری فقط بعد از پرداخت کامل انجام می‌شود.', wait0: 'استعلام از آهن‌فروشی‌های تهران انجام شد و موجودی تایید شده است. پس از تخصیص راننده و بارگیری، برگ حمل اینجا نمایش داده می‌شود.' },
     { code: 'HM-10198', goods: 'آجر فشاری — ۸٬۰۰۰ قالب', dest: 'شهریار، اندیشه', date: '۲۸ شهریور ۱۴۰۵', step: 7,
       wb: { no: '۱۴۰۵۰۶۲۸-۷۱۱۲', track: 'HM-57790', fromTitle: 'آجر و بلوک رضوی — شهریار', fromAddr: 'شهریار، جاده قدیم، کوره‌های آجرپزی', toTitle: 'کارگاه اندیشه فاز ۳', toAddr: 'شهریار، اندیشه، خیابان گلستان', distance: '۱۸ کیلومتر',
-        items: 'آجر فشاری ۲۰×۱۰×۵ — ۸٬۰۰۰ قالب', weight: '۱۴ تن', fare: '۶٬۲۰۰٬۰۰۰ تومان', pay: 'پیش‌کرایه (پرداخت‌شده)', issued: '۲۸ شهریور ۱۴۰۵ — ۰۸:۱۵', due: '۲۸ شهریور، تا ساعت ۱۴:۰۰',
+        items: 'آجر فشاری ۲۰×۱۰×۵ — ۸٬۰۰۰ قالب', weight: '۱۴ تن', fare: '۶٬۲۰۰٬۰۰۰ تومان', pay: 'پرداخت‌شده به حساب های مصالح', issued: '۲۸ شهریور ۱۴۰۵ — ۰۸:۱۵', due: '۲۸ شهریور، تا ساعت ۱۴:۰۰',
         driverName: 'مهدی رستمی', vehicle: 'تریلی کفی', plate: ['۴۵', 'ق', '۷۸۲', '۲۱'] } }
   ];
   componentDidMount() {
     const r = new URLSearchParams(location.search).get('role');
     let u = {}; try { u = JSON.parse(localStorage.getItem('hm_user') || '{}'); } catch (e) {}
-    this.setState({ role: r === 'personal' || r === 'contractor' ? r : (u.role === 'personal' ? 'personal' : 'contractor'), name: u.name || '' });
+    this.setState({ role: r === 'personal' || r === 'contractor' ? r : (u.role === 'personal' ? 'personal' : 'contractor'), name: u.name || '', roles: Array.isArray(u.roles) && u.roles.length ? u.roles : ['contractor', 'driver'] });
+  }
+  offerVals(s) {
+    const isO = this.ORDERS[s.sel] && this.ORDERS[s.sel].code === 'HM-10244';
+    const OF = [['آهن‌فروشی مرکزی پردیس', '۶ کیلومتر', 214800000, 3200000, 'امروز ۲ ساعت دیگر', 0], ['انبار های مصالح — پردیس', '۹ کیلومتر', 216000000, 3600000, 'همین حالا', 1], ['آهن‌آلات شرق تهران', '۲۲ کیلومتر', 213600000, 6900000, 'فردا صبح', 0]].map(o => ({ o, t: o[2] + o[3] })).sort((a, b) => a.t - b.t);
+    const fa = v => String(v).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    const w = n => { const m = Math.floor(n / 1e6), k = Math.round((n % 1e6) / 1000); return [m ? fa(m) + ' میلیون' : '', k ? fa(k) + ' هزار' : ''].filter(Boolean).join(' و ') + ' تومان'; };
+    const pi = s.offerPick ?? 0, pm = s.payM || 'gate', sel = OF[pi];
+    return {
+      showOffers: isO && !s.paid, showPaid: isO && !!s.paid,
+      offers: OF.map(({ o, t }, i) => ({ name: o[0], dist: o[1], goods: w(o[2]), fare: w(o[3]), total: w(t), ready: o[4], own: !!o[5], border: i === pi ? '#FF5B0F' : '#ECECEC', bg: i === pi ? '#FFF8F4' : '#fff', dot: i === pi ? '#FF5B0F' : '#fff', pick: () => this.setState({ offerPick: i }) })),
+      payMethods: [['gate', 'credit-card', 'درگاه بانکی', 'پرداخت آنلاین — مهلت ۲۵ دقیقه'], ['transfer', 'building-bank', 'حواله بانکی (پایا / ساتنا)', 'برای مبالغ بالا — مهلت یک روز کاری و بارگذاری رسید']].map(([k, icon, t, d]) => ({ icon, t, d, border: pm === k ? '#FF5B0F' : '#ECECEC', bg: pm === k ? '#FFF8F4' : '#fff', pick: () => this.setState({ payM: k }) })),
+      isTransfer: pm === 'transfer', receiptLabel: s.receipt ? 'رسید بارگذاری شد: ' + s.receipt : 'بارگذاری رسید حواله',
+      pickReceipt: e => { const f = e.target.files && e.target.files[0]; if (f) this.setState({ receipt: f.name }); },
+      bigOrder: sel.t > 200000000,
+      payLabel: pm === 'gate' ? 'پرداخت ' + w(sel.t) : 'ثبت انتخاب و دریافت شماره حساب', needReceipt: s.paid === 'transfer',
+      payDeadline: pm === 'gate' ? 'مهلت پرداخت: ۲۵ دقیقه — پس از آن پیشنهاد منقضی و رزرو آزاد می‌شود.' : 'مهلت حواله: یک روز کاری. پس از دیدن مبلغ در حساب، مدیر مالی تایید می‌کند.',
+      pay: () => { const o = this.ORDERS[s.sel]; o.step = pm === 'gate' ? 3 : 2; o.wait = pm === 'gate' ? 'پرداخت شد. پیشنهاد بار برای رانندگان ارسال شد.' : 'انتخاب ثبت شد. منتظر واریز حواله و بارگذاری رسید هستیم.'; this.setState({ paid: pm }); },
+      cancelOrder: () => { this.ORDERS[s.sel].wait = 'سفارش لغو شد (قبل از پرداخت، بدون هزینه).'; this.setState({ paid: 'cancel' }); },
+      paidTitle: s.paid === 'gate' ? 'پرداخت انجام شد' : s.paid === 'cancel' ? 'سفارش لغو شد' : s.receipt ? 'رسید شما ارسال شد' : 'انتخاب شما ثبت شد — مبلغ را حواله کنید',
+      paidText: s.paid === 'cancel' ? 'هیچ مبلغی از شما کسر نشد.' : `فروشنده: ${sel.o[0]} — تلفن: ۰۲۱-۷۶۲۵۴۴۱۰. ${s.paid === 'gate' ? 'به‌محض قبول راننده، مشخصات او را پیامک می‌کنیم.' : (s.receipt ? 'پس از تایید مدیر مالی، پیشنهاد بار برای رانندگان ارسال می‌شود.' : `مبلغ ${w(sel.t)} را تا یک روز کاری حواله کنید و رسید را همین‌جا بارگذاری کنید. قیمت تا پایان مهلت ثابت است.`)}`,
+      disputeLabel: s.disputed ? 'مشکل ثبت شد؛ پشتیبانی تماس می‌گیرد' : 'ثبت کسری یا آسیب بار',
+      dispute: () => this.setState({ disputed: true })
+    };
   }
 rwd() { let c = null; try { c = JSON.parse(localStorage.getItem('hm_rewards') || 'null'); } catch (e) {} c = c && c.length ? c : [{ id: 1, type: 'goal', role: 'driver', title: 'چالش ۱۰ بار در هفته', on: true, amount: 0, panelBig: '۲ میلیون تومان جایزه', panelSmall: 'اگر این هفته ۱۰ بار بزنید' }, { id: 2, type: 'cash', role: 'supplier', title: 'کش‌بک فروش سیمان', on: true, amount: 0, panelBig: '۱٪ از فروش شما برمی‌گردد', panelSmall: 'تا سقف ۵ میلیون تومان در این ماه' }, { id: 3, type: 'cash', role: 'contractor', title: 'کش‌بک ۲٪ خرید پروژه', on: true, amount: 0, panelBig: '۲٪ کش‌بک به کیف پول', panelSmall: 'روی هر خرید تا پایان مهر' }]; return c.filter(x => x.on && x.panel !== false && x.role === this.state.role).map(x => ({ ...x, icon: { bonus: 'gift', cash: 'receipt-refund', goal: 'trophy' }[x.type], kind: { bonus: 'پاداش برای شما', cash: 'کش‌بک برای شما', goal: 'طرح تشویقی' }[x.type] })); }
   wbData(o, status) {
@@ -201,7 +290,7 @@ rwd() { let c = null; try { c = JSON.parse(localStorage.getItem('hm_rewards') ||
       rows: [{ k: 'کالا', v: w.items }, { k: 'وزن', v: w.weight }, { k: 'فرستنده', v: w.fromTitle.split(' — ')[0] }, { k: 'گیرنده', v: this.state.name || 'مهندس رضایی' },
         { k: 'تاریخ صدور', v: w.issued }, { k: 'کرایه حمل', v: w.fare }, { k: 'نوع پرداخت', v: w.pay }, { k: 'مهلت تحویل', v: w.due }],
       driverName: w.driverName, vehicle: w.vehicle, p1: w.plate[0], pl: w.plate[1], p2: w.plate[2], p3: w.plate[3],
-      notes: ['بار باید با برزنت پوشانده و مهار شود.', 'تخلیه بار به عهده گیرنده است؛ مسئولیت راننده تا درب کارگاه است.', 'کسری یا آسیب بار باید هنگام تحویل در بارنامه ثبت و امضا شود.', 'مهر و امضای تحویل‌گیرنده روی بارنامه الزامی است.', `کرایه: ${w.pay}.`],
+      notes: ['بار باید با برزنت پوشانده و مهار شود.', 'تخلیه بار به عهده گیرنده است؛ مسئولیت راننده تا درب کارگاه است.', 'کسری یا آسیب بار باید هنگام تحویل در برگ حمل ثبت و امضا شود.', 'مهر و امضای تحویل‌گیرنده روی برگ حمل الزامی است.', `کرایه: ${w.pay}.`],
       hasAdmin: false, adminNote: '' };
   }
   renderVals() {
@@ -211,12 +300,15 @@ rwd() { let c = null; try { c = JSON.parse(localStorage.getItem('hm_rewards') ||
     const tone = st => st >= 7 ? 'green' : st >= 5 ? 'orange' : st >= 3 ? 'blue' : 'gray';
     const label = st => st >= 7 ? 'تحویل شده' : this.TL[st - 1] ? (st === 6 ? 'در مسیر' : this.TL[st - 1][1]) : '';
     const o = orders[s.sel], st = o.step;
-    const NAV = [['layout-dashboard', 'داشبورد', 'خانه'], ['package', 'سفارش‌ها', 'سفارش‌ها', '۲'], ['file-invoice', 'بارنامه‌ها', 'بارنامه'], ['receipt-2', 'استعلام‌ها', 'استعلام', '۳'], [isC ? 'building-skyscraper' : 'map-pin', isC ? 'پروژه‌ها' : 'آدرس‌ها', isC ? 'پروژه' : 'آدرس'], ['user', 'پروفایل', 'پروفایل']];
+    const NAV = [['layout-dashboard', 'داشبورد', 'خانه'], ['package', 'سفارش‌ها', 'سفارش‌ها', '۲'], ['file-invoice', 'برگ‌های حمل', 'برگ حمل'], ['receipt-2', 'استعلام‌ها', 'استعلام', '۳'], [isC ? 'building-skyscraper' : 'map-pin', isC ? 'پروژه‌ها' : 'آدرس‌ها', isC ? 'پروژه' : 'آدرس'], ['user', 'پروفایل', 'پروفایل']];
     const name = s.name || (isC ? 'مهندس رضایی' : 'علی محمدی');
     return {
       rewards: this.rwd(), role: s.role,
+      ...this.offerVals(s),
+      multiRole: (s.roles || []).length > 1, rolesOpen: !!s.rolesOpen, toggleRoles: () => this.setState({ rolesOpen: !s.rolesOpen }),
+      myRoles: (s.roles || []).map(k => { const m = { personal: ['user', 'پنل مشتری شخصی', 'panel.dc.html?role=personal'], contractor: ['helmet', 'پنل پیمانکار', 'panel.dc.html?role=contractor'], driver: ['steering-wheel', 'پنل راننده', 'driver-panel.dc.html'], supplier: ['building-store', 'پنل مصالح‌فروش', 'supplier-panel.dc.html'] }[k] || ['user', k, '#']; const cur = k === s.role; return { icon: m[0], t: m[1], href: m[2], cur: cur ? 'الان' : '', bg: cur ? '#FFF6F1' : '#fff' }; }),
       initial: name.trim()[0] || 'ک', userName: name, roleLabel: isC ? 'حساب پیمانکار' : 'حساب شخصی', roleIcon: isC ? 'helmet' : 'user',
-      greet: `${name} عزیز، خوش آمدید`, pageTitle: 'پیگیری سفارش و بارنامه',
+      greet: `${name} عزیز، خوش آمدید`, pageTitle: 'پیگیری سفارش و برگ حمل',
       nav: NAV.map(([icon, label, short, badge], i) => ({ icon, label, short, badge: badge || '', hasBadge: !!badge, a: s.nav === i ? '1' : '0', go: e => { e.preventDefault(); this.setState({ nav: i }); } })).filter((n, i) => i < 5 || true),
       stats: [
         { icon: 'package', k: 'سفارش فعال', v: fa(orders.filter(x => x.step < 7).length), tone: 'orange' }, { icon: 'truck', k: 'بار در مسیر', v: fa(orders.filter(x => x.step === 6 || x.step === 5).length), tone: 'blue' },
@@ -226,8 +318,8 @@ rwd() { let c = null; try { c = JSON.parse(localStorage.getItem('hm_rewards') ||
       orders: orders.map((x, i) => ({ code: x.code, goods: x.goods, dest: x.dest, date: x.date, status: label(x.step), tone: tone(x.step), a: s.sel === i ? '1' : '0', pick: () => this.setState({ sel: i }) })),
       sel: {
         code: o.code,
-        headline: st >= 7 ? 'بار تحویل داده شد' : st === 6 ? 'بار در مسیر کارگاه شماست' : st === 5 ? 'بارگیری انجام شد و بارنامه صادر شد' : 'در حال آماده‌سازی بار',
-        timeline: this.TL.map(([icon, label], i) => ({ icon, label, st: i + 1 < st ? 'done' : i + 1 === st ? (st >= 7 ? 'done' : 'cur') : 'todo', line: i === 0 ? 'none' : 'block' })),
+        headline: st >= 7 ? 'بار تحویل داده شد' : st === 6 ? 'بار در مسیر کارگاه شماست' : st === 5 ? 'بارگیری انجام شد و برگ حمل صادر شد' : 'در حال آماده‌سازی بار',
+        timeline: this.TL.map(([icon, label], i) => ({ icon, label, st: i + 1 < st ? 'done' : i + 1 === st ? (st >= 7 ? 'done' : 'cur') : 'todo', line: i === this.TL.length - 1 ? 'none' : 'block', lineOn: i + 2 <= st ? '1' : '0' })),
         hasWb: !!o.wb, noWb: !o.wb, wbWait: o.wait || '',
         wb: o.wb ? this.wbData(o, label(st)) : null,
         hasDriver: !!o.wb && st < 7, canConfirm: !!o.wb && st === 6 || (o.wb && st === 5 && s.sel === 0 && !s.confirmed)

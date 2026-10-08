@@ -231,17 +231,17 @@ button{white-space:nowrap;}
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  MODS = [['orders', 'package', 'سفارش‌ها'], ['dispatch', 'route', 'تخصیص بار'], ['inquiry', 'message-question', 'استعلام از مصالح‌فروشی‌ها'], ['drivers', 'truck', 'رانندگان و تایید مدارک', 1], ['suppliers', 'building-store', 'مصالح‌فروشان'], ['waybills', 'file-invoice', 'بارنامه‌ها'], ['customers', 'users', 'مشتریان و پیمانکاران'], ['support', 'headset', 'تیکت و پشتیبانی'], ['finance', 'cash', 'مالی و تسویه', 1], ['fees', 'percentage', 'قوانین حق‌العمل', 1], ['rewards', 'gift', 'پاداش و کش‌بک', 1], ['sms', 'message', 'ارسال پیامک'], ['reports', 'chart-bar', 'گزارش‌ها'], ['team', 'shield-lock', 'کارکنان و دسترسی‌ها', 1]];
+  MODS = [['orders', 'package', 'سفارش‌ها و تخصیص بار'], ['inquiry', 'message-question', 'استعلام از مصالح‌فروشی‌ها'], ['drivers', 'truck', 'رانندگان و تایید مدارک', 1], ['suppliers', 'building-store', 'مصالح‌فروشان'], ['waybills', 'file-invoice', 'برگ‌های حمل'], ['customers', 'users', 'مشتریان و پیمانکاران'], ['support', 'headset', 'پشتیبانی، اختلاف و پیامک'], ['finance', 'cash', 'مالی و تسویه', 1], ['fees', 'percentage', 'قوانین حق‌العمل', 1], ['rewards', 'gift', 'پاداش و کش‌بک', 1], ['content', 'layout-board', 'محتوای سایت و مشاوره'], ['stock', 'building-warehouse', 'انبار خودمان'], ['reports', 'chart-bar', 'گزارش‌ها'], ['team', 'shield-lock', 'کارکنان و دسترسی‌ها', 1]];
   ACTS = ['view', 'edit', 'approve', 'delete'];
-  NA = { reports: ['edit', 'approve', 'delete'], sms: ['approve'], customers: ['approve'], support: ['approve'] };
+  NA = { reports: ['edit', 'approve', 'delete'], customers: ['approve'], support: ['approve'] };
   P = (list) => { const o = {}; list.split(' ').forEach(t => { const [m, a] = t.split(':'); o[m] = a.split(''); }); return o; };
   ROLES0 = [
     { k: 'owner', name: 'مدیر کل', icon: 'crown', tone: 'orange', desc: 'مالک سیستم؛ همه دسترسی‌ها', locked: true, perm: 'all' },
-    { k: 'sales', name: 'کارشناس فروش', icon: 'shopping-cart', tone: 'blue', desc: 'پیگیری سفارش مشتریان و پیمانکاران', perm: 'orders:vea inquiry:v customers:ve waybills:v sms:v reports:v' },
-    { k: 'support', name: 'کارشناس پشتیبانی', icon: 'headset', tone: 'green', desc: 'پاسخ به تماس‌ها و پیگیری مشکلات', perm: 'orders:v waybills:v customers:v support:ved drivers:v suppliers:v sms:ve' },
-    { k: 'drivers', name: 'کارشناس امور رانندگان', icon: 'steering-wheel', tone: 'purple', desc: 'بررسی مدارک، تایید و مدیریت رانندگان', perm: 'drivers:vea dispatch:ve waybills:ve sms:ve orders:v' },
+    { k: 'sales', name: 'کارشناس فروش', icon: 'shopping-cart', tone: 'blue', desc: 'پیگیری سفارش مشتریان و پیمانکاران', perm: 'orders:vea inquiry:v customers:ve waybills:v content:v reports:v' },
+    { k: 'support', name: 'کارشناس پشتیبانی', icon: 'headset', tone: 'green', desc: 'پاسخ به تماس‌ها و پیگیری مشکلات', perm: 'orders:v waybills:v customers:v support:ved drivers:v suppliers:v support:v' },
+    { k: 'drivers', name: 'کارشناس امور رانندگان', icon: 'steering-wheel', tone: 'purple', desc: 'بررسی مدارک، تایید و مدیریت رانندگان', perm: 'drivers:vea dispatch:ve waybills:ve support:v orders:v' },
     { k: 'inquiry', name: 'کارشناس استعلامات', icon: 'message-question', tone: 'gray', desc: 'استعلام موجودی و قیمت از مصالح‌فروشی‌ها', perm: 'inquiry:vea suppliers:ve orders:v dispatch:v' },
-    { k: 'finance', name: 'مدیر مالی', icon: 'cash', tone: 'red', desc: 'تسویه، حق‌العمل و طرح‌های تشویقی', perm: 'finance:vead fees:vea rewards:vead reports:v waybills:v orders:v suppliers:v drivers:v' }
+    { k: 'finance', name: 'مدیر مالی', icon: 'cash', tone: 'red', desc: 'تسویه، حق‌العمل و طرح‌های تشویقی', perm: 'finance:vead fees:vea rewards:vead reports:v waybills:v orders:v suppliers:v drivers:v' }, { k: 'content', name: 'کارشناس محتوا', icon: 'layout-board', tone: 'blue', desc: 'ویرایش محصولات، دسته‌ها و صفحات سایت', perm: 'content:vea reports:v' }, { k: 'stock', name: 'مدیر انبار', icon: 'building-warehouse', tone: 'green', desc: 'ورود کالا، شمارش و موجودی انبار خودمان', perm: 'stock:vea orders:v waybills:v' }
   ];
   STAFF0 = [
     { id: 1, name: 'مدیر سیستم', phone: '09120000000', role: 'owner', cities: [], st: 'active', last: 'همین حالا', ov: {} },
@@ -281,7 +281,7 @@ class Component extends DCLogic {
       { who: 'مدیر سیستم', what: 'از «فرزانه موسوی» با نقش مدیر مالی دعوت کرد', when: 'دیروز ۱۲:۳۰', icon: 'user-plus', tone: 'orange' }
     ];
     return {
-      nav: [['layout-dashboard', 'داشبورد', 'admin.dc.html'], ['route', 'تخصیص بار', 'admin.dc.html'], ['truck', 'رانندگان', 'admin.dc.html'], ['cash', 'مالی و حق‌العمل', 'admin-finance.dc.html'], ['gift', 'پاداش و کش‌بک', 'admin-rewards.dc.html'], ['users-plus', 'معرفی (Referral)', 'admin-referral.dc.html'], ['shield-lock', 'کارکنان و دسترسی', '#'], ['building-warehouse', 'انبار خودمان', 'admin-inventory.dc.html'], ['layout-board', 'محتوای سایت', 'admin-cms.dc.html']].map(([icon, label, href], i) => ({ icon, label, href, a: i === 5 ? '1' : '0' })),
+      nav: [['layout-dashboard', 'داشبورد', 'admin.dc.html'], ['route', 'تخصیص بار', 'admin.dc.html'], ['truck', 'رانندگان', 'admin.dc.html'], ['adjustments', 'قوانین عملیاتی', 'admin-ops.dc.html'], ['building-store', 'فروشگاه‌ها و رسیدها', 'admin-partners.dc.html'], ['cash', 'مالی و حق‌العمل', 'admin-finance.dc.html'], ['gift', 'پاداش و کش‌بک', 'admin-rewards.dc.html'], ['users-plus', 'معرفی (Referral)', 'admin-referral.dc.html'], ['shield-lock', 'کارکنان و دسترسی', '#'], ['building-warehouse', 'انبار خودمان', 'admin-inventory.dc.html'], ['layout-board', 'محتوای سایت', 'admin-cms.dc.html']].map(([icon, label, href], i) => ({ icon, label, href, a: i === 5 ? '1' : '0' })),
       tabs: [['users', 'کارکنان'], ['shield-check', 'نقش‌ها و دسترسی'], ['history', 'گزارش فعالیت']].map(([icon, t], i) => ({ icon, t, a: s.tab === i ? '1' : '0', go: () => this.setState({ tab: i }) })),
       tabStaff: s.tab === 0, tabRoles: s.tab === 1, tabLog: s.tab === 2,
       roleCounts: roles.map(r => ({ name: r.name, icon: r.icon, tone: r.tone, n: fa(staff.filter(p => p.role === r.k && p.st !== 'removed').length) })),

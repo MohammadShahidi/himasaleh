@@ -108,7 +108,7 @@ a:hover{color:#FF5B0F;}
           <div style="margin-top:10px;font-size:13px;color:#E0371F;display:flex;align-items:center;gap:6px;"><i class="ti ti-alert-circle" style="font-size:16px;"></i>کد ۵ رقمی را کامل وارد کنید</div>
         </sc-if>
         <div style="margin-top:16px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;color:#777;">
-          <sc-if value="{{ waiting }}" hint-placeholder-val="{{ true }}"><i class="ti ti-clock" style="font-size:16px;"></i>ارسال مجدد تا {{ timer }} دیگر</sc-if>
+          <sc-if value="{{ blocked }}" hint-placeholder-val="{{ false }}"><span style="color:#C8341E;font-weight:700;">تعداد درخواست زیاد شد. {{ timer }} دیگر دوباره امتحان کنید.</span></sc-if><sc-if value="{{ waitingNorm }}" hint-placeholder-val="{{ true }}"><i class="ti ti-clock" style="font-size:16px;"></i>ارسال مجدد تا {{ timer }} دیگر</sc-if>
           <sc-if value="{{ canResend }}" hint-placeholder-val="{{ false }}"><button onClick="{{ resend }}" style="border:none;background:none;color:#FF5B0F;font-size:14px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;"><i class="ti ti-refresh" style="font-size:16px;"></i>ارسال مجدد کد</button></sc-if>
         </div>
         <button data-btn="" onClick="{{ verify }}" style="margin-top:22px;width:100%;height:58px;border:none;border-radius:14px;background:#FF5B0F;color:#fff;font-size:17px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 14px 30px rgba(255,91,15,.35);">
@@ -141,7 +141,7 @@ a:hover{color:#FF5B0F;}
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { mode: 'login', role: 'personal', step: 1, name: '', company: '', phone: '', err: false, busy: false, code: ['', '', '', '', ''], otpErr: false, left: 0 };
+  state = { mode: 'login', role: 'personal', step: 1, name: '', company: '', phone: '', err: false, busy: false, code: ['', '', '', '', ''], otpErr: false, left: 0, sends: 1, blocked: false };
   refs = [0, 1, 2, 3, 4].map(() => React.createRef());
   ROLES = [
     { k: 'personal', icon: 'user', label: 'شخصی', hint: 'خرید برای منزل یا ساخت شخصی' },
@@ -150,10 +150,10 @@ class Component extends DCLogic {
     { k: 'supplier', icon: 'building-store', label: 'مصالح‌فروش', hint: 'فروش مصالح به پروژه‌های شهر' }
   ];
   ART = {
-    personal: ['حساب شخصی', 'خرید مصالح ساده،<br>تحویل درب منزل', [['receipt-2', 'استعلام قیمت آنلاین'], ['truck-delivery', 'پیگیری لحظه‌ای بار و بارنامه'], ['map-pin', 'ذخیره آدرس‌های تحویل'], ['headset', 'پشتیبانی و مشاوره رایگان']]],
-    contractor: ['حساب پیمانکاری', 'مدیریت خرید همه<br>پروژه‌ها در یک پنل', [['building-skyscraper', 'تعریف چند پروژه و کارگاه'], ['file-invoice', 'پیش‌فاکتور، فاکتور و بارنامه‌ها'], ['discount', 'قیمت ویژه خرید عمده'], ['user-star', 'کارشناس اختصاصی']]],
+    personal: ['حساب شخصی', 'خرید مصالح ساده،<br>تحویل درب منزل', [['receipt-2', 'استعلام قیمت آنلاین'], ['truck-delivery', 'پیگیری لحظه‌ای بار و برگ حمل'], ['map-pin', 'ذخیره آدرس‌های تحویل'], ['headset', 'پشتیبانی و مشاوره رایگان']]],
+    contractor: ['حساب پیمانکاری', 'مدیریت خرید همه<br>پروژه‌ها در یک پنل', [['building-skyscraper', 'تعریف چند پروژه و کارگاه'], ['file-invoice', 'پیش‌فاکتور، فاکتور و برگ‌های حمل'], ['discount', 'قیمت ویژه خرید عمده'], ['user-star', 'کارشناس اختصاصی']]],
     supplier: ['همکاری مصالح‌فروشان', 'استعلام‌های شهر خودت را<br>بگیر و بیشتر بفروش', [['message-question', 'دریافت استعلام از پروژه‌های شهر'], ['truck', 'حمل با رانندگان تاییدشده های مصالح'], ['lock-dollar', 'پرداخت امانی و تسویه یک‌روزه'], ['percentage', 'فقط از فروش موفق حق‌العمل']]],
-    driver: ['همکاری رانندگان', 'ماشین داری؟<br>در شهر خودت بار بزن', [['map-2', 'دریافت بار از مصالح‌فروشی‌های شهر خودت'], ['file-invoice', 'بارنامه و نکات بار در پنل راننده'], ['cash', 'تسویه سریع کرایه'], ['shield-check', 'احراز هویت و مدارک امن']]]
+    driver: ['همکاری رانندگان', 'ماشین داری؟<br>در شهر خودت بار بزن', [['map-2', 'دریافت بار از مصالح‌فروشی‌های شهر خودت'], ['file-invoice', 'برگ حمل و نکات بار در پنل راننده'], ['cash', 'تسویه سریع کرایه'], ['shield-check', 'احراز هویت و مدارک امن']]]
   };
   componentDidMount() {
     const u = new URLSearchParams(location.search), r = u.get('role');
@@ -162,6 +162,7 @@ class Component extends DCLogic {
   }
   componentWillUnmount() { clearInterval(this.iv); }
   norm(v, n) { return String(v).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[^\d]/g, '').slice(0, n); }
+  startTimer5() { clearInterval(this.iv); this.setState({ left: 300 }); this.iv = setInterval(() => this.setState(st => { if (st.left <= 1) { clearInterval(this.iv); return { left: 0, blocked: false, sends: 0 }; } return { left: st.left - 1 }; }), 1000); }
   startTimer() { clearInterval(this.iv); this.setState({ left: 60 }); this.iv = setInterval(() => this.setState(s => { if (s.left <= 1) clearInterval(this.iv); return { left: Math.max(0, s.left - 1) }; }), 1000); }
   setDigit(i, raw) {
     const d = this.norm(raw, 5), code = this.state.code.slice();
@@ -174,10 +175,10 @@ class Component extends DCLogic {
     const okP = /^09\d{9}$/.test(s.phone), isReg = s.mode === 'register', role = s.role;
     const mm = `${Math.floor(s.left / 60)}:${String(s.left % 60).padStart(2, '0')}`;
     const art = this.ART[role];
-    let nextHref = 'panel.dc.html?role=' + role, nextLabel = 'ورود به پنل کاربری', nextIcon = 'layout-dashboard', nextText = 'اکنون می‌توانید سفارش‌ها، استعلام‌ها و بارنامه‌های خود را از پنل پیگیری کنید.';
+    let nextHref = 'panel.dc.html?role=' + role, nextLabel = 'ورود به پنل کاربری', nextIcon = 'layout-dashboard', nextText = 'اکنون می‌توانید سفارش‌ها، استعلام‌ها و برگ‌های حملی خود را از پنل پیگیری کنید.';
     if (role === 'driver' && isReg) { nextHref = 'driver-register.dc.html'; nextLabel = 'ادامه: بارگذاری مدارک'; nextIcon = 'id'; nextText = 'برای فعال شدن حساب راننده، مدارک هویتی، مدارک خودرو، ویدیو و محل سکونت خود را بارگذاری کنید.'; }
     else if (role === 'supplier') { nextHref = 'supplier-panel.dc.html'; nextLabel = 'ورود به پنل مصالح‌فروش'; nextIcon = 'building-store'; nextText = 'استعلام‌های قیمت پروژه‌های شهر شما، بارگیری‌ها و تسویه حساب در پنل مصالح‌فروش است.'; }
-    else if (role === 'driver') { nextHref = 'driver-panel.dc.html'; nextLabel = 'ورود به پنل راننده'; nextIcon = 'steering-wheel'; nextText = 'بارهای پیشنهادی شهر شما و بارنامه‌های فعال در پنل راننده آماده است.'; }
+    else if (role === 'driver') { nextHref = 'driver-panel.dc.html'; nextLabel = 'ورود به پنل راننده'; nextIcon = 'steering-wheel'; nextText = 'بارهای پیشنهادی شهر شما و برگ‌های حملی فعال در پنل راننده آماده است.'; }
     return {
       hasRef: !!s.ref && isReg, refCode: s.ref || '', refGift: (() => { let c = null; try { c = JSON.parse(localStorage.getItem('hm_ref') || 'null'); } catch (e) {} const on = !c || c.invitee !== false, amt = (c && c.inviteeAmt) || 200000; return on ? ` و بعد از تایید حساب ${String(amt / 1000).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d])} هزار تومان هدیه می‌گیرید.` : '.'; })(),
       s1: s.step === 1, s2: s.step === 2, s3: s.step === 3,
@@ -200,8 +201,8 @@ class Component extends DCLogic {
       otp: s.code.map((v, i) => ({ v, ref: this.refs[i], change: e => this.setDigit(i, e.target.value),
         key: e => { if (e.key === 'Backspace' && !s.code[i] && i > 0) this.refs[i - 1].current && this.refs[i - 1].current.focus(); } })),
       otpErr: s.otpErr, otpBorder: s.otpErr ? '#E0371F' : '#ECECEC',
-      waiting: s.left > 0, canResend: s.left === 0, timer: fa(mm), resend: () => this.startTimer(),
-      verify: () => { if (s.busy) return; if (s.code.join('').length < 5) return this.setState({ otpErr: true }); this.setState({ busy: true }); setTimeout(() => { clearInterval(this.iv); try { localStorage.setItem('hm_user', JSON.stringify({ role, name: s.name, company: s.company, phone: s.phone })); } catch (e) {} this.setState({ busy: false, step: 3 }); }, 900); },
+      waiting: s.left > 0, waitingNorm: s.left > 0 && !s.blocked, canResend: s.left === 0, timer: fa(mm), resend: () => { if (s.sends >= 7) { this.setState({ blocked: true, left: 300 }); this.startTimer5(); return; } this.setState({ sends: s.sends + 1 }); this.startTimer(); }, blocked: s.blocked,
+      verify: () => { if (s.busy) return; if (s.code.join('').length < 5) return this.setState({ otpErr: true }); this.setState({ busy: true }); setTimeout(() => { clearInterval(this.iv); try { let old = {}; try { old = JSON.parse(localStorage.getItem('hm_user') || '{}'); } catch (e) {} const roles = Array.from(new Set([...(old.phone === s.phone && old.roles ? old.roles : []), role])); localStorage.setItem('hm_user', JSON.stringify({ role, roles, name: s.name || old.name || '', company: s.company, phone: s.phone })); } catch (e) {} this.setState({ busy: false, step: 3 }); }, 900); },
       welcome: isReg ? `${s.name ? s.name + '، ' : ''}خوش آمدید!` : 'با موفقیت وارد شدید',
       nextHref, nextLabel, nextIcon, nextText,
       artTag: art[0], artTitle: art[1].replace('<br>', '\n'),

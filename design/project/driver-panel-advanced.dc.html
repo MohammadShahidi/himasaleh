@@ -133,7 +133,7 @@ span[dir="ltr"]{white-space:nowrap;flex:none;}
               <label data-btn="" style="margin-top:4px;display:flex;align-items:center;gap:12px;border:1.5px dashed {{ rcBorder }};background:#FAFAFA;border-radius:14px;padding:14px;cursor:pointer;">
                 <input type="file" accept="image/*" capture="environment" onChange="{{ pickReceipt }}" style="position:absolute;width:1px;height:1px;opacity:0;">
                 <span style="width:44px;height:44px;flex:none;border-radius:12px;background:#FFF0E8;color:#FF5B0F;display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ rcIcon }}" style="font-size:22px;"></i></span>
-                <span style="display:flex;flex-direction:column;"><span style="font-size:14px;font-weight:800;color:#222;">{{ rcTitle }}</span><span style="font-size:12px;color:#999;">عکس بارنامه با مهر و امضای تحویل‌گیرنده</span></span>
+                <span style="display:flex;flex-direction:column;"><span style="font-size:14px;font-weight:800;color:#222;">{{ rcTitle }}</span><span style="font-size:12px;color:#999;">عکس برگ حمل با مهر و امضای تحویل‌گیرنده</span></span>
               </label>
             </sc-if>
             <div style="margin-top:14px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;">
@@ -141,7 +141,7 @@ span[dir="ltr"]{white-space:nowrap;flex:none;}
               <div style="background:#FFF8F4;border:1px solid #FFE0CF;border-radius:12px;padding:10px 12px;"><div style="font-size:11px;color:#999;white-space:nowrap;">حق‌العمل ({{ drvPct }}٪)</div><div style="font-size:14px;font-weight:900;color:#E4500A;white-space:nowrap;">− {{ fareFee }}</div></div>
               <div style="background:#F2FBF5;border:1px solid #CFEBD9;border-radius:12px;padding:10px 12px;"><div style="font-size:11px;color:#999;white-space:nowrap;">خالص شما</div><div style="font-size:14px;font-weight:900;color:#178A48;white-space:nowrap;">{{ fareNet }}</div></div>
             </div>
-            <div style="margin-top:6px;font-size:12px;color:#999;line-height:1.8;">این بار پس‌کرایه است: کرایه کامل را از گیرنده می‌گیرید و حق‌العمل از کیف پول شما کسر می‌شود.</div>
+            <div style="margin-top:6px;font-size:12px;color:#999;line-height:1.8;">مشتری کرایه را قبلاً به های مصالح پرداخت کرده است. از گیرنده وجه نقد نگیرید؛ سهم خالص شما بعد از تحویل به کیف پول می‌آید.</div>
             <button data-btn="" onClick="{{ advance }}" style="margin-top:14px;width:100%;height:56px;border:none;border-radius:14px;background:#FF5B0F;color:#fff;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 14px 30px rgba(255,91,15,.3);opacity:{{ advOp }};"><i class="ti ti-{{ advIcon }}" style="font-size:20px;"></i>{{ advLabel }}</button>
           </sc-if>
           <sc-if value="{{ tripDone }}" hint-placeholder-val="{{ false }}">
@@ -232,8 +232,8 @@ span[dir="ltr"]{white-space:nowrap;flex:none;}
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
   state = { fee: null, wallet: 1200000, nav: 0, on: true, pending: false, trip: 2, receipt: false, err: false, offers: {}, tick: 0, drv: null };
-  TS = [['navigation', 'حرکت به سمت مبدا', 'مصالح فروشی البرز — کرج'], ['building-store', 'رسیدن به مصالح‌فروشی', 'اعلام حضور برای بارگیری'], ['packages', 'بارگیری و دریافت بارنامه', '۲۰۰ کیسه سیمان — ۱۰ تن'], ['truck', 'در مسیر مقصد', 'تهران، ونک — ۴۲ کیلومتر'], ['flag-check', 'تحویل و ثبت رسید', 'بارگذاری بارنامه امضاشده']];
-  ADV = [['building-store', 'اعلام رسیدن به مبدا'], ['packages', 'ثبت بارگیری و دریافت بارنامه'], ['truck', 'شروع حرکت به مقصد'], ['flag-check', 'رسیدم؛ ثبت تحویل'], ['circle-check', 'پایان سفر و ارسال رسید']];
+  TS = [['navigation', 'حرکت به سمت مبدا', 'مصالح فروشی البرز — کرج'], ['building-store', 'رسیدن به مصالح‌فروشی', 'اعلام حضور برای بارگیری'], ['packages', 'بارگیری و دریافت برگ حمل', '۲۰۰ کیسه سیمان — ۱۰ تن'], ['truck', 'در مسیر مقصد', 'تهران، ونک — ۴۲ کیلومتر'], ['flag-check', 'تحویل و ثبت رسید', 'بارگذاری برگ حمل امضاشده']];
+  ADV = [['building-store', 'اعلام رسیدن به مبدا'], ['packages', 'ثبت بارگیری و دریافت برگ حمل'], ['truck', 'شروع حرکت به مقصد'], ['flag-check', 'رسیدم؛ ثبت تحویل'], ['circle-check', 'پایان سفر و ارسال رسید']];
   OFF = [
     { id: 1, goods: 'ماسه شسته — ۱۲ متر مکعب', from: 'مصالح فروشی ولیعصر — شادآباد', to: 'کارگاه سعادت‌آباد، خیابان سرو', weight: '۱۸ تن', dist: '۲۴ کیلومتر', when: 'بارگیری امروز ۱۴:۰۰', fare: '۵٬۸۰۰٬۰۰۰ تومان', ttl: 900 },
     { id: 2, goods: 'گچ ساختمانی — ۳۰۰ کیسه', from: 'انبار مصالح پارس — جاده ساوه', to: 'پروژه مسکونی پرند، فاز ۲', weight: '۱۲ تن', dist: '۳۱ کیلومتر', when: 'بارگیری فردا ۰۸:۰۰', fare: '۴٬۹۰۰٬۰۰۰ تومان', ttl: 1680 },
@@ -250,7 +250,7 @@ class Component extends DCLogic {
     const s = this.state, fa = v => String(v).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
     const d = s.drv || {}, plate = d.plate || ['12', 'ع', '345', '67'];
     const name = d.name && d.name.trim() ? d.name : 'حسن کریمی', city = d.city || 'تهران';
-    const NAV = [['layout-dashboard', 'داشبورد', 'خانه'], ['bell-ringing', 'بارهای پیشنهادی', 'بارها'], ['route', 'سفرهای من', 'سفرها'], ['file-invoice', 'بارنامه‌ها', 'بارنامه'], ['wallet', 'درآمد و تسویه', 'درآمد'], ['id', 'مدارک و پروفایل', 'مدارک']];
+    const NAV = [['layout-dashboard', 'داشبورد', 'خانه'], ['bell-ringing', 'بارهای پیشنهادی', 'بارها'], ['route', 'سفرهای من', 'سفرها'], ['file-invoice', 'برگ‌های حمل', 'برگ حمل'], ['wallet', 'درآمد و تسویه', 'درآمد'], ['id', 'مدارک و پروفایل', 'مدارک']];
     const done = s.trip > 5, cur = s.trip;
     const locked = s.pending || !s.on;
     const mm = t => { const x = Math.max(0, t); return fa(`${Math.floor(x / 60)}:${String(x % 60).padStart(2, '0')}`); };
@@ -261,7 +261,7 @@ class Component extends DCLogic {
     return {
       drvPct: fa(pct), fareGross: toman(8500000), fareFee: toman(8500000 * pct / 100), fareNet: toman(8500000 * (1 - pct / 100)),
       wallet: toman(wal), walletW: Math.min(100, wal / (wMin * 4) * 100) + '%', walletC: wal < wMin ? '#E0371F' : '#22B35E',
-      walletNote: wal < wMin ? `موجودی کمتر از حداقل (${toman(wMin)}) است؛ برای قبول بارهای پس‌کرایه کیف پول را شارژ کنید.` : `حق‌العمل بارهای پس‌کرایه از کیف پول کسر می‌شود. حداقل موجودی لازم: ${toman(wMin)}`,
+      walletNote: wal < 0 ? 'موجودی منفی است؛ تا تسویه بدهی، بار جدید پیشنهاد نمی‌شود. کیف پول را شارژ کنید.' : `جریمه تاخیر و هزینه لغو از کیف پول کسر می‌شود. حداقل برداشت: ${toman(1000000)}.`,
       topup: () => this.setState({ wallet: s.wallet + 500000 }),
       dName: name, firstName: name.split(' ')[0], dVehicle: `${d.vt || 'کامیون ده‌چرخ'} — ${d.bt || 'کفی'}`,
       pl: { a: fa(plate[0]), l: plate[1], b: fa(plate[2]), c: fa(plate[3]) }, city,
@@ -278,14 +278,14 @@ class Component extends DCLogic {
       tripActive: !done, tripDone: done,
       tripStatus: done ? 'تحویل شده' : ['در راه مبدا', 'در محل بارگیری', 'در حال بارگیری', 'در مسیر مقصد', 'در محل تحویل'][cur - 1], tripTone: done ? 'green' : 'orange',
       tsteps: this.TS.map(([icon, label, sub], i) => ({ icon, label, sub, st: i + 1 < cur ? 'done' : i + 1 === cur ? 'cur' : 'todo', line: i === 4 ? 'none' : 'block', lineBg: i + 1 < cur ? '#141414' : '#EAEAEA' })),
-      needReceipt: cur === 5, rcBorder: s.err && !s.receipt ? '#E0371F' : (s.receipt ? '#FF5B0F' : '#D8D8D8'), rcIcon: s.receipt ? 'circle-check' : 'camera', rcTitle: s.receipt ? 'رسید بارگذاری شد' : 'بارگذاری عکس بارنامه امضاشده',
+      needReceipt: cur === 5, rcBorder: s.err && !s.receipt ? '#E0371F' : (s.receipt ? '#FF5B0F' : '#D8D8D8'), rcIcon: s.receipt ? 'circle-check' : 'camera', rcTitle: s.receipt ? 'رسید بارگذاری شد' : 'بارگذاری عکس برگ حمل امضاشده',
       pickReceipt: e => { if (e.target.files && e.target.files[0]) this.setState({ receipt: true, err: false }); },
       advLabel: done ? '' : this.ADV[cur - 1][1], advIcon: done ? 'check' : this.ADV[cur - 1][0], advOp: cur === 5 && !s.receipt ? .6 : 1,
       advance: () => { if (cur === 5 && !s.receipt) return this.setState({ err: true }); this.setState({ trip: cur + 1 }); },
       wb: { no: '۱۴۰۵۰۷۱۲-۸۸۴۱', status: done ? 'تحویل شده' : 'سفر فعال', track: 'HM-58213', fromTitle: 'مصالح فروشی البرز — کرج', fromAddr: 'کرج، جاده ملارد، بعد از پل فردیس — تلفن انبار: ۰۲۶-۳۶۱۲۴۵۰۰', toTitle: 'کارگاه پروژه ونک', toAddr: 'تهران، ونک، خیابان ملاصدرا، پلاک ۱۸ — تحویل‌گیرنده: مهندس رضایی', distance: '۴۲ کیلومتر',
-        rows: [{ k: 'کالا', v: 'سیمان پرتلند تیپ ۲ — ۲۰۰ کیسه' }, { k: 'وزن', v: '۱۰ تن' }, { k: 'تاریخ صدور', v: '۱۲ مهر ۱۴۰۵ — ۱۰:۲۰' }, { k: 'مهلت تحویل', v: '۱۲ مهر، تا ساعت ۱۶:۰۰' }, { k: 'کرایه راننده', v: '۸٬۵۰۰٬۰۰۰ تومان' }, { k: 'نوع پرداخت', v: 'پس‌کرایه — دریافت از گیرنده' }],
+        rows: [{ k: 'کالا', v: 'سیمان پرتلند تیپ ۲ — ۲۰۰ کیسه' }, { k: 'وزن', v: '۱۰ تن' }, { k: 'تاریخ صدور', v: '۱۲ مهر ۱۴۰۵ — ۱۰:۲۰' }, { k: 'مهلت تحویل', v: '۱۲ مهر، تا ساعت ۱۶:۰۰' }, { k: 'کرایه راننده', v: '۸٬۵۰۰٬۰۰۰ تومان' }, { k: 'نوع پرداخت', v: 'پرداخت‌شده به حساب های مصالح' }],
         driverName: name, vehicle: `${d.vt || 'کامیون ده‌چرخ'} ${d.bt || 'کفی'}`, p1: fa(plate[0]), pl: plate[1], p2: fa(plate[2]), p3: fa(plate[3]),
-        notes: ['پیش از حرکت تعداد کیسه‌ها را با انباردار شمارش و در بارنامه ثبت کنید.', 'بار باید با برزنت پوشانده و مهار شود؛ سیمان نباید خیس شود.', 'تخلیه به عهده گیرنده است؛ مسئولیت شما تا درب کارگاه است.', 'کرایه را پس از تحویل و امضای بارنامه از گیرنده دریافت کنید.', 'عکس بارنامه امضاشده را در همین پنل بارگذاری کنید.', 'در صورت تاخیر بیش از ۲ ساعت با پشتیبانی تماس بگیرید.'],
+        notes: ['پیش از حرکت تعداد کیسه‌ها را با انباردار شمارش و در برگ حمل ثبت کنید.', 'بار باید با برزنت پوشانده و مهار شود؛ سیمان نباید خیس شود.', 'تخلیه به عهده گیرنده است؛ مسئولیت شما تا درب کارگاه است.', 'کرایه را پس از تحویل و امضای برگ حمل از گیرنده دریافت کنید.', 'عکس برگ حمل امضاشده را در همین پنل بارگذاری کنید.', 'در صورت تاخیر بیش از ۲ ساعت با پشتیبانی تماس بگیرید.'],
         hasAdmin: false, adminNote: '' },
       liveColor: locked ? '#AAA' : '#22B35E', liveAnim: locked ? 'none' : 'hmpulseG 1.6s infinite', liveText: locked ? 'غیرفعال' : 'زنده',
       locked, showOffers: !locked,

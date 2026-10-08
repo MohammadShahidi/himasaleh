@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+html,body{margin:0;padding:0;background:#F4F4F5;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Vazirmatn',Tahoma,sans-serif;color:#1a1a1a;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+a:hover{color:#FF5B0F;}
+input,button{font-family:inherit;}
+button{white-space:nowrap;}
+[data-btn]{cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.2,1),background-color .3s,color .3s,border-color .3s;}
+[data-btn]:active{transform:scale(.96);}
+[data-nav-i]{transition:all .3s;}
+[data-nav-i]:hover{background:rgba(255,255,255,.06);color:#fff !important;}
+[data-nav-i][data-active="1"]{background:#FF5B0F !important;color:#fff !important;}
+[data-chip]{transition:all .3s;cursor:pointer;white-space:nowrap;}
+[data-chip][data-active="1"]{background:#141414 !important;color:#fff !important;border-color:#141414 !important;}
+[data-field]:focus{outline:none;border-color:#FF5B0F !important;background:#fff !important;}
+[data-tr]:hover{background:#FAFAFA;}
+@media (max-width:1000px){[data-side]{display:none !important;}}
+@media (max-width:640px){[data-main]{padding:16px 14px 40px !important;}}
+</style>
+</helmet>
+<div dir="rtl" style="font-family:'Vazirmatn',Tahoma,sans-serif;background:#F4F4F5;min-height:100vh;display:flex;min-width:0;">
+  <aside data-side="" style="position:sticky;top:0;height:100vh;width:260px;flex:none;background:#141414;color:#fff;display:flex;flex-direction:column;padding:24px 18px;overflow-y:auto;">
+    <a href="index.dc.html" style="display:flex;align-items:center;gap:10px;color:#fff;padding:0 6px;"><img src="assets/logo-light.png" alt="" style="height:40px;width:auto;"><span style="font-size:22px;font-weight:900;white-space:nowrap;"><span style="color:#FF5B0F;">های</span> مصالح</span></a>
+    <div style="margin-top:10px;padding:0 6px;font-size:12px;font-weight:700;color:#FF8A4F;display:flex;align-items:center;gap:6px;"><i class="ti ti-shield-lock" style="font-size:15px;"></i>پنل مدیریت</div>
+    <nav style="margin-top:24px;display:flex;flex-direction:column;gap:4px;">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="9">
+        <a data-nav-i="" data-active="{{ n.a }}" href="{{ n.href }}" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:12px;font-size:15px;font-weight:600;color:#BDBDBD;white-space:nowrap;"><i class="ti ti-{{ n.icon }}" style="font-size:20px;"></i>{{ n.label }}</a>
+      </sc-for>
+    </nav>
+  </aside>
+  <main data-main="" style="flex:1;min-width:0;padding:24px 32px 40px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+      <div>
+        <div style="font-size:14px;color:#888;">همه عددها پیش‌فرض‌اند و قابل تغییر</div>
+        <h1 style="margin:2px 0 0;font-size:clamp(22px,2.4vw,28px);font-weight:900;color:#141414;">قوانین عملیاتی</h1>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <sc-if value="{{ saved }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;font-weight:800;padding:8px 14px;border-radius:12px;background:#E6F6EC;color:#178A48;white-space:nowrap;">ذخیره شد — روی سفارش‌های جدید اعمال می‌شود</span></sc-if>
+        <button data-btn="" onClick="{{ save }}" style="height:46px;border:none;border-radius:12px;background:#FF5B0F;color:#fff;padding:0 18px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px;"><i class="ti ti-device-floppy" style="font-size:18px;"></i>ذخیره</button>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:18px;align-items:start;">
+      <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:20px;grid-column:1/-1;">
+        <div style="font-size:17px;font-weight:900;color:#141414;display:flex;align-items:center;gap:8px;"><i class="ti ti-truck" style="font-size:22px;color:#FF5B0F;"></i>جدول نرخ پایه کرایه</div>
+        <div style="margin-top:4px;font-size:13px;color:#888;">مسافت با مسیریاب نشان محاسبه می‌شود؛ ضریب آب‌وهوا روی مسیرهای برفی و بارانی اعمال می‌شود.</div>
+        <div style="margin-top:12px;overflow-x:auto;">
+          <div style="min-width:640px;">
+            <div style="display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:8px;padding:8px 10px;font-size:12px;font-weight:800;color:#888;"><span>نوع خودرو</span><span>هر کیلومتر</span><span>هر تن</span><span>بارگیری و تخلیه</span><span>ضریب برگشت خالی</span></div>
+            <sc-for list="{{ fares }}" as="r" hint-placeholder-count="4">
+              <div data-tr="" style="display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:8px;align-items:center;padding:8px 10px;border-top:1px solid #F4F4F4;border-radius:10px;">
+                <span style="font-size:14px;font-weight:800;color:#222;white-space:nowrap;">{{ r.name }}</span>
+                <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="4">
+                  <input data-field="" inputmode="decimal" value="{{ c.v }}" onChange="{{ c.set }}" style="width:100%;height:40px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:10px;padding:0 10px;font-size:14px;font-weight:700;">
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:#999;">مبالغ به هزار تومان.</div>
+      </div>
+
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="4">
+        <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:20px;">
+          <div style="font-size:17px;font-weight:900;color:#141414;display:flex;align-items:center;gap:8px;"><i class="ti ti-{{ g.icon }}" style="font-size:22px;color:#FF5B0F;"></i>{{ g.title }}</div>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+            <sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#FAFAFA;border:1px solid #F0F0F0;border-radius:14px;padding:10px 12px;">
+                <div style="flex:1;min-width:180px;"><div style="font-size:14px;font-weight:800;color:#222;">{{ r.t }}</div><div style="font-size:12px;color:#888;line-height:1.8;">{{ r.d }}</div></div>
+                <div style="display:flex;align-items:center;border:1.5px solid #E6E6E6;border-radius:12px;overflow:hidden;background:#fff;"><button data-btn="" onClick="{{ r.dec }}" style="width:36px;height:40px;border:none;background:#F5F5F5;"><i class="ti ti-minus"></i></button><span style="min-width:120px;text-align:center;font-weight:900;font-size:14px;white-space:nowrap;padding:0 6px;">{{ r.v }}</span><button data-btn="" onClick="{{ r.inc }}" style="width:36px;height:40px;border:none;background:#F5F5F5;"><i class="ti ti-plus"></i></button></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+
+      <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:20px;">
+        <div style="font-size:17px;font-weight:900;color:#141414;display:flex;align-items:center;gap:8px;"><i class="ti ti-circle-x" style="font-size:22px;color:#FF5B0F;"></i>جدول هزینه لغو</div>
+        <div style="margin-top:4px;font-size:13px;color:#888;line-height:1.8;">هر طرف که لغو کند، هزینه را می‌پردازد یا از موجودی او کسر می‌شود.</div>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+          <sc-for list="{{ cancels }}" as="r" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#FAFAFA;border:1px solid #F0F0F0;border-radius:14px;padding:10px 12px;">
+              <div style="flex:1;min-width:180px;"><div style="font-size:14px;font-weight:800;color:#222;">{{ r.t }}</div><div style="font-size:12px;color:#888;">{{ r.d }}</div></div>
+              <sc-if value="{{ r.edit }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;border:1.5px solid #E6E6E6;border-radius:12px;overflow:hidden;background:#fff;"><button data-btn="" onClick="{{ r.dec }}" style="width:36px;height:40px;border:none;background:#F5F5F5;"><i class="ti ti-minus"></i></button><span style="min-width:90px;text-align:center;font-weight:900;font-size:14px;white-space:nowrap;">{{ r.v }}</span><button data-btn="" onClick="{{ r.inc }}" style="width:36px;height:40px;border:none;background:#F5F5F5;"><i class="ti ti-plus"></i></button></div></sc-if>
+              <sc-if value="{{ r.fixed }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;font-weight:800;color:#666;background:#F0F0F0;border-radius:10px;padding:8px 12px;white-space:nowrap;">{{ r.v }}</span></sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:20px;">
+        <div style="font-size:17px;font-weight:900;color:#141414;display:flex;align-items:center;gap:8px;"><i class="ti ti-arrow-back-up" style="font-size:22px;color:#FF5B0F;"></i>قاعده مرجوعی دسته‌ها</div>
+        <div style="margin-top:4px;font-size:13px;color:#888;line-height:1.8;">اگر مشتری اشتباه سفارش داده باشد، کرایه رفت و برگشت را آنلاین می‌پردازد و بار دست‌نخورده مرجوع می‌شود.</div>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+          <sc-for list="{{ returns }}" as="r" hint-placeholder-count="6">
+            <span data-chip="" data-active="{{ r.a }}" onClick="{{ r.flip }}" style="border:1.5px solid #E6E6E6;background:#fff;border-radius:12px;padding:9px 14px;font-size:14px;font-weight:700;color:#333;display:flex;align-items:center;gap:6px;"><i class="ti ti-{{ r.icon }}" style="font-size:16px;"></i>{{ r.t }}</span>
+          </sc-for>
+        </div>
+        <div style="margin-top:8px;font-size:12px;color:#999;">مشکی = قابل مرجوع.</div>
+      </div>
+
+      <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:20px;">
+        <div style="font-size:17px;font-weight:900;color:#141414;display:flex;align-items:center;gap:8px;"><i class="ti ti-message-2" style="font-size:22px;color:#FF5B0F;"></i>سرویس پیامک</div>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+          <sc-for list="{{ sms }}" as="r" hint-placeholder-count="2">
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#FAFAFA;border:1px solid #F0F0F0;border-radius:14px;padding:12px;">
+              <span style="width:10px;height:10px;border-radius:50%;background:{{ r.dot }};flex:none;"></span>
+              <div style="flex:1;min-width:160px;"><div style="font-size:14px;font-weight:800;color:#222;">{{ r.t }}</div><div style="font-size:12px;color:#888;">{{ r.d }}</div></div>
+              <input data-field="" value="{{ r.key }}" onChange="{{ r.set }}" placeholder="کلید API" dir="ltr" style="width:200px;max-width:100%;height:40px;border:1.5px solid #ECECEC;background:#fff;border-radius:10px;padding:0 10px;font-size:13px;">
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin-top:8px;font-size:12px;color:#888;line-height:1.8;">اگر سرویس اصلی خطا بدهد، پیامک‌ها خودکار از سرویس پشتیبان ارسال و به مدیر فنی اطلاع داده می‌شود.</div>
+        <div style="margin-top:16px;font-size:15px;font-weight:900;color:#141414;">روش واریز به مصالح‌فروشان</div>
+        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+          <sc-for list="{{ payouts }}" as="r" hint-placeholder-count="3"><span data-chip="" data-active="{{ r.a }}" onClick="{{ r.pick }}" style="border:1.5px solid #E6E6E6;background:#fff;border-radius:12px;padding:9px 14px;font-size:14px;font-weight:700;color:#333;">{{ r.t }}</span></sc-for>
+        </div>
+      </div>
+
+      <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:20px;">
+        <div style="font-size:17px;font-weight:900;color:#141414;display:flex;align-items:center;gap:8px;"><i class="ti ti-headset" style="font-size:22px;color:#FF5B0F;"></i>موضوع‌های درخواست مشاوره</div>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+          <sc-for list="{{ topics }}" as="t" hint-placeholder-count="5">
+            <span style="border:1.5px solid #E6E6E6;background:#FAFAFA;border-radius:12px;padding:7px 8px 7px 12px;font-size:14px;font-weight:700;color:#333;display:flex;align-items:center;gap:6px;white-space:nowrap;">{{ t.t }}<button data-btn="" onClick="{{ t.del }}" style="width:24px;height:24px;border:none;border-radius:8px;background:#EDEDED;color:#777;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x" style="font-size:13px;"></i></button></span>
+          </sc-for>
+        </div>
+        <div style="margin-top:10px;display:flex;gap:8px;">
+          <input data-field="" value="{{ newTopic }}" onChange="{{ setNewTopic }}" placeholder="موضوع جدید" style="flex:1;min-width:0;height:44px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:0 12px;font-size:14px;">
+          <button data-btn="" onClick="{{ addTopic }}" style="height:44px;border:none;border-radius:12px;background:#141414;color:#fff;padding:0 16px;font-size:14px;font-weight:800;">افزودن</button>
+        </div>
+        <div style="margin-top:8px;font-size:12px;color:#888;">کارشناس فروش باید حداکثر تا ۲۴ ساعت تماس بگیرد؛ درخواست‌های بی‌پاسخ در گزارش تاخیر کارشناسان نمایش داده می‌شوند.</div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  DEF = {
+    fares: [['وانت', 18, 40, 300, 1.2], ['نیسان / خاور', 26, 55, 500, 1.25], ['کامیون ده‌چرخ', 38, 70, 900, 1.3], ['تریلی', 52, 85, 1400, 1.35]],
+    n: { weather: 15, noTaker: 20, bump: 10, bumpCap: 30, inq: 25, gate: 25, transfer: 1, diff: 25, autoOk: 24, ownerRem: 24, bigOrder: 200, late: 25, lateFine: 10, lateSup: 3, cDay: 3, cMonth: 8, otp: 7, otpWait: 5, bot: 4 },
+    cancel: { paid: 5, driverMoving: 8, driverShare: 50 },
+    ret: { cement: 0, steel: 0, brick: 1, sand: 0, pipe: 1, tile: 1 },
+    sms: ['', ''], payout: 'manual',
+    topics: ['استعلام قیمت', 'خرید عمده پروژه', 'برآورد مصالح', 'پیگیری سفارش', 'همکاری راننده / فروشنده']
+  };
+  state = { c: null, saved: false, newTopic: '' };
+  componentDidMount() { let c = null; try { c = JSON.parse(localStorage.getItem('hm_ops') || 'null'); } catch (e) {} this.setState({ c: c ? { ...this.DEF, ...c, n: { ...this.DEF.n, ...c.n } } : this.DEF }); }
+  up(p) { this.setState(s => ({ c: { ...(s.c || this.DEF), ...p }, saved: false })); }
+  renderVals() {
+    const s = this.state, C = s.c || this.DEF, N = C.n, fa = v => String(v).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]).replace('.', '٫');
+    const row = (k, t, d, unit, st, min, max) => ({ t, d, v: fa(N[k]) + ' ' + unit, dec: () => this.up({ n: { ...N, [k]: Math.max(min, +(N[k] - st).toFixed(2)) } }), inc: () => this.up({ n: { ...N, [k]: Math.min(max, +(N[k] + st).toFixed(2)) } }) });
+    const cr = (k, st, max) => ({ dec: () => this.up({ cancel: { ...C.cancel, [k]: Math.max(0, C.cancel[k] - st) } }), inc: () => this.up({ cancel: { ...C.cancel, [k]: Math.min(max, C.cancel[k] + st) } }) });
+    return {
+      nav: [['layout-dashboard', 'داشبورد', 'admin.dc.html'], ['adjustments', 'قوانین عملیاتی', '#'], ['building-store', 'فروشگاه‌ها و رسیدها', 'admin-partners.dc.html'], ['cash', 'مالی و حق‌العمل', 'admin-finance.dc.html'], ['gift', 'پاداش و کش‌بک', 'admin-rewards.dc.html'], ['users-plus', 'معرفی (Referral)', 'admin-referral.dc.html'], ['building-warehouse', 'انبار خودمان', 'admin-inventory.dc.html'], ['shield-lock', 'کارکنان و دسترسی', 'admin-team.dc.html'], ['layout-board', 'محتوای سایت', 'admin-cms.dc.html']].map(([icon, label, href], i) => ({ icon, label, href, a: i === 1 ? '1' : '0' })),
+      saved: s.saved, save: () => { try { localStorage.setItem('hm_ops', JSON.stringify(C)); } catch (e) {} this.setState({ saved: true }); },
+      fares: C.fares.map((r, i) => ({ name: r[0], cells: r.slice(1).map((v, j) => ({ v: fa(v), set: e => { const n = parseFloat(String(e.target.value).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace('٫', '.')) || 0; this.up({ fares: C.fares.map((x, a) => a === i ? x.map((y, b) => b === j + 1 ? n : y) : x) }); } })) })),
+      groups: [
+        { icon: 'cloud-storm', title: 'کرایه و نبود راننده', rows: [row('weather', 'ضریب آب‌وهوای بد', 'افزایش کرایه در مسیرهای برفی یا بارانی', '٪', 5, 0, 50), row('noTaker', 'اگر کسی بار را قبول نکرد، بعد از', 'ارسال دوباره و هشدار به کارشناس', 'دقیقه', 5, 5, 120), row('bump', 'افزایش خودکار کرایه هر بار', 'مابه‌التفاوت از مشتری گرفته می‌شود', '٪', 5, 0, 30), row('bumpCap', 'سقف کل افزایش کرایه', 'بیشتر از این افزایش نمی‌یابد', '٪', 5, 0, 100)] },
+        { icon: 'clock', title: 'مهلت‌ها', rows: [row('inq', 'مهلت پاسخ استعلام', 'بعد از آن پیشنهادها برای مشتری پیامک می‌شود', 'دقیقه', 5, 5, 120), row('gate', 'مهلت پرداخت با درگاه', 'قیمت فروشگاه تا پایان مهلت ثابت است', 'دقیقه', 5, 5, 120), row('transfer', 'مهلت حواله بانکی', 'بارگذاری رسید و تایید مدیر مالی', 'روز کاری', 1, 1, 5), row('diff', 'مهلت پرداخت مابه‌التفاوت کرایه', 'فقط با درگاه؛ بعد از آن به پشتیبانی می‌رود', 'دقیقه', 5, 5, 120), row('autoOk', 'تایید خودکار تحویل', 'اگر مشتری تایید یا اختلاف ثبت نکند', 'ساعت', 6, 6, 96), row('ownerRem', 'یادآوری ویدیو مالک خودرو', 'پیامک دوباره برای مالک', 'ساعت', 6, 6, 72), row('bigOrder', 'سفارش بزرگ (تماس کارشناس)', 'بالاتر از این مبلغ، کارشناس تماس می‌گیرد', 'میلیون تومان', 50, 50, 5000)] },
+        { icon: 'alarm', title: 'تاخیر و انصراف', rows: [row('late', 'تاخیر مشمول جریمه', 'بیشتر از این درصدِ زمان اعلامی', '٪', 5, 5, 100), row('lateFine', 'جریمه تاخیر', 'از سهم همان طرف در همان سفارش', '٪', 1, 0, 50), row('lateSup', 'انتقال به بررسی پشتیبانی', 'تاخیر بیشتر از این ضریبِ زمان اعلامی', 'برابر', 1, 2, 10), row('cDay', 'انصراف راننده در یک روز', 'بیشتر از این: پیامک اخطار مسدودی', 'بار', 1, 1, 10), row('cMonth', 'انصراف راننده در یک ماه', 'هشدار در پنل کارشناس برای تماس', 'بار', 1, 2, 30)] },
+        { icon: 'lock', title: 'ورود و جلوگیری از سوءاستفاده', rows: [row('otp', 'درخواست کد تایید پشت سر هم', 'برای هر شماره، IP و دستگاه', 'بار', 1, 3, 20), row('otpWait', 'صبر بعد از سقف', 'تا درخواست بعدی', 'دقیقه', 1, 1, 60), row('bot', 'توقف ثبت‌نام در صورت تشخیص ربات', 'برای همان IP یا دستگاه', 'ساعت', 1, 1, 48)] }
+      ],
+      cancels: [
+        { t: 'قبل از پرداخت', d: 'بدون هزینه', v: 'رایگان', fixed: true, edit: false },
+        { t: 'بعد از پرداخت، قبل از حرکت راننده', d: 'از مبلغ پرداختی کسر و بقیه بازگردانده می‌شود', v: fa(C.cancel.paid) + '٪', edit: true, fixed: false, ...cr('paid', 1, 30) },
+        { t: 'راننده به سمت بار حرکت کرده', d: 'هزینه لغو بیشتر', v: fa(C.cancel.driverMoving) + '٪', edit: true, fixed: false, ...cr('driverMoving', 1, 40) },
+        { t: 'سهم راننده از هزینه لغو', d: 'به کیف پول راننده‌ای که حرکت کرده بود', v: fa(C.cancel.driverShare) + '٪', edit: true, fixed: false, ...cr('driverShare', 10, 100) },
+        { t: 'بعد از بارگیری', d: 'فقط از طریق پشتیبانی، مانند اختلاف', v: 'پشتیبانی', fixed: true, edit: false }
+      ],
+      returns: [['cement', 'package', 'سیمان (باز شده: خیر)'], ['steel', 'layout-columns', 'میلگرد و آهن (بریده: خیر)'], ['brick', 'wall', 'آجر و بلوک'], ['sand', 'shovel', 'شن و ماسه'], ['pipe', 'tools', 'لوله و اتصالات'], ['tile', 'layout-grid', 'کاشی و سرامیک']].map(([k, icon, t]) => ({ icon, t, a: C.ret[k] ? '1' : '0', flip: () => this.up({ ret: { ...C.ret, [k]: C.ret[k] ? 0 : 1 } }) })),
+      sms: [['سرویس اصلی', 'فعال — آخرین ارسال: ۲ دقیقه پیش', '#22A45D'], ['سرویس پشتیبان', 'آماده — در صورت خطای سرویس اصلی', '#E4A10A']].map(([t, d, dot], i) => ({ t, d, dot, key: C.sms[i], set: e => this.up({ sms: C.sms.map((x, j) => j === i ? e.target.value : x) }) })),
+      payouts: [['manual', 'دستی (شروع کار)'], ['batch', 'فایل گروهی بانک'], ['api', 'واریز خودکار با API بانک']].map(([k, t]) => ({ t, a: C.payout === k ? '1' : '0', pick: () => this.up({ payout: k }) })),
+      topics: C.topics.map((t, i) => ({ t, del: () => this.up({ topics: C.topics.filter((_, j) => j !== i) }) })),
+      newTopic: s.newTopic, setNewTopic: e => this.setState({ newTopic: e.target.value }),
+      addTopic: () => { const t = s.newTopic.trim(); if (!t) return; this.up({ topics: [...C.topics, t] }); this.setState({ newTopic: '' }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -121,15 +121,15 @@ button{font-family:inherit;}
                 </div>
               </sc-for>
             </div>
-            <a href="{{ fullWb }}" style="margin-top:14px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:16px;font-weight:800;color:#1E4FD8;padding:10px;"><i class="ti ti-file-invoice" style="font-size:20px;"></i>دیدن بارنامه کامل</a>
+            <a href="{{ fullWb }}" style="margin-top:14px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:16px;font-weight:800;color:#1E4FD8;padding:10px;"><i class="ti ti-file-invoice" style="font-size:20px;"></i>دیدن برگ حمل کامل</a>
           </div>
 
           <div style="background:#141414;color:#fff;border-radius:26px;padding:20px;">
-            <div style="font-size:17px;color:#BBB;">پولی که از این بار می‌گیرید</div>
+            <div style="font-size:17px;color:#BBB;">بعد از تحویل به کیف پول شما می‌آید</div>
             <div style="margin-top:6px;font-size:32px;font-weight:900;color:#3DDC84;">{{ money.net }}</div>
             <div style="margin-top:10px;background:rgba(255,255,255,.08);border-radius:16px;padding:14px;font-size:17px;line-height:2;">
-              <div style="display:flex;justify-content:space-between;gap:10px;"><span>از صاحب بار نقد بگیرید:</span><b>{{ money.gross }}</b></div>
-              <div style="display:flex;justify-content:space-between;gap:10px;color:#FFB48F;"><span>سهم های مصالح (از کیف پول):</span><b>{{ money.fee }}</b></div>
+              <div style="display:flex;justify-content:space-between;gap:10px;"><span>کرایه این بار:</span><b>{{ money.gross }}</b></div>
+              <div style="display:flex;justify-content:space-between;gap:10px;color:#FFB48F;"><span>سهم های مصالح:</span><b>{{ money.fee }}</b></div>
             </div>
           </div>
         </sc-if>
@@ -264,9 +264,9 @@ class Component extends DCLogic {
   state = { loc: null, tab: 0, on: true, pending: false, trip: 1, photo: false, err: false, offers: {}, tick: 0, drv: null, fee: null, wallet: 1200000 };
   STEPS = [
     { icon: 'navigation', short: 'برو بار', title: 'برو سر بار', placeIcon: 'building-store', placeColor: '#FF5B0F', place: 'مصالح فروشی البرز', addr: 'کرج، جاده ملارد، بعد از پل فردیس', tel: 'tel:02636124500', telLabel: 'زنگ به انبار', btn: 'رسیدم سر بار', say: 'قدم اول. برو سر بار. مصالح فروشی البرز، کرج، جاده ملارد. وقتی رسیدی دکمه سبز را بزن.' },
-    { icon: 'packages', short: 'بار بزن', title: 'بار را بزن و بارنامه بگیر', placeIcon: 'building-store', placeColor: '#FF5B0F', place: 'مصالح فروشی البرز', addr: '۲۰۰ کیسه سیمان — کیسه‌ها را بشمار', tel: 'tel:02636124500', telLabel: 'زنگ به انبار', btn: 'بار زدم، راه افتادم', say: 'قدم دوم. دویست کیسه سیمان بار بزن. کیسه‌ها را بشمار و بارنامه بگیر. روی بار برزنت بکش.' },
+    { icon: 'packages', short: 'بار بزن', title: 'با فروشنده بار را بشمار، عکس بگیر', placeIcon: 'building-store', placeColor: '#FF5B0F', place: 'مصالح فروشی البرز', addr: '۲۰۰ کیسه سیمان — با فروشنده بشمار، عکس بگیر، برزنت بکش، برگ حمل بگیر', tel: 'tel:02636124500', telLabel: 'زنگ به انبار', btn: 'بار زدم، راه افتادم', say: 'قدم دوم. دویست کیسه سیمان بار بزن. با فروشنده کیسه‌ها را بشمار و از بار عکس بگیر. روی بار برزنت بکش و برگ حمل بگیر.' },
     { icon: 'truck', short: 'برو مقصد', title: 'برو به مقصد', placeIcon: 'flag', placeColor: '#178A48', place: 'کارگاه ونک', addr: 'تهران، ونک، خیابان ملاصدرا، پلاک ۱۸', tel: 'tel:09121112233', telLabel: 'زنگ به صاحب بار', btn: 'رسیدم مقصد', say: 'قدم سوم. برو به تهران، ونک، خیابان ملاصدرا. وقتی رسیدی دکمه سبز را بزن.' },
-    { icon: 'signature', short: 'تحویل', title: 'بار را تحویل بده و امضا بگیر', placeIcon: 'flag', placeColor: '#178A48', place: 'مهندس رضایی', addr: 'پول کرایه را نقد بگیر و از بارنامه امضا شده عکس بگیر', tel: 'tel:09121112233', telLabel: 'زنگ به صاحب بار', btn: 'تحویل دادم', say: 'قدم آخر. بار را تحویل بده. کرایه را بگیر. از بارنامه امضا شده عکس بگیر و دکمه سبز را بزن.' }
+    { icon: 'signature', short: 'تحویل', title: 'بار را تحویل بده و امضا بگیر', placeIcon: 'flag', placeColor: '#178A48', place: 'مهندس رضایی', addr: 'بار را با صاحب بار بشمار، برگ حمل را امضا کند و از آن عکس بگیر', tel: 'tel:09121112233', telLabel: 'زنگ به صاحب بار', btn: 'تحویل دادم', say: 'قدم آخر. بار را با صاحب بار بشمار. برگ حمل را امضا کند. از آن عکس بگیر و دکمه سبز را بزن. پول شما بعد از تحویل به کیف پول می‌آید.' }
   ];
   OFF = [
     { id: 1, goods: 'ماسه — ۱۲ متر', from: 'مصالح ولیعصر، شادآباد', to: 'سعادت‌آباد', weight: '۱۸ تن', dist: '۲۴ کیلومتر', when: 'امروز ۲ ظهر', fare: 5800000, ttl: 900 },
@@ -306,16 +306,16 @@ class Component extends DCLogic {
       steps: this.STEPS.map((t, i) => ({ icon: t.icon, short: t.short, st: i + 1 < s.trip ? 'done' : i + 1 === s.trip ? 'cur' : 'todo' })),
       step: { ...st, map: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(st.addr.split('—')[0])}` },
       speak: () => this.say(st.say),
-      needPhoto: s.trip === 4, photoText: s.photo ? 'عکس گرفته شد' : 'عکس بارنامه امضا شده', photoIcon: s.photo ? 'circle-check' : 'camera',
+      needPhoto: s.trip === 4, photoText: s.photo ? 'عکس گرفته شد' : 'عکس برگ حمل امضا شده', photoIcon: s.photo ? 'circle-check' : 'camera',
       photoBorder: s.err && !s.photo ? '#E0371F' : (s.photo ? '#22A45D' : '#CCC'), photoBg: s.photo ? '#F2FBF5' : '#fff',
       pickPhoto: e => { if (e.target.files && e.target.files[0]) this.setState({ photo: true, err: false }); },
       advOp: s.trip === 4 && !s.photo ? .5 : 1,
-      advance: () => { if (s.trip === 4 && !s.photo) { this.say('اول از بارنامه امضا شده عکس بگیر.'); return this.setState({ err: true }); } this.setState({ trip: s.trip + 1 }); window.scrollTo({ top: 0, behavior: 'smooth' }); },
+      advance: () => { if (s.trip === 4 && !s.photo) { this.say('اول از برگ حمل امضا شده عکس بگیر.'); return this.setState({ err: true }); } this.setState({ trip: s.trip + 1 }); window.scrollTo({ top: 0, behavior: 'smooth' }); },
       load: { goods: 'سیمان — ۲۰۰ کیسه', weight: '۱۰ تن',
         rules: [
           { icon: 'tent', t: 'روی بار برزنت بکشید؛ سیمان نباید خیس شود', bg: '#E8EFFD', c: '#1E4FD8' },
           { icon: 'list-numbers', t: 'کیسه‌ها را موقع بار زدن بشمارید', bg: '#FFF0E8', c: '#E4500A' },
-          { icon: 'cash', t: `کرایه را نقد بگیرید: ${words(8500000)}`, bg: '#E6F6EC', c: '#178A48' },
+          { icon: 'cash', t: 'نقد نگیرید؛ مشتری قبلاً پرداخت کرده', bg: '#E6F6EC', c: '#178A48' },
           { icon: 'signature', t: 'از صاحب بار امضا بگیرید و عکس بفرستید', bg: '#F0F0F0', c: '#444' }
         ] },
       fullWb: 'driver-panel-advanced.dc.html',

@@ -172,7 +172,13 @@ button{white-space:nowrap;}
               <div><label style="font-size:13px;font-weight:800;color:#333;">دلیل پاداش</label><input data-field="" value="{{ reason }}" onChange="{{ setReason }}" style="margin-top:6px;width:100%;height:46px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:0 14px;font-size:14px;"></div>
             </div>
           </sc-if>
-          <sc-if value="{{ tCash }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ tRate }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;"><span style="font-size:14px;font-weight:700;color:#444;">نرخ حق‌العمل در این طرح:</span><div style="display:flex;align-items:center;border:1.5px solid #E6E6E6;border-radius:12px;overflow:hidden;background:#FAFAFA;"><button data-btn="" onClick="{{ rateDec }}" style="width:40px;height:44px;border:none;background:#F1F1F1;"><i class="ti ti-minus"></i></button><span style="min-width:90px;text-align:center;font-weight:900;">{{ rateV }}</span><button data-btn="" onClick="{{ rateInc }}" style="width:40px;height:44px;border:none;background:#F1F1F1;"><i class="ti ti-plus"></i></button></div></div>
+                <div style="font-size:12px;color:#888;line-height:1.9;background:#FAFAFA;border:1px dashed #DDD;border-radius:12px;padding:10px 12px;">فقط کمتر از نرخ پیش‌فرض قابل قبول است. ملاک، لحظه ارسال استعلام یا پیشنهاد بار است. اگر چند طرح هم‌زمان شامل کسی شود، کمترین نرخ اعمال می‌شود؛ و اگر کش‌بک هم داشته باشد، فقط یکی که به نفع اوست اعمال می‌شود.</div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ tCash }}" hint-placeholder-val="{{ false }}">
             <div data-g3="" style="margin-top:14px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;">
               <sc-for list="{{ cashNums }}" as="n" hint-placeholder-count="3">
                 <div><label style="font-size:13px;font-weight:800;color:#333;white-space:nowrap;">{{ n.label }}</label>
@@ -303,6 +309,7 @@ class Component extends DCLogic {
     let rewardText, cost, panelBig, panelSmall, typeLabel, typeIcon;
     if (s.type === 'bonus') { rewardText = words(s.amount); cost = n * s.amount; panelBig = words(s.amount) + ' پاداش'; panelSmall = `به خاطر ${s.reason} — به کیف پول شما اضافه شد`; typeLabel = 'پاداش'; typeIcon = 'gift'; }
     else if (s.type === 'cash') { rewardText = `${fa(s.pct)}٪ — سقف ${words(s.cap * 1e6)}`; cost = n * Math.min(s.cap * 1e6, 40e6 * s.pct / 100) * .7; panelBig = `${fa(s.pct)}٪ کش‌بک به کیف پول`; panelSmall = `روی هر ${s.role === 'supplier' ? 'فروش' : 'خرید'} بالای ${words(s.minOrder * 1e6)} — تا سقف ${words(s.cap * 1e6)}`; typeLabel = 'کش‌بک'; typeIcon = 'receipt-refund'; }
+    else if (s.type === 'rate') { const rp = s.ratePct ?? 1.5; rewardText = `حق‌العمل ${fa(rp)}٪`; cost = n * 1.2e6; panelBig = `حق‌العمل شما فقط ${fa(rp)}٪`; panelSmall = 'تا پایان این طرح، روی هر استعلام یا بار جدید'; typeLabel = 'نرخ ترجیحی'; typeIcon = 'percentage'; }
     else { const t0 = s.tiers[0], t1 = s.tiers[1]; rewardText = `${words(t0[1])} تا ${words(t1[1])}`; cost = n * (t0[1] * .3 + (t1[1] - t0[1]) * .1); panelBig = words(t0[1]) + ' جایزه'; panelSmall = `اگر در این ${perLabel} ${fa(t0[0])} ${s.role === 'driver' ? 'بار بزنید' : 'سفارش داشته باشید'} — با ${fa(t1[0])} ${s.role === 'driver' ? 'بار' : 'سفارش'}: ${words(t1[1])}`; typeLabel = 'طرح تشویقی'; typeIcon = 'trophy'; }
     if (budgets[s.budget]) cost = Math.min(cost, budgets[s.budget]);
     const firstName = s.scope === 'pick' && s.picked.length ? s.picked[0] : this.PEOPLE[s.role][0][0];
@@ -312,13 +319,13 @@ class Component extends DCLogic {
     const camps = s.camps || this.SEED;
     const q = s.q.trim();
     return {
-      nav: [['layout-dashboard', 'داشبورد', 'admin.dc.html'], ['route', 'تخصیص بار', 'admin.dc.html'], ['truck', 'رانندگان', 'admin.dc.html'], ['building-store', 'مصالح‌فروشی‌ها', 'supplier-panel.dc.html'], ['cash', 'مالی و حق‌العمل', 'admin-finance.dc.html'], ['gift', 'پاداش و کش‌بک', '#'], ['users-plus', 'معرفی (Referral)', 'admin-referral.dc.html'], ['shield-lock', 'کارکنان و دسترسی', 'admin-team.dc.html'], ['building-warehouse', 'انبار خودمان', 'admin-inventory.dc.html'], ['layout-board', 'محتوای سایت', 'admin-cms.dc.html']].map(([icon, label, href], i) => ({ icon, label, href, a: i === 5 ? '1' : '0' })),
+      nav: [['layout-dashboard', 'داشبورد', 'admin.dc.html'], ['route', 'تخصیص بار', 'admin.dc.html'], ['truck', 'رانندگان', 'admin.dc.html'], ['building-store', 'مصالح‌فروشی‌ها', 'supplier-panel.dc.html'], ['adjustments', 'قوانین عملیاتی', 'admin-ops.dc.html'], ['building-store', 'فروشگاه‌ها و رسیدها', 'admin-partners.dc.html'], ['cash', 'مالی و حق‌العمل', 'admin-finance.dc.html'], ['gift', 'پاداش و کش‌بک', '#'], ['users-plus', 'معرفی (Referral)', 'admin-referral.dc.html'], ['shield-lock', 'کارکنان و دسترسی', 'admin-team.dc.html'], ['building-warehouse', 'انبار خودمان', 'admin-inventory.dc.html'], ['layout-board', 'محتوای سایت', 'admin-cms.dc.html']].map(([icon, label, href], i) => ({ icon, label, href, a: i === 5 ? '1' : '0' })),
       spent: words(camps.filter(c => c.on).length * 18.5e6),
       campCount: `${fa(camps.length)} طرح`,
       camps: camps.map(c => ({ ...c, typeLabel: { bonus: 'پاداش', cash: 'کش‌بک', goal: 'طرح تشویقی' }[c.type], icon: { bonus: 'gift', cash: 'receipt-refund', goal: 'trophy' }[c.type], tone: { bonus: 'orange', cash: 'blue', goal: 'purple' }[c.type],
         st: c.on ? 'فعال' : 'متوقف', stBg: c.on ? '#E6F6EC' : '#F0F0F0', stC: c.on ? '#178A48' : '#888',
         toggle: () => { const next = camps.map(x => x.id === c.id ? { ...x, on: !x.on } : x); this.setState({ camps: next }); try { localStorage.setItem('hm_rewards', JSON.stringify(next)); } catch (e) {} } })),
-      types: [['bonus', 'gift', 'پاداش', 'مبلغ ثابت، یک‌باره به کیف پول'], ['cash', 'receipt-refund', 'کش‌بک', 'درصدی از خرید یا فروش برمی‌گردد'], ['goal', 'trophy', 'طرح تشویقی', 'با رسیدن به هدف، جایزه می‌گیرد']].map(([k, icon, t, d]) => ({ icon, t, d, a: s.type === k ? '1' : '0', pick: () => upd({ type: k, title: { bonus: 'پاداش ویژه همکاران', cash: 'کش‌بک ویژه این ماه', goal: 'چالش پرکاری' }[k] }) })),
+      types: [['bonus', 'gift', 'پاداش', 'مبلغ ثابت، یک‌باره به کیف پول'], ['cash', 'receipt-refund', 'کش‌بک', 'درصدی از خرید یا فروش برمی‌گردد'], ['rate', 'percentage', 'نرخ ترجیحی حق‌العمل', 'حق‌العمل کمتر برای مدت محدود'], ['goal', 'trophy', 'طرح تشویقی', 'با رسیدن به هدف، جایزه می‌گیرد']].map(([k, icon, t, d]) => ({ icon, t, d, a: s.type === k ? '1' : '0', pick: () => upd({ type: k, title: { rate: 'حق‌العمل ویژه همکاران', bonus: 'پاداش ویژه همکاران', cash: 'کش‌بک ویژه این ماه', goal: 'چالش پرکاری' }[k] }) })),
       title: s.title, setTitle: e => upd({ title: e.target.value }),
       roles: this.ROLES.map(([k, icon, t]) => ({ icon, t, a: s.role === k ? '1' : '0', pick: () => upd({ role: k, picked: [], vehicles: [] }) })),
       scopes: [['all', 'users-group', 'همه'], ['group', 'filter', 'گروهی'], ['pick', 'user-check', 'تکی / انتخابی']].map(([k, icon, t]) => ({ icon, t, a: s.scope === k ? '1' : '0', pick: () => upd({ scope: k }) })),
@@ -330,7 +337,7 @@ class Component extends DCLogic {
       q: s.q, setQ: e => this.setState({ q: e.target.value }),
       people: this.PEOPLE[s.role].filter(p => !q || (p[0] + p[1]).includes(q)).map(([name, city, kind, cnt]) => { const on = s.picked.includes(name); return { name, meta: `${city} — ${kind} — ${fa(cnt)} ${s.role === 'driver' ? 'بار' : 'سفارش'} در ماه`, a: on ? '1' : '0', boxB: on ? '#FF5B0F' : '#D0D0D0', boxBg: on ? '#FF5B0F' : '#fff', toggle: () => upd({ picked: tgl(s.picked, name) }) }; }),
       countFa: fa(n),
-      tBonus: s.type === 'bonus', tCash: s.type === 'cash', tGoal: s.type === 'goal',
+      tBonus: s.type === 'bonus', tCash: s.type === 'cash', tGoal: s.type === 'goal', tRate: s.type === 'rate', rateV: fa(s.ratePct ?? 1.5) + '٪', rateDec: () => upd({ ratePct: Math.max(0, +((s.ratePct ?? 1.5) - .5).toFixed(1)) }), rateInc: () => upd({ ratePct: Math.min(10, +((s.ratePct ?? 1.5) + .5).toFixed(1)) }),
       amounts: [200000, 500000, 1000000, 2000000].map(v => ({ t: words(v), a: s.amount === v ? '1' : '0', pick: () => upd({ amount: v }) })),
       reason: s.reason, setReason: e => upd({ reason: e.target.value }),
       cashNums: [

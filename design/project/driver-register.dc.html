@@ -325,7 +325,7 @@ a:hover{color:#FF5B0F;}
             </div>
             <label style="margin-top:22px;display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.9;color:#444;cursor:pointer;">
               <input type="checkbox" checked="{{ agree }}" onChange="{{ toggleAgree }}" style="width:20px;height:20px;accent-color:#FF5B0F;margin-top:3px;flex:none;">
-              صحت اطلاعات و مدارک را تایید می‌کنم و قوانین حمل بار، رعایت نکات بارنامه و تحویل سالم بار را می‌پذیرم.{{ agreeExtra }}
+              صحت اطلاعات و مدارک را تایید می‌کنم و قوانین حمل بار، رعایت نکات برگ حمل و تحویل سالم بار را می‌پذیرم.{{ agreeExtra }}
             </label>
             <sc-if value="{{ aErr }}" hint-placeholder-val="{{ false }}"><div style="margin-top:8px;font-size:13px;color:#E0371F;">برای ارسال، تایید قوانین الزامی است.</div></sc-if>
           </div>
@@ -371,7 +371,7 @@ class Component extends DCLogic {
   BT = ['کفی', 'بغل‌دار', 'کمپرسی', 'مسقف'];
   DOCS = [['nidF', 'کارت ملی (رو)', 'id', 1], ['nidB', 'کارت ملی (پشت)', 'id', 1], ['carF', 'کارت ماشین (رو)', 'car', 1], ['carB', 'کارت ماشین (پشت)', 'car', 1], ['green', 'برگ سبز خودرو', 'file-certificate', 1], ['lic', 'گواهینامه', 'license', 0]];
   REL = ['پدر', 'مادر', 'همسر', 'برادر', 'خواهر', 'فرزند', 'شریک', 'کارفرما / شرکت حمل', 'سایر'];
-  ODOCS = [['oNidF', 'کارت ملی مالک (رو)', 'id', 1], ['oNidB', 'کارت ملی مالک (پشت)', 'id', 1], ['oAuth', 'وکالت‌نامه، رضایت‌نامه محضری یا اجاره‌نامه', 'file-certificate', 0]];
+  ODOCS = [['oNidF', 'کارت ملی مالک (رو)', 'id', 1], ['oNidB', 'کارت ملی مالک (پشت)', 'id', 1], ['oAuth', 'وکالت‌نامه، رضایت‌نامه محضری یا اجاره‌نامه (یا ویدیو رضایت مالک)', 'file-certificate', 0]];
   STEPS = [['user', 'اطلاعات فردی'], ['truck', 'اطلاعات خودرو'], ['id', 'مدارک'], ['video', 'ویدیو احراز هویت'], ['map-pin', 'محل سکونت'], ['checklist', 'بازبینی و ارسال']];
   state = { ref: '', owner: 'self', ofn: '', oln: '', onid: '', ophone: '', rel: null, relOther: '', ovid: null, oLink: false, step: 1, max: 1, err: false, busy: false, fn: '', ln: '', nid: '', phone: '', lic: '', vt: null, bt: null, pl1: '', plL: 'ع', pl2: '', pl3: '', capacity: '', year: '', docs: {}, prog: {}, vid: null, prov: 'تهران', city: 'تهران', serve: ['تهران'], addr: '', postal: '', geo: null, geoState: 'idle', agree: false };
   componentDidMount() { try { const rc = localStorage.getItem('hm_ref_code'); if (rc) this.setState({ ref: rc }); } catch (e) {} try { const u = JSON.parse(localStorage.getItem('hm_user') || '{}'); if (u.phone) this.setState({ phone: u.phone }); if (u.name) { const [a, ...b] = u.name.split(' '); this.setState({ fn: a || '', ln: b.join(' ') }); } } catch (e) {} }
@@ -447,8 +447,8 @@ class Component extends DCLogic {
           rels: this.REL.map((t, i) => ({ t, a: s.rel === i ? '1' : '0', border: bad(s.rel == null) ? '#E0371F' : '#ECECEC', pick: () => this.setState({ rel: i }) })),
           relIsOther: s.rel === 8, relOther: s.relOther, setRelOther: e => this.setState({ relOther: e.target.value }),
           vErrText: other && !this.ownerOk() ? 'مشخصات مالک و نسبت خود با مالک را کامل کنید.' : 'نوع خودرو، بارگیر و پلاک کامل را وارد کنید.',
-          ownerName: on, authHint: this.authReq() ? 'چون مالک از بستگان درجه یک نیست، مدرک اجازه استفاده از خودرو (وکالت‌نامه، رضایت‌نامه محضری یا اجاره‌نامه) الزامی است.' : 'برای بستگان درجه یک، کارت ملی مالک کافی است؛ مدرک اجازه اختیاری است.',
-          drvScript: other ? `«اینجانب ${dn} با کد ملی ${s.nid ? fa(s.nid) : '[کد ملی]'}، راننده خودرو با پلاک ${pl} هستم که متعلق به ${on} (${relT || 'نسبت'}) است. با رضایت کامل مالک، متقاضی همکاری با های مصالح هستم و مسئولیت حمل و تحویل سالم بار و رعایت نکات بارنامه را می‌پذیرم.»` : `«اینجانب ${dn} با کد ملی ${s.nid ? fa(s.nid) : '[کد ملی]'}، مالک و راننده خودرو با پلاک ${pl}، متقاضی همکاری به عنوان راننده با های مصالح هستم.»`,
+          ownerName: on, authHint: this.authReq() ? 'چون مالک از بستگان درجه یک نیست، یکی از این‌ها لازم است: وکالت‌نامه، رضایت‌نامه محضری، اجاره‌نامه، یا ویدیو رضایت مالک (مرحله بعد).' : 'برای بستگان درجه یک، کارت ملی مالک کافی است؛ مدرک اجازه اختیاری است.',
+          drvScript: other ? `«اینجانب ${dn} با کد ملی ${s.nid ? fa(s.nid) : '[کد ملی]'}، راننده خودرو با پلاک ${pl} هستم که متعلق به ${on} (${relT || 'نسبت'}) است. با رضایت کامل مالک، متقاضی همکاری با های مصالح هستم و مسئولیت حمل و تحویل سالم بار و رعایت نکات برگ حمل را می‌پذیرم.»` : `«اینجانب ${dn} با کد ملی ${s.nid ? fa(s.nid) : '[کد ملی]'}، مالک و راننده خودرو با پلاک ${pl}، متقاضی همکاری به عنوان راننده با های مصالح هستم.»`,
           ownerScript: `«اینجانب ${on} با کد ملی ${s.onid ? fa(s.onid) : '[کد ملی مالک]'}، مالک خودرو با پلاک ${pl} هستم. به ${dn} با کد ملی ${s.nid ? fa(s.nid) : '[کد ملی]'} (${relT || 'نسبت'}) اجازه می‌دهم با این خودرو برای های مصالح بار حمل کند و از ثبت این اطلاعات آگاه و راضی هستم.»`,
           hasOVid: !!s.ovid, oVidUrl: s.ovid || '', oVidBtn: s.ovid ? 'ضبط دوباره' : 'ضبط ویدیو مالک',
           pickOwnerVid: e => { const f = e.target.files && e.target.files[0]; if (f) this.setState({ ovid: URL.createObjectURL(f) }); },

@@ -88,6 +88,9 @@ button,input{font-family:inherit;}
                       <span style="position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:18px;font-weight:800;color:#888;">تومان</span>
                     </div>
                     <div style="margin-top:6px;font-size:16px;color:#666;text-align:center;">{{ q.priceWords }}</div>
+                  <sc-if value="{{ q.notComp }}" hint-placeholder-val="{{ false }}">
+                    <div data-pane="" style="margin-top:10px;display:flex;gap:10px;align-items:flex-start;background:#FFF6E0;border:2px solid #F3D27A;border-radius:18px;padding:14px;font-size:17px;line-height:1.9;color:#7A5600;"><i class="ti ti-alert-triangle" style="font-size:28px;flex:none;color:#E4A10A;"></i><span>قیمت شما بالاتر از بقیه است. قیمت رقابتی امروز: <b>{{ q.bestText }}</b>. اگر کمتر کنید، شانس فروش بیشتر است.</span></div>
+                  </sc-if>
                     <button data-big="" onClick="{{ q.useLast }}" style="margin-top:8px;width:100%;height:52px;border:2px dashed #CCC;border-radius:16px;background:#fff;color:#444;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px;"><i class="ti ti-history" style="font-size:20px;"></i>همان قیمت دفعه قبل: {{ q.lastWords }}</button>
                     <div style="margin-top:16px;font-size:19px;font-weight:900;">کی آماده است؟</div>
                     <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
@@ -216,8 +219,8 @@ button,input{font-family:inherit;}
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
   REQ = [
-    { id: 1, item: 'سیمان', img: 'assets/c1.jpg', n: 250, unitName: 'کیسه', unit: 'هر کیسه', dest: 'تهران، شهرک غرب', need: 'فردا صبح', last: 285000, cat: 'cement', ttl: 1500 },
-    { id: 2, item: 'چسب کاشی', img: 'assets/c1.jpg', n: 60, unitName: 'کیسه', unit: 'هر کیسه', dest: 'کرج، گوهردشت', need: 'امروز', last: 165000, cat: 'cement', ttl: 540 }
+    { id: 1, item: 'سیمان', img: 'assets/c1.jpg', n: 250, unitName: 'کیسه', unit: 'هر کیسه', dest: 'تهران، شهرک غرب', need: 'فردا صبح', last: 285000, best: 279000, cat: 'cement', ttl: 1500 },
+    { id: 2, item: 'چسب کاشی', img: 'assets/c1.jpg', n: 60, unitName: 'کیسه', unit: 'هر کیسه', dest: 'کرج، گوهردشت', need: 'امروز', last: 165000, best: 158000, cat: 'cement', ttl: 540 }
   ];
   state = { loc: null, tab: 0, open: true, tick: 0, ans: {}, loaded: {}, fee: null, store: '', city: '' };
   componentDidMount() {
@@ -254,7 +257,7 @@ class Component extends DCLogic {
       tabs: [['message-question', 'درخواست'], ['truck-loading', 'بار زدن'], ['wallet', 'پول من'], ['building-store', 'فروشگاه']].map(([icon, label], i) => ({ icon, label, a: s.tab === i ? '1' : '0', dot: (i === 0 && nOpen > 0 && s.open) || (i === 1 && !s.loaded[0]), n: fa(i === 0 ? nOpen : 1), go: () => { this.setState({ tab: i }); window.scrollTo(0, 0); } })),
       reqs: this.REQ.map(q => { const A = this.a(q.id), price = num(A.price), total = price * q.n, fee = total * rates[q.cat] / 100, left = Math.max(0, q.ttl - s.tick);
         return { item: q.item, img: q.img, qtyText: `${fa(q.n)} ${q.unitName}`, dest: q.dest, need: q.need, unit: q.unit,
-          open: !A.sent, sent: A.sent, yes: A.yes === true ? '1' : '0', no: A.yes === false ? '1' : '0', askPrice: A.yes === true,
+          open: !A.sent, sent: A.sent, yes: A.yes === true ? '1' : '0', no: A.yes === false ? '1' : '0', askPrice: A.yes === true, notComp: A.yes === true && !!price && price > q.best, bestText: words(q.best),
           border: A.sent ? '#EEE' : '#FFD9C4',
           setYes: () => this.setA(q.id, { yes: true }), setNo: () => this.setA(q.id, { yes: false }),
           price: A.price ? fa(Number(price).toLocaleString('en-US')) : '', setPrice: e => this.setA(q.id, { price: String(num(e.target.value)) }),

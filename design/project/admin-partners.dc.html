@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+html,body{margin:0;padding:0;background:#F4F4F5;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Vazirmatn',Tahoma,sans-serif;color:#1a1a1a;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+a:hover{color:#FF5B0F;}
+input,button{font-family:inherit;}
+button{white-space:nowrap;}
+[data-btn]{cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.2,1),background-color .3s,color .3s;}
+[data-btn]:active{transform:scale(.96);}
+[data-nav-i]{transition:all .3s;}
+[data-nav-i]:hover{background:rgba(255,255,255,.06);color:#fff !important;}
+[data-nav-i][data-active="1"]{background:#FF5B0F !important;color:#fff !important;}
+[data-chip]{transition:all .3s;cursor:pointer;white-space:nowrap;}
+[data-chip][data-active="1"]{background:#141414 !important;color:#fff !important;border-color:#141414 !important;}
+[data-field]:focus{outline:none;border-color:#FF5B0F !important;background:#fff !important;}
+[data-tr]:hover{background:#FAFAFA;}
+[data-tone]{white-space:nowrap;flex:none;}
+[data-tone="orange"]{background:#FFF0E8;color:#E4500A;}
+[data-tone="green"]{background:#E6F6EC;color:#178A48;}
+[data-tone="gray"]{background:#F0F0F0;color:#666;}
+[data-tone="red"]{background:#FDECEA;color:#C8341E;}
+@media (max-width:1000px){[data-side]{display:none !important;}}
+@media (max-width:640px){[data-main]{padding:16px 14px 40px !important;}}
+</style>
+</helmet>
+<div dir="rtl" style="font-family:'Vazirmatn',Tahoma,sans-serif;background:#F4F4F5;min-height:100vh;display:flex;min-width:0;">
+  <aside data-side="" style="position:sticky;top:0;height:100vh;width:260px;flex:none;background:#141414;color:#fff;display:flex;flex-direction:column;padding:24px 18px;overflow-y:auto;">
+    <a href="index.dc.html" style="display:flex;align-items:center;gap:10px;color:#fff;padding:0 6px;"><img src="assets/logo-light.png" alt="" style="height:40px;width:auto;"><span style="font-size:22px;font-weight:900;white-space:nowrap;"><span style="color:#FF5B0F;">های</span> مصالح</span></a>
+    <div style="margin-top:10px;padding:0 6px;font-size:12px;font-weight:700;color:#FF8A4F;display:flex;align-items:center;gap:6px;"><i class="ti ti-shield-lock" style="font-size:15px;"></i>پنل مدیریت</div>
+    <nav style="margin-top:24px;display:flex;flex-direction:column;gap:4px;">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="9">
+        <a data-nav-i="" data-active="{{ n.a }}" href="{{ n.href }}" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:12px;font-size:15px;font-weight:600;color:#BDBDBD;white-space:nowrap;"><i class="ti ti-{{ n.icon }}" style="font-size:20px;"></i>{{ n.label }}</a>
+      </sc-for>
+    </nav>
+  </aside>
+  <main data-main="" style="flex:1;min-width:0;padding:24px 32px 40px;">
+    <div style="font-size:14px;color:#888;">بررسی و تایید</div>
+    <h1 style="margin:2px 0 0;font-size:clamp(22px,2.4vw,28px);font-weight:900;color:#141414;">فروشگاه‌ها، رسیدها و انصراف‌ها</h1>
+    <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3"><span data-chip="" data-active="{{ t.a }}" onClick="{{ t.pick }}" style="border:1.5px solid #E6E6E6;background:#fff;border-radius:12px;padding:10px 16px;font-size:14px;font-weight:800;color:#333;display:flex;align-items:center;gap:6px;"><i class="ti ti-{{ t.icon }}" style="font-size:17px;"></i>{{ t.t }}<span style="font-size:12px;opacity:.7;">{{ t.n }}</span></span></sc-for>
+    </div>
+
+    <sc-if value="{{ tShops }}" hint-placeholder-val="{{ true }}">
+      <div style="margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:18px;align-items:start;">
+        <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:20px;">
+          <div style="font-size:17px;font-weight:900;color:#141414;">ثبت فروشگاه توسط ادمین</div>
+          <div style="margin-top:4px;font-size:13px;color:#888;line-height:1.8;">با همین شماره، حساب مصالح‌فروش ساخته و پیامک دعوت ارسال می‌شود. جواز کسب و شبا را خود فروشنده در اولین ورود وارد می‌کند.</div>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px;">
+            <input data-field="" value="{{ fName }}" onChange="{{ setFName }}" placeholder="نام فروشگاه" style="height:46px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:0 14px;font-size:14px;">
+            <input data-field="" value="{{ fPhone }}" onChange="{{ setFPhone }}" inputmode="tel" dir="ltr" placeholder="09xx xxx xxxx" style="height:46px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:0 14px;font-size:14px;text-align:right;">
+            <button data-btn="" onClick="{{ pickMap }}" style="height:46px;border:1.5px dashed {{ mapBorder }};background:#fff;color:#333;border-radius:12px;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;"><i class="ti ti-map-pin" style="font-size:18px;color:#FF5B0F;"></i>{{ mapLabel }}</button>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;"><sc-for list="{{ cats }}" as="c" hint-placeholder-count="6"><span data-chip="" data-active="{{ c.a }}" onClick="{{ c.flip }}" style="border:1.5px solid #E6E6E6;background:#fff;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:700;color:#333;">{{ c.t }}</span></sc-for></div>
+            <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:#C8341E;background:#FDF3F1;border-radius:12px;padding:10px 12px;line-height:1.8;"><i class="ti ti-shield-lock" style="font-size:16px;flex:none;"></i>ادمین شبا وارد نمی‌کند تا هیچ کارمندی نتواند شبای خودش را ثبت کند.</div>
+            <button data-btn="" onClick="{{ addShop }}" style="height:50px;border:none;border-radius:14px;background:#FF5B0F;color:#fff;font-size:15px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;"><i class="ti ti-send" style="font-size:18px;"></i>ساخت حساب و ارسال پیامک دعوت</button>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:18px;">
+          <div style="padding:0 4px 8px;font-size:17px;font-weight:900;color:#141414;">مصالح‌فروشان</div>
+          <sc-for list="{{ shops }}" as="r" hint-placeholder-count="4">
+            <div data-tr="" style="padding:12px 8px;border-bottom:1px solid #F4F4F4;border-radius:12px;">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <div style="flex:1;min-width:160px;"><div style="font-size:14px;font-weight:800;color:#222;">{{ r.name }}</div><div style="font-size:12px;color:#999;">{{ r.meta }}</div></div>
+                <span data-tone="{{ r.tone }}" style="font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px;">{{ r.st }}</span>
+              </div>
+              <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
+                <sc-for list="{{ r.checks }}" as="c" hint-placeholder-count="4"><span data-tone="{{ c.tone }}" style="font-size:12px;font-weight:700;padding:4px 10px;border-radius:8px;display:flex;align-items:center;gap:4px;"><i class="ti ti-{{ c.icon }}" style="font-size:14px;"></i>{{ c.t }}</span></sc-for>
+                <sc-if value="{{ r.can }}" hint-placeholder-val="{{ false }}"><button data-btn="" onClick="{{ r.ok }}" style="margin-inline-start:auto;border:none;background:#22A45D;color:#fff;border-radius:10px;padding:6px 12px;font-size:12px;font-weight:800;">تایید جواز و فعال‌سازی</button></sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ tRcpt }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:18px;background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:18px;">
+        <div style="padding:0 4px 4px;font-size:17px;font-weight:900;color:#141414;">رسیدهای حواله بانکی</div>
+        <div style="padding:0 4px 10px;font-size:13px;color:#888;">فقط وقتی تایید کنید که مبلغ را در گردش حساب بانکی دیده‌اید. حواله باید از حساب خود مشتری یا شرکت او باشد.</div>
+        <sc-for list="{{ rcpts }}" as="r" hint-placeholder-count="3">
+          <div data-tr="" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 8px;border-bottom:1px solid #F4F4F4;border-radius:12px;">
+            <span style="width:44px;height:44px;border-radius:12px;background:#F3F3F3;display:flex;align-items:center;justify-content:center;flex:none;"><i class="ti ti-receipt" style="font-size:22px;color:#666;"></i></span>
+            <div style="flex:1;min-width:200px;"><div style="font-size:14px;font-weight:800;color:#222;">{{ r.code }} — {{ r.who }}</div><div style="font-size:12px;color:#999;">{{ r.meta }}</div></div>
+            <b style="font-size:14px;white-space:nowrap;">{{ r.amt }}</b>
+            <span data-tone="{{ r.tone }}" style="font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px;">{{ r.st }}</span>
+            <sc-if value="{{ r.can }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:6px;"><button data-btn="" onClick="{{ r.ok }}" style="border:none;background:#22A45D;color:#fff;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:800;">مبلغ در حساب است — تایید</button><button data-btn="" onClick="{{ r.no }}" style="border:1.5px solid #F6CFC8;background:#fff;color:#C8341E;border-radius:10px;padding:7px 10px;font-size:12px;font-weight:800;">رد</button></div></sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ tCancel }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:18px;background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:18px;">
+        <div style="padding:0 4px 4px;font-size:17px;font-weight:900;color:#141414;">انصراف رانندگان بعد از قبول بار</div>
+        <div style="padding:0 4px 10px;font-size:13px;color:#888;">بیش از ۳ بار در روز: پیامک اخطار مسدودی. ۸ بار در ماه: تماس کارشناس برای بررسی یا آموزش.</div>
+        <sc-for list="{{ cancels }}" as="r" hint-placeholder-count="4">
+          <div data-tr="" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 8px;border-bottom:1px solid #F4F4F4;border-radius:12px;">
+            <div style="flex:1;min-width:160px;"><div style="font-size:14px;font-weight:800;color:#222;">{{ r.name }}</div><div style="font-size:12px;color:#999;">{{ r.meta }}</div></div>
+            <span style="font-size:13px;color:#666;white-space:nowrap;">امروز <b>{{ r.d }}</b></span>
+            <span style="font-size:13px;color:#666;white-space:nowrap;">این ماه <b>{{ r.m }}</b></span>
+            <span data-tone="{{ r.tone }}" style="font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px;">{{ r.st }}</span>
+            <sc-if value="{{ r.call }}" hint-placeholder-val="{{ false }}"><a data-btn="" href="{{ r.tel }}" onClick="{{ r.called }}" style="background:#141414;color:#fff;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:800;display:flex;align-items:center;gap:6px;white-space:nowrap;"><i class="ti ti-phone" style="font-size:15px;"></i>تماس و ثبت نتیجه</a></sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { tab: 0, fName: '', fPhone: '', fMap: false, fCats: [], shops: null, rc: {}, called: {} };
+  SHOPS = [
+    { name: 'مصالح فروشی البرز', meta: 'کرج — سیمان، آجر', by: 'خودش', map: 1, lic: 'ok', iban: 'ok', st: 'on' },
+    { name: 'آهن‌فروشی مرکزی پردیس', meta: 'پردیس — آهن‌آلات', by: 'خودش', map: 1, lic: 'wait', iban: 'ok', st: 'wait' },
+    { name: 'شن و ماسه رضوی', meta: 'شهریار — شن و ماسه', by: 'ادمین', map: 1, lic: 'none', iban: 'none', st: 'invited' },
+    { name: 'لوله و اتصالات ستاره', meta: 'تهران — لوله', by: 'خودش', map: 0, lic: 'wait', iban: 'bad', st: 'wait' }
+  ];
+  RC = [['HM-10244', 'مهندس رضایی — شرکت سازه‌گستر', '۲۱۸ میلیون و ۴۰۰ هزار تومان', 'ساتنا — امروز ۱۰:۱۲ — از حساب شرکت'], ['HM-10251', 'آقای محمدی', '۴۲ میلیون تومان', 'پایا — دیروز ۱۶:۴۰ — از حساب شخص دیگر']];
+  CN = [['جواد رحیمی', 'کامیون ده‌چرخ — تهران', 4, 9, '09121234567'], ['مهدی رستمی', 'تریلی — کرج', 1, 8, '09351234567'], ['حسن کریمی', 'کامیون ده‌چرخ — تهران', 0, 2, '09121112233'], ['رضا نوری', 'نیسان — شهریار', 2, 3, '09191234567']];
+  renderVals() {
+    const s = this.state, fa = v => String(v).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]), shops = s.shops || this.SHOPS;
+    const cs = { ok: ['green', 'circle-check'], wait: ['orange', 'hourglass'], none: ['gray', 'minus'], bad: ['red', 'alert-triangle'] };
+    const CATS = ['سیمان', 'آهن‌آلات', 'آجر و بلوک', 'شن و ماسه', 'لوله', 'در و پنجره'];
+    return {
+      nav: [['layout-dashboard', 'داشبورد', 'admin.dc.html'], ['adjustments', 'قوانین عملیاتی', 'admin-ops.dc.html'], ['building-store', 'فروشگاه‌ها و رسیدها', '#'], ['cash', 'مالی و حق‌العمل', 'admin-finance.dc.html'], ['gift', 'پاداش و کش‌بک', 'admin-rewards.dc.html'], ['users-plus', 'معرفی (Referral)', 'admin-referral.dc.html'], ['building-warehouse', 'انبار خودمان', 'admin-inventory.dc.html'], ['shield-lock', 'کارکنان و دسترسی', 'admin-team.dc.html'], ['layout-board', 'محتوای سایت', 'admin-cms.dc.html']].map(([icon, label, href], i) => ({ icon, label, href, a: i === 2 ? '1' : '0' })),
+      tabs: [['building-store', 'مصالح‌فروشان', shops.filter(x => x.st !== 'on').length], ['receipt', 'رسیدهای حواله', this.RC.filter((_, i) => !s.rc[i]).length], ['user-x', 'انصراف رانندگان', this.CN.filter(c => c[2] > 3 || c[3] >= 8).length]].map(([icon, t, n], i) => ({ icon, t, n: n ? fa(n) : '', a: s.tab === i ? '1' : '0', pick: () => this.setState({ tab: i }) })),
+      tShops: s.tab === 0, tRcpt: s.tab === 1, tCancel: s.tab === 2,
+      fName: s.fName, setFName: e => this.setState({ fName: e.target.value }), fPhone: s.fPhone, setFPhone: e => this.setState({ fPhone: e.target.value }),
+      mapLabel: s.fMap ? 'مکان فروشگاه ثبت شد' : 'انتخاب مکان فروشگاه روی نقشه', mapBorder: s.fMap ? '#22A45D' : '#DDD', pickMap: () => this.setState({ fMap: true }),
+      cats: CATS.map(t => ({ t, a: s.fCats.includes(t) ? '1' : '0', flip: () => this.setState({ fCats: s.fCats.includes(t) ? s.fCats.filter(x => x !== t) : [...s.fCats, t] }) })),
+      addShop: () => { if (!s.fName.trim() || s.fPhone.replace(/\D/g, '').length < 11 || !s.fMap) return; this.setState({ shops: [{ name: s.fName, meta: s.fCats.join('، ') || 'بدون دسته', by: 'ادمین', map: 1, lic: 'none', iban: 'none', st: 'invited' }, ...shops], fName: '', fPhone: '', fMap: false, fCats: [] }); },
+      shops: shops.map((r, i) => ({ name: r.name, meta: `${r.meta} — ثبت توسط ${r.by}`, st: { on: 'فعال', wait: 'در انتظار بررسی', invited: 'دعوت شده' }[r.st], tone: { on: 'green', wait: 'orange', invited: 'gray' }[r.st],
+        checks: [['مکان', r.map ? 'ok' : 'bad'], ['جواز کسب', r.lic], ['شبا', r.iban]].map(([t, k]) => ({ t: t + (k === 'bad' && t === 'شبا' ? ': به نام دیگری' : k === 'bad' ? ': ثبت نشده' : ''), tone: cs[k][0], icon: cs[k][1] })),
+        can: r.st === 'wait' && r.lic === 'wait' && r.iban === 'ok', ok: () => this.setState({ shops: shops.map((x, j) => j === i ? { ...x, lic: 'ok', st: 'on' } : x) }) })),
+      rcpts: this.RC.map((r, i) => ({ code: r[0], who: r[1], amt: r[2], meta: r[3], st: s.rc[i] === 'ok' ? 'تایید شد' : s.rc[i] === 'no' ? 'رد شد' : 'در انتظار', tone: s.rc[i] === 'ok' ? 'green' : s.rc[i] === 'no' ? 'red' : 'orange', can: !s.rc[i], ok: () => this.setState({ rc: { ...s.rc, [i]: 'ok' } }), no: () => this.setState({ rc: { ...s.rc, [i]: 'no' } }) })),
+      cancels: this.CN.map(([name, meta, d, m, tel], i) => { const hot = m >= 8, warn = d > 3; return { name, meta, d: fa(d), m: fa(m), tel: 'tel:' + tel,
+        st: s.called[i] ? 'تماس گرفته شد' : hot ? 'نیاز به تماس' : warn ? 'پیامک اخطار رفت' : 'عادی', tone: s.called[i] ? 'green' : hot ? 'red' : warn ? 'orange' : 'gray', call: hot && !s.called[i], called: () => this.setState({ called: { ...s.called, [i]: true } }) }; })
+    };
+  }
+}
+</script>
+</body>
+</html>

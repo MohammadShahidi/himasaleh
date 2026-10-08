@@ -81,7 +81,7 @@ button{white-space:nowrap;}
     <div data-cols="" style="margin-top:20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:20px;align-items:start;">
       <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:22px;">
         <div style="font-size:17px;font-weight:900;color:#141414;white-space:nowrap;display:flex;align-items:center;gap:8px;"><i class="ti ti-route-2" style="font-size:22px;color:#FF5B0F;"></i>قانون مسیردهی سفارش</div>
-        <div style="margin-top:6px;font-size:13px;color:#888;line-height:1.9;">وقتی سفارش ثبت می‌شود، سیستم اول انبار خودمان را بررسی می‌کند و فقط در صورت نبود یا کمبود، از مصالح‌فروش استعلام می‌گیرد.</div>
+        <div style="margin-top:6px;font-size:13px;color:#888;line-height:1.9;">استعلام از مصالح‌فروشان همیشه انجام می‌شود. اگر کالا در انبار خودمان موجود باشد، رزرو می‌شود و پیشنهاد انبار کنار بقیه پیشنهادها به مشتری نمایش داده می‌شود؛ انتخاب با مشتری است.</div>
         <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px;">
           <sc-for list="{{ toggles }}" as="t" hint-placeholder-count="4">
             <div onClick="{{ t.flip }}" style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:12px 12px 18px;border-radius:14px;background:#FAFAFA;border:1px solid #F0F0F0;opacity:{{ t.op }};">
@@ -217,17 +217,17 @@ class Component extends DCLogic {
     else { check = `موجودی ناکافی (${sep(qty)} ${item.unit})`; result = 'موجودی کافی نیست و تامین ترکیبی خاموش است؛ کل سفارش از مصالح‌فروش استعلام می‌شود.'; }
     const setN = {}; ['name', 'wh', 'qty', 'cost', 'price'].forEach(k => { setN[k] = e => this.setState({ nf: { ...s.nf, [k]: e.target.value } }); });
     return {
-      nav: [['layout-dashboard', 'داشبورد', 'admin.dc.html'], ['route', 'تخصیص بار', 'admin.dc.html'], ['building-warehouse', 'انبار خودمان', '#'], ['cash', 'مالی و حق‌العمل', 'admin-finance.dc.html'], ['gift', 'پاداش و کش‌بک', 'admin-rewards.dc.html'], ['users-plus', 'معرفی (Referral)', 'admin-referral.dc.html'], ['shield-lock', 'کارکنان و دسترسی', 'admin-team.dc.html'], ['layout-board', 'محتوای سایت', 'admin-cms.dc.html']].map(([icon, label, href], i) => ({ icon, label, href, a: i === 2 ? '1' : '0' })),
+      nav: [['layout-dashboard', 'داشبورد', 'admin.dc.html'], ['route', 'تخصیص بار', 'admin.dc.html'], ['building-warehouse', 'انبار خودمان', '#'], ['adjustments', 'قوانین عملیاتی', 'admin-ops.dc.html'], ['building-store', 'فروشگاه‌ها و رسیدها', 'admin-partners.dc.html'], ['cash', 'مالی و حق‌العمل', 'admin-finance.dc.html'], ['gift', 'پاداش و کش‌بک', 'admin-rewards.dc.html'], ['users-plus', 'معرفی (Referral)', 'admin-referral.dc.html'], ['shield-lock', 'کارکنان و دسترسی', 'admin-team.dc.html'], ['layout-board', 'محتوای سایت', 'admin-cms.dc.html']].map(([icon, label, href], i) => ({ icon, label, href, a: i === 2 ? '1' : '0' })),
       saved: s.saved,
       stats: [
         { icon: 'coin', k: 'ارزش موجودی (قیمت خرید)', v: value >= 1e9 ? fa((value / 1e9).toFixed(1)) + ' میلیارد' : fa(Math.round(value / 1e6)) + ' میلیون', tone: 'blue' }, { icon: 'packages', k: 'اقلام در انبار', v: fa(inv.stock.filter(x => x.qty > 0).length) + ' کالا', tone: 'gray' },
         { icon: 'alert-triangle', k: 'کم‌موجود یا تمام‌شده', v: fa(low) + ' کالا', tone: low ? 'red' : 'green' }, { icon: 'bolt', k: 'تامین مستقیم این ماه', v: '۳۴ سفارش', tone: 'orange' }
       ],
       toggles: [
-        ['own', 'اولویت با انبار خودمان', 'اگر کالا موجود بود، از مصالح‌فروش استعلام گرفته نمی‌شود.'],
+        ['own', 'پیشنهاد انبار خودمان کنار بقیه', 'اگر کالا موجود بود، پیشنهاد انبار هم به مشتری نمایش داده می‌شود. استعلام از مصالح‌فروشان قطع نمی‌شود.'],
         ['sameCity', 'فقط انبارهای نزدیک به مقصد', 'انبار باید در همان شهر یا داخل شعاع تعیین‌شده باشد تا کرایه حمل بالا نرود.'],
         ['partial', 'تامین ترکیبی', 'اگر موجودی کم بود، بخشی از انبار و بقیه از مصالح‌فروش تامین شود.'],
-        ['reserve', 'رزرو خودکار موجودی', 'با ثبت سفارش، مقدار سفارش از موجودی قابل فروش کم می‌شود.']
+        ['reserve', 'رزرو تا پایان مهلت پرداخت', 'با ثبت سفارش موجودی رزرو می‌شود؛ اگر مهلت پرداخت بگذرد یا پیشنهاد دیگری انتخاب شود، آزاد می‌شود. خروج از موجودی هنگام «بار زدم».']
       ].map(([k, t, d]) => ({ t, d, track: R[k] ? '#FF5B0F' : '#D5D5D5', knob: R[k] ? 'none' : 'translateX(-18px)', op: k !== 'own' && !R.own ? .5 : 1, flip: () => this.upd({ rule: { ...R, [k]: !R[k] } }) })),
       nums: [
         { label: 'شعاع مجاز انبار تا مقصد', v: fa(R.radius) + ' کیلومتر', hint: 'انبارهای دورتر در نظر گرفته نمی‌شوند', dec: () => this.upd({ rule: { ...R, radius: Math.max(10, R.radius - 10) } }), inc: () => this.upd({ rule: { ...R, radius: R.radius + 10 } }) },

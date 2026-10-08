@@ -156,19 +156,19 @@ span[dir="ltr"]{white-space:nowrap;flex:none;}
           </div>
 
           <div data-lock="{{ lock3 }}" style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:20px;">
-            <div style="display:flex;align-items:center;gap:10px;"><span style="width:32px;height:32px;border-radius:10px;background:{{ s3bg }};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;">۳</span><span style="font-size:16px;font-weight:900;color:#141414;white-space:nowrap;">صدور بارنامه و نکات بار</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><span style="width:32px;height:32px;border-radius:10px;background:{{ s3bg }};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;">۳</span><span style="font-size:16px;font-weight:900;color:#141414;white-space:nowrap;">صدور برگ حمل و نکات بار</span></div>
             <sc-if value="{{ notIssued }}" hint-placeholder-val="{{ true }}">
               <div data-g2="" style="margin-top:16px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;">
                 <div><label style="display:block;font-size:13px;font-weight:700;color:#333;">کرایه حمل (تومان)</label><input data-field="" inputmode="numeric" value="{{ fare }}" onChange="{{ setFare }}" style="margin-top:6px;width:100%;height:48px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:0 14px;font-size:15px;font-weight:700;"></div>
                 <div><label style="display:block;font-size:13px;font-weight:700;color:#333;">مهلت تحویل</label><input data-field="" value="{{ due }}" onChange="{{ setDue }}" style="margin-top:6px;width:100%;height:48px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:0 14px;font-size:14px;"></div>
-                <div><label style="display:block;font-size:13px;font-weight:700;color:#333;">نوع پرداخت کرایه</label>
+                <div><label style="display:block;font-size:13px;font-weight:700;color:#333;">روش پرداخت مشتری</label>
                   <div style="margin-top:6px;display:grid;grid-template-columns:1fr 1fr;gap:4px;background:#F1F1F1;border-radius:12px;padding:4px;height:48px;">
-                    <button data-seg="" data-active="{{ payPre }}" onClick="{{ setPre }}" style="border:none;background:transparent;border-radius:9px;font-size:13px;font-weight:800;color:#777;cursor:pointer;">پیش‌کرایه</button>
-                    <button data-seg="" data-active="{{ payPost }}" onClick="{{ setPost }}" style="border:none;background:transparent;border-radius:9px;font-size:13px;font-weight:800;color:#777;cursor:pointer;">پس‌کرایه</button>
+                    <button data-seg="" data-active="{{ payPre }}" onClick="{{ setPre }}" style="border:none;background:transparent;border-radius:9px;font-size:13px;font-weight:800;color:#777;cursor:pointer;">پرداخت با درگاه</button>
+                    <button data-seg="" data-active="{{ payPost }}" onClick="{{ setPost }}" style="border:none;background:transparent;border-radius:9px;font-size:13px;font-weight:800;color:#777;cursor:pointer;">حواله بانکی</button>
                   </div>
                 </div>
               </div>
-              <label style="display:block;margin-top:16px;font-size:13px;font-weight:700;color:#333;">نکات بارنامه (برای راننده، مشتری و مصالح‌فروشی نمایش داده می‌شود)</label>
+              <label style="display:block;margin-top:16px;font-size:13px;font-weight:700;color:#333;">نکات برگ حمل (برای راننده، مشتری و مصالح‌فروشی نمایش داده می‌شود)</label>
               <div style="margin-top:8px;display:flex;flex-direction:column;gap:8px;">
                 <sc-for list="{{ noteOpts }}" as="n" hint-placeholder-count="5">
                   <label style="display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#333;cursor:pointer;line-height:1.8;"><input type="checkbox" checked="{{ n.on }}" onChange="{{ n.toggle }}" style="width:18px;height:18px;accent-color:#FF5B0F;margin-top:4px;flex:none;">{{ n.t }}</label>
@@ -178,10 +178,10 @@ span[dir="ltr"]{white-space:nowrap;flex:none;}
                 <div><label style="display:block;font-size:13px;font-weight:700;color:#333;">نکته اضافه</label><textarea data-field="" rows="2" value="{{ extra }}" onChange="{{ setExtra }}" placeholder="مثلاً ورود کامیون از درب شمالی" style="margin-top:6px;width:100%;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:10px 14px;font-size:14px;resize:vertical;"></textarea></div>
                 <div><label style="display:block;font-size:13px;font-weight:700;color:#333;">یادداشت داخلی (فقط مدیر)</label><textarea data-field="" rows="2" value="{{ inote }}" onChange="{{ setInote }}" placeholder="مثلاً کمیسیون و توافق با مصالح‌فروشی" style="margin-top:6px;width:100%;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:10px 14px;font-size:14px;resize:vertical;"></textarea></div>
               </div>
-              <button data-btn="" onClick="{{ issue }}" style="margin-top:18px;width:100%;height:54px;border:none;border-radius:14px;background:#FF5B0F;color:#fff;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 14px 30px rgba(255,91,15,.3);"><i class="ti ti-file-invoice" style="font-size:20px;"></i>صدور و ارسال بارنامه</button>
+              <button data-btn="" onClick="{{ issue }}" style="margin-top:18px;width:100%;height:54px;border:none;border-radius:14px;background:#FF5B0F;color:#fff;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 14px 30px rgba(255,91,15,.3);"><i class="ti ti-file-invoice" style="font-size:20px;"></i>صدور و ارسال برگ حمل</button>
             </sc-if>
             <sc-if value="{{ issued }}" hint-placeholder-val="{{ false }}">
-              <div data-pane="" style="margin-top:14px;display:flex;align-items:center;gap:10px;background:#F2FBF5;border:1px solid #BFE6CD;border-radius:14px;padding:12px 14px;font-size:14px;color:#178A48;font-weight:700;"><i class="ti ti-circle-check" style="font-size:20px;"></i>بارنامه صادر شد و برای راننده، مشتری و مصالح‌فروشی ارسال شد.</div>
+              <div data-pane="" style="margin-top:14px;display:flex;align-items:center;gap:10px;background:#F2FBF5;border:1px solid #BFE6CD;border-radius:14px;padding:12px 14px;font-size:14px;color:#178A48;font-weight:700;"><i class="ti ti-circle-check" style="font-size:20px;"></i>برگ حمل صادر شد و برای راننده، مشتری و مصالح‌فروشی ارسال شد.</div>
             </sc-if>
           </div>
 
@@ -263,7 +263,7 @@ class Component extends DCLogic {
     isf: [['علی احمدی', 'کامیونت', 8, ['۱۳', 'د', '۵۵۲', '۵۳'], '۴٫۷', 'آزاد', '۶ کیلومتر'], ['سعید مرادی', 'خاور', 5, ['۴۳', 'ص', '۲۱۸', '۶۷'], '۴٫۵', 'آزاد', '۳ کیلومتر'], ['مجید حیدری', 'ده‌چرخ کمپرسی', 18, ['۲۳', 'ق', '۶۶۰', '۵۳'], '۴٫۸', 'آزاد', '۱۱ کیلومتر']],
     msh: [['جواد رحیمی', 'ده‌چرخ کمپرسی', 18, ['۱۲', 'ط', '۳۳۰', '۳۶'], '۴٫۹', 'آزاد', '۸ کیلومتر'], ['امیر قاسمی', 'کامیون تک کمپرسی', 12, ['۷۴', 'ل', '۴۴۱', '۱۲'], '۴٫۶', 'آزاد', '۵ کیلومتر'], ['حمید کاظمی', 'تریلی کفی', 25, ['۵۵', 'م', '۱۰۲', '۳۲'], '۴٫۷', 'در سفر', 'تا فردا']]
   };
-  NOTES = ['بار باید با برزنت پوشانده و مهار شود.', 'تخلیه بار به عهده گیرنده است؛ مسئولیت راننده تا درب کارگاه است.', 'کسری یا آسیب بار هنگام تحویل در بارنامه ثبت و امضا شود.', 'مهر و امضای تحویل‌گیرنده روی بارنامه الزامی است.', 'راننده عکس بارنامه امضاشده را در پنل بارگذاری کند.', 'بیمه باربری برای این محموله فعال است.'];
+  NOTES = ['بار باید با برزنت پوشانده و مهار شود.', 'تخلیه بار به عهده گیرنده است؛ مسئولیت راننده تا درب کارگاه است.', 'کسری یا آسیب بار هنگام تحویل در برگ حمل ثبت و امضا شود.', 'مهر و امضای تحویل‌گیرنده روی برگ حمل الزامی است.', 'راننده عکس برگ حمل امضاشده را در پنل بارگذاری کند.', 'بیمه باربری برای این محموله فعال است.'];
   APPS = [
     { name: 'سعید جعفری', vt: 'کامیونت', city: 'کرج', when: '۲ ساعت پیش', nid: '۰۰۱۲۳۴۵۶۷۸', phone: '۰۹۱۲۴۴۵۶۶۷۷', plate: '۳۸ ن ۴۵۱ - ایران ۶۸', bt: 'بغل‌دار', cap: '۸ تن', serve: 'کرج، فردیس، نظرآباد' },
     { name: 'بهروز فتحی', vt: 'ده‌چرخ', city: 'تبریز', when: 'دیروز', nid: '۱۳۶۲۲۲۰۰۹۱', phone: '۰۹۱۴۳۳۲۱۱۰۰', plate: '۱۵ و ۷۲۳ - ایران ۱۵', bt: 'کمپرسی', cap: '۱۸ تن', serve: 'تبریز، مرند', owner: 'حمید فتحی — پدر' },
@@ -285,7 +285,7 @@ class Component extends DCLogic {
     const s = this.state, fa = v => String(v).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]).replace('.', '٫');
     const o = this.ORD[s.sel], f = this.flow();
     const sups = this.SUP[o.city], drvs = this.DRV[o.city];
-    const stOf = (i) => { const fl = s.flows[i]; if (!fl) return ['در انتظار استعلام', 'gray']; if (fl.issued) return ['بارنامه صادر شد', 'green']; if (fl.pick === 'own' && fl.drv == null) return ['از انبار خودمان', 'green']; if (fl.drv != null) return ['آماده صدور بارنامه', 'blue']; if (fl.pick != null) return ['انتخاب راننده', 'orange']; return ['در حال استعلام', 'orange']; };
+    const stOf = (i) => { const fl = s.flows[i]; if (!fl) return ['در انتظار استعلام', 'gray']; if (fl.issued) return ['برگ حمل صادر شد', 'green']; if (fl.pick === 'own' && fl.drv == null) return ['از انبار خودمان', 'green']; if (fl.drv != null) return ['آماده صدور برگ حمل', 'blue']; if (fl.pick != null) return ['انتخاب راننده', 'orange']; return ['در حال استعلام', 'orange']; };
     const apps = (s.local ? [{ name: s.local.name, vt: s.local.vt, city: s.local.city, when: 'همین حالا', nid: '—', phone: '—', plate: s.local.plate ? `${fa(s.local.plate[0])} ${s.local.plate[1]} ${fa(s.local.plate[2])} - ایران ${fa(s.local.plate[3])}` : '—', bt: s.local.bt, cap: '—', serve: (s.local.serve || []).join('، '), owner: s.local.owner ? `${s.local.owner.name} — ${s.local.owner.rel}` : '' }] : []).concat(this.APPS);
     const appSt = i => s.appSt[i] || 'pending';
     const stLabel = { pending: ['در انتظار بررسی', 'orange'], ok: ['تایید شده', 'green'], rej: ['رد شده', 'red'] };
@@ -295,10 +295,10 @@ class Component extends DCLogic {
     const ownMsg = !inv.rule.own ? null : !oit || !oit.qty ? null : !(owh && (!inv.rule.sameCity || owh[1] === o.cityName)) ? `موجودی در ${owh[0]} هست ولی خارج از محدوده ${o.cityName} است؛ استعلام لازم است.` : oit.qty < oq ? `فقط ${fa(oit.qty)} ${oit.unit} در ${owh[0]} موجود است؛ بقیه با استعلام تامین شود.` : null;
     const pickedSup = f.pick === 'own' ? [owh[0] + ' (خودمان)', owh[2] + ' — انبار های مصالح', 1, ''] : f.pick != null ? sups[f.pick] : null, pickedDrv = f.drv != null ? drvs[f.drv] : null;
     const fareNum = f.fare || (o.w >= 12 ? '۶٬۴۰۰٬۰۰۰' : o.w >= 7 ? '۵٬۲۰۰٬۰۰۰' : '۴٬۸۰۰٬۰۰۰');
-    const noteList = f.notes.map(i => this.NOTES[i]).concat(f.extra.trim() ? [f.extra.trim()] : []).concat([f.pay === 'pre' ? 'کرایه به صورت پیش‌کرایه پرداخت شده است.' : 'کرایه به صورت پس‌کرایه در مقصد از گیرنده دریافت شود.']);
+    const noteList = f.notes.map(i => this.NOTES[i]).concat(f.extra.trim() ? [f.extra.trim()] : []).concat([f.pay === 'pre' ? 'مشتری قیمت تمام‌شده را با درگاه به حساب های مصالح پرداخت کرده است. از گیرنده وجه نقد دریافت نشود.' : 'مشتری قیمت تمام‌شده را با حواله بانکی پرداخت کرده و رسید تایید شده است. از گیرنده وجه نقد دریافت نشود.']);
     const pendingCount = apps.filter((x, i) => appSt(i) === 'pending').length;
     return {
-      nav: [['layout-dashboard', 'داشبورد'], ['route', 'تخصیص بار', '۳'], ['truck', 'رانندگان', fa(pendingCount)], ['building-store', 'مصالح‌فروشی‌ها'], ['cash', 'مالی و حق‌العمل'], ['gift', 'پاداش و کش‌بک'], ['shield-lock', 'کارکنان و دسترسی'], ['building-warehouse', 'انبار خودمان'], ['layout-board', 'محتوای سایت'], ['users-plus', 'معرفی (Referral)']].map(([icon, label, badge], i) => ({ icon, label, href: i === 4 ? 'admin-finance.dc.html' : i === 5 ? 'admin-rewards.dc.html' : i === 6 ? 'admin-team.dc.html' : i === 7 ? 'admin-inventory.dc.html' : i === 8 ? 'admin-cms.dc.html' : i === 9 ? 'admin-referral.dc.html' : i === 3 ? 'supplier-panel.dc.html' : '#', badge: badge || '', hasBadge: !!badge && badge !== '۰', a: (s.tab === 'dispatch' && i === 1) || (s.tab === 'drivers' && i === 2) ? '1' : '0', go: e => { if (i >= 3) return; e.preventDefault(); if (i === 1) this.setState({ tab: 'dispatch' }); if (i === 2) this.setState({ tab: 'drivers' }); } })),
+      nav: [['layout-dashboard', 'داشبورد'], ['route', 'تخصیص بار', '۳'], ['truck', 'رانندگان', fa(pendingCount)], ['building-store', 'مصالح‌فروشی‌ها'], ['cash', 'مالی و حق‌العمل'], ['gift', 'پاداش و کش‌بک'], ['shield-lock', 'کارکنان و دسترسی'], ['building-warehouse', 'انبار خودمان'], ['layout-board', 'محتوای سایت'], ['users-plus', 'معرفی (Referral)'], ['adjustments', 'قوانین عملیاتی'], ['building-store', 'فروشگاه‌ها و رسیدها']].map(([icon, label, badge], i) => ({ icon, label, href: i === 4 ? 'admin-finance.dc.html' : i === 5 ? 'admin-rewards.dc.html' : i === 6 ? 'admin-team.dc.html' : i === 7 ? 'admin-inventory.dc.html' : i === 8 ? 'admin-cms.dc.html' : i === 9 ? 'admin-referral.dc.html' : i === 10 ? 'admin-ops.dc.html' : i === 11 ? 'admin-partners.dc.html' : i === 3 ? 'supplier-panel.dc.html' : '#', badge: badge || '', hasBadge: !!badge && badge !== '۰', a: (s.tab === 'dispatch' && i === 1) || (s.tab === 'drivers' && i === 2) ? '1' : '0', go: e => { if (i >= 3) return; e.preventDefault(); if (i === 1) this.setState({ tab: 'dispatch' }); if (i === 2) this.setState({ tab: 'drivers' }); } })),
       tabD: s.tab === 'dispatch' ? '1' : '0', tabR: s.tab === 'drivers' ? '1' : '0', pendingFa: fa(pendingCount),
       toDispatch: () => this.setState({ tab: 'dispatch' }), toDrivers: () => this.setState({ tab: 'drivers' }),
       isDispatch: s.tab === 'dispatch', isDrivers: s.tab === 'drivers',
@@ -306,7 +306,7 @@ class Component extends DCLogic {
         { icon: 'package', k: 'در انتظار تخصیص', v: fa(this.ORD.filter((x, i) => !(s.flows[i] && s.flows[i].issued)).length), tone: 'orange' },
         { icon: 'steering-wheel', k: 'راننده فعال', v: '۱۲۸', tone: 'blue' },
         { icon: 'id-badge-2', k: 'درخواست راننده', v: fa(pendingCount), tone: 'gray' },
-        { icon: 'file-invoice', k: 'بارنامه امروز', v: fa(14 + Object.values(s.flows).filter(x => x.issued).length), tone: 'green' }
+        { icon: 'file-invoice', k: 'برگ حمل امروز', v: fa(14 + Object.values(s.flows).filter(x => x.issued).length), tone: 'green' }
       ],
       orders: this.ORD.map((x, i) => ({ code: x.code, goods: x.goods, city: x.cityName, cust: x.cust, st: stOf(i)[0], tone: stOf(i)[1], a: s.sel === i ? '1' : '0', pick: () => this.setState({ sel: i }) })),
       o: { ...o, weightFa: fa(o.w) + ' تن' },
@@ -314,8 +314,8 @@ class Component extends DCLogic {
       askAll: () => { if (f.pick === 'own') return; sups.forEach((_, i) => this.ask(i)); },
       own: { show: !!(ownOk || ownMsg), can: ownOk && f.pick !== 'own' && !f.issued, chosen: f.pick === 'own',
         title: ownOk ? `موجود در ${owh[0]}: ${fa(oit.qty)} ${oit.unit}` : 'موجودی انبار خودمان کافی نیست',
-        sub: ownOk ? `نیازی به استعلام از مصالح‌فروش نیست. سود فروش مستقیم: ${fa(Math.round((oit.price - oit.cost) * oq / 1e6))} میلیون تومان.` : ownMsg,
-        border: ownOk ? '#BFE6CD' : '#FFE0CF', bg: ownOk ? '#F2FBF5' : '#FFF8F4', supOp: f.pick === 'own' ? .4 : 1,
+        sub: ownOk ? `رزرو شد. پیشنهاد انبار کنار پیشنهاد مصالح‌فروشان به مشتری نمایش داده می‌شود؛ انتخاب با مشتری است. سود اگر انتخاب شود: ${fa(Math.round((oit.price - oit.cost) * oq / 1e6))} میلیون تومان.` : ownMsg,
+        border: ownOk ? '#BFE6CD' : '#FFE0CF', bg: ownOk ? '#F2FBF5' : '#FFF8F4', supOp: 1,
         use: () => this.setFlow({ pick: 'own' }) },
       sups: sups.map(([name, meta, , price], i) => { const st = f.sup[i]; return { name, meta, price: price || '', idle: !st, wait: st === 'wait', ok: st === 'ok', no: st === 'no', a: f.pick === i ? '1' : '0', ask: e => { e.stopPropagation(); this.ask(i); }, pick: () => { if (st === 'ok' && !f.issued) this.setFlow({ pick: i }); } }; }),
       lock2: f.pick == null ? '1' : '0', lock3: f.drv == null ? '1' : '0',
@@ -332,7 +332,7 @@ class Component extends DCLogic {
       issue: () => this.setFlow({ issued: true }),
       wb: pickedSup && pickedDrv ? { no: `۱۴۰۵۰۷۱۳-${fa(9100 + s.sel * 37)}`, status: 'صادر شده — منتظر بارگیری', track: `HM-${fa(59000 + s.sel * 41)}`,
         fromTitle: pickedSup[0], fromAddr: pickedSup[1].split(' — ')[0], toTitle: `کارگاه ${o.cust}`, toAddr: o.dest, distance: pickedSup[1].split(' — ')[1] || '',
-        rows: [{ k: 'کالا', v: o.goods }, { k: 'وزن', v: fa(o.w) + ' تن' }, { k: 'فرستنده', v: pickedSup[0] }, { k: 'گیرنده', v: `${o.cust} (${o.custType})` }, { k: 'تاریخ صدور', v: '۱۳ مهر ۱۴۰۵' }, { k: 'مهلت تحویل', v: f.due || 'فردا تا ساعت ۱۶:۰۰' }, { k: 'کرایه حمل', v: fareNum + ' تومان' }, { k: 'نوع پرداخت', v: f.pay === 'pre' ? 'پیش‌کرایه' : 'پس‌کرایه' }],
+        rows: [{ k: 'کالا', v: o.goods }, { k: 'وزن', v: fa(o.w) + ' تن' }, { k: 'فرستنده', v: pickedSup[0] }, { k: 'گیرنده', v: `${o.cust} (${o.custType})` }, { k: 'تاریخ صدور', v: '۱۳ مهر ۱۴۰۵' }, { k: 'مهلت تحویل', v: f.due || 'فردا تا ساعت ۱۶:۰۰' }, { k: 'کرایه حمل', v: fareNum + ' تومان' }, { k: 'نوع پرداخت', v: f.pay === 'pre' ? 'پرداخت‌شده (درگاه)' : 'پرداخت‌شده (حواله)' }],
         driverName: pickedDrv[0], vehicle: pickedDrv[1], p1: pickedDrv[3][0], pl: pickedDrv[3][1], p2: pickedDrv[3][2], p3: pickedDrv[3][3],
         notes: noteList, hasAdmin: !!f.inote.trim(), adminNote: f.inote } : null,
       apps: apps.map((x, i) => ({ name: x.name, vt: x.vt, city: x.city, when: x.when, st: stLabel[appSt(i)][0], tone: stLabel[appSt(i)][1], a: s.appSel === i ? '1' : '0', pick: () => this.setState({ appSel: i }) })),

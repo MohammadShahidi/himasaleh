@@ -208,7 +208,7 @@ button,[data-seg],[data-tab]{white-space:nowrap;}
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  DEF = { model: 'deduct', sup: { cement: 3, steel: 1.5, brick: 4, sand: 5, pipe: 4 }, drv: 8, min: 150, cust: 0, escrow: true, wallet: true, own: false, walletMin: 500 };
+  DEF = { model: 'deduct', sup: { cement: 3, steel: 1.5, brick: 4, sand: 4, pipe: 4 }, drv: 8, min: 150, cust: 0, escrow: true, wallet: true, own: false, walletMin: 1000 };
   CATS = [['cement', 'package', 'سیمان و افزودنی‌ها'], ['steel', 'layout-columns', 'آهن آلات'], ['brick', 'wall', 'آجر و بلوک'], ['sand', 'shovel', 'شن و ماسه'], ['pipe', 'tools', 'لوله و اتصالات']];
   state = { fee: null, saved: false, period: 2, calcCat: 'cement', calcGoods: '57', calcFare: '8.5', led: 'sup', done: {} };
   componentDidMount() { let f = null; try { f = JSON.parse(localStorage.getItem('hm_fee') || 'null'); } catch (e) {} this.setState({ fee: { ...this.DEF, ...(f || {}), sup: { ...this.DEF.sup, ...((f && f.sup) || {}) } } }); }
@@ -242,7 +242,7 @@ class Component extends DCLogic {
       ? SUPL.map(([name, meta, gmv, pct], i) => { const done = s.done['s' + i]; const net = gmv * (1 - pct / 100); return { name, meta: `${meta} — فروش ${mil(gmv)}`, k: `خالص (−${fa(pct)}٪)`, v: mil(net) + ' تومان', color: '#141414', st: done ? 'تسویه شد' : 'آماده تسویه', tone: done ? 'green' : 'orange', can: !done, actLabel: 'واریز به شبا', act: () => this.setState(st => ({ done: { ...st.done, ['s' + i]: 1 } })) }; })
       : DRVL.map(([name, meta, fareM, wallet], i) => { const done = s.done['d' + i]; const debt = wallet < 0; return { name, meta: `${meta} — کرایه ${mil(fareM)}`, k: debt ? 'بدهی کیف پول' : 'موجودی کیف پول', v: mil(Math.abs(wallet)) + ' تومان', color: debt ? '#C8341E' : '#178A48', st: done ? (debt ? 'پیامک ارسال شد' : 'تسویه شد') : debt ? 'بدهکار — حساب محدود' : 'قابل برداشت', tone: done ? 'gray' : debt ? 'red' : 'green', can: !done, actLabel: debt ? 'ارسال یادآوری' : 'واریز', act: () => this.setState(st => ({ done: { ...st.done, ['d' + i]: 1 } })) }; });
     return {
-      nav: [['layout-dashboard', 'داشبورد', 'admin.dc.html'], ['route', 'تخصیص بار', 'admin.dc.html'], ['truck', 'رانندگان', 'admin.dc.html'], ['building-store', 'مصالح‌فروشی‌ها', 'supplier-panel.dc.html'], ['cash', 'مالی و حق‌العمل', '#'], ['file-invoice', 'بارنامه‌ها', 'admin.dc.html'], ['gift', 'پاداش و کش‌بک', 'admin-rewards.dc.html'], ['users-plus', 'معرفی (Referral)', 'admin-referral.dc.html'], ['shield-lock', 'کارکنان و دسترسی', 'admin-team.dc.html'], ['building-warehouse', 'انبار خودمان', 'admin-inventory.dc.html'], ['layout-board', 'محتوای سایت', 'admin-cms.dc.html']].map(([icon, label, href], i) => ({ icon, label, href, a: i === 4 ? '1' : '0' })),
+      nav: [['layout-dashboard', 'داشبورد', 'admin.dc.html'], ['route', 'تخصیص بار', 'admin.dc.html'], ['truck', 'رانندگان', 'admin.dc.html'], ['building-store', 'مصالح‌فروشی‌ها', 'supplier-panel.dc.html'], ['adjustments', 'قوانین عملیاتی', 'admin-ops.dc.html'], ['building-store', 'فروشگاه‌ها و رسیدها', 'admin-partners.dc.html'], ['cash', 'مالی و حق‌العمل', '#'], ['file-invoice', 'برگ‌های حمل', 'admin.dc.html'], ['gift', 'پاداش و کش‌بک', 'admin-rewards.dc.html'], ['users-plus', 'معرفی (Referral)', 'admin-referral.dc.html'], ['shield-lock', 'کارکنان و دسترسی', 'admin-team.dc.html'], ['building-warehouse', 'انبار خودمان', 'admin-inventory.dc.html'], ['layout-board', 'محتوای سایت', 'admin-cms.dc.html']].map(([icon, label, href], i) => ({ icon, label, href, a: i === 4 ? '1' : '0' })),
       periods: ['امروز', 'این هفته', 'این ماه'].map((label, i) => ({ label, a: s.period === i ? '1' : '0', pick: () => this.setState({ period: i }) })),
       stats: [
         { k: 'گردش مالی (GMV)', v: ['۱۸۴ میلیون', '۱٫۱ میلیارد', '۴٫۲ میلیارد'][s.period], sub: 'کل پرداخت مشتریان', icon: 'chart-line', tone: 'blue' },
@@ -251,7 +251,7 @@ class Component extends DCLogic {
         { k: 'مانده حساب امانی', v: '۵۴۰ میلیون', sub: 'سفارش‌های تحویل‌نشده', icon: 'lock-dollar', tone: 'green' }
       ],
       flow: [
-        ['credit-card', 'پرداخت مشتری', 'کالا + کرایه به حساب امانی'], ['building-store', 'بارگیری', 'مصالح‌فروش بار را تحویل راننده می‌دهد'], ['file-check', 'تحویل و امضا', 'بارنامه امضا و تحویل تایید می‌شود'],
+        ['credit-card', 'پرداخت مشتری', 'کالا + کرایه به حساب امانی'], ['building-store', 'بارگیری', 'مصالح‌فروش بار را تحویل راننده می‌دهد'], ['file-check', 'تحویل و امضا', 'برگ حمل امضا و تحویل تایید می‌شود'],
         ['percentage', 'کسر حق‌العمل', 'سهم های مصالح خودکار کسر می‌شود'], ['building-bank', 'تسویه', 'واریز به شبا مصالح‌فروش و کیف پول راننده']
       ].map(([icon, t, d], i) => ({ icon, t, d, arrow: i === 4 ? 'none' : 'block' })),
       saved: s.saved,
@@ -262,11 +262,11 @@ class Component extends DCLogic {
         { label: 'حق‌العمل از راننده', v: fa(F.drv) + '٪ از کرایه', hint: 'از کرایه هر سفر کسر می‌شود', ...step('drv', 1, 0, 20) },
         { label: 'حداقل حق‌العمل هر سفارش', v: fa(F.min) + ' هزار تومان', hint: 'برای سفارش‌های کوچک', ...step('min', 50, 0, 1000) },
         { label: 'کارمزد خدمات مشتری', v: fa(F.cust) + '٪', hint: 'در مدل ترکیبی یا کارمزد مشتری', ...step('cust', .5, 0, 10) },
-        { label: 'حداقل موجودی کیف پول راننده', v: fa(F.walletMin) + ' هزار تومان', hint: 'برای قبول بار پس‌کرایه', ...step('walletMin', 100, 0, 5000) }
+        { label: 'حداقل مبلغ برداشت از کیف پول', v: fa(F.walletMin) + ' هزار تومان', hint: 'کش‌بک و پاداش فقط بعد از اولین سفارش یا سفر موفق قابل برداشت است', ...step('walletMin', 100, 0, 5000) }
       ],
       toggles: [
         ['escrow', 'پرداخت امانی اجباری', 'مشتری مبلغ را به حساب امانی می‌پردازد و پس از تحویل آزاد می‌شود.'],
-        ['wallet', 'کسر از کیف پول در بارهای پس‌کرایه', 'وقتی راننده کرایه را نقد می‌گیرد، حق‌العمل از کیف پول او کسر می‌شود.'],
+        ['wallet', 'کسر جریمه و هزینه لغو از کیف پول', 'جریمه تاخیر و هزینه لغو از کیف پول کسر می‌شود؛ اگر موجودی منفی شود، پیشنهاد بار و استعلام جدید قطع می‌شود.'],
         ['own', 'فروش از انبار های مصالح', 'برای آینده: کالا از موجودی خودمان با حاشیه سود فروخته می‌شود.']
       ].map(([k, t, d]) => ({ t, d, track: F[k] ? '#FF5B0F' : '#D5D5D5', knob: F[k] ? 'none' : 'translateX(-18px)', flip: () => this.upd({ [k]: !F[k] }) })),
       save: () => { try { localStorage.setItem('hm_fee', JSON.stringify(F)); } catch (e) {} this.setState({ saved: true }); },
