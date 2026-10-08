@@ -47,7 +47,7 @@ flowchart LR
 | `web` | Next.js 15 (App Router) + Serwist | سایت عمومی (SSR/ISR برای سئو)، پنل‌ها، PWA |
 | `api` | NestJS + Prisma + pg-boss | REST API، قواعد کسب‌وکار، کارهای زمان‌دار، اتصال به سرویس‌های بیرونی |
 | `postgres` | PostgreSQL 16 | داده + صف کارها (pg-boss) |
-| (اختیاری) `minio` | MinIO | فقط اگر ذخیره‌ساز S3 جدا ندارید |
+| (اختیاری) `s3` | SeaweedFS | فقط اگر ذخیره‌ساز S3 جدا ندارید. MinIO دیگر ایمیج Docker عمومی منتشر نمی‌کند. |
 
 ---
 
@@ -437,7 +437,7 @@ erDiagram
 
 ## ۹. زیرساخت
 
-- Docker Compose روی سرور شما: `proxy`، `web`، `api`، `postgres` (و `minio` اگر لازم بود).
+- Docker Compose روی سرور شما: `proxy`، `web`، `api`، `postgres` (و `s3` با SeaweedFS اگر لازم بود).
 - دو محیط از ابتدا: `dev` (محلی) و `production`. محیط `staging` قبل از اتصال درگاه و API بانک اضافه می‌شود.
 - CI: lint، تایپ، تست واحد، بررسی migrationهای Prisma، build ایمیج‌ها.
 - لاگ با pino در فایل. خطاهای جدی (مثل قطعی هر دو سرویس پیامک یا خطای دفتر کل) با پیامک یا تلگرام به مدیر فنی اطلاع داده می‌شوند.

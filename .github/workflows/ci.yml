@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: hm
+          POSTGRES_PASSWORD: hm
+          POSTGRES_DB: hm
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U hm" --health-interval 5s --health-retries 20
+    env:
+      DATABASE_URL: postgresql://hm:hm@localhost:5432/hm
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build shared package
+        run: pnpm --filter @hm/shared build
+      - name: Typecheck
+        run: pnpm -r typecheck
+      - name: Unit tests
+        run: pnpm -r test
+      - name: Migrations apply cleanly and match the schema
+        run: pnpm --filter @hm/api exec prisma migrate deploy && pnpm --filter @hm/api exec prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code
+      - name: Build apps
+        run: pnpm --filter @hm/api build && pnpm --filter @hm/web build
+
+  images:
+    runs-on: ubuntu-latest
+    needs: check
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -f infra/api.Dockerfile -t hm-api .
+      - run: docker build -f infra/web.Dockerfile -t hm-web .

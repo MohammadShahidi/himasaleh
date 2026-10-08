@@ -1,0 +1,166 @@
+// Phase 0: accounts, sign-in, settings, audit, files, SMS log.
+// Money columns (later phases) are BigInt rials; rates are Int basis points.
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "esm"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  personal
+  contractor
+  driver
+  supplier
+  staff
+}
+
+enum UserStatus {
+  active
+  restricted
+  disabled
+}
+
+model User {
+  id        String     @id @default(cuid())
+  phone     String     @unique
+  fullName  String?
+  /// company name (contractor) or store name (supplier)
+  orgName   String?
+  /// referral code entered at sign-up; the referral module (phase 3) resolves it
+  referredByCode String?
+  status    UserStatus @default(active)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  roles         UserRole[]
+  refreshTokens RefreshToken[]
+  files         FileObject[]
+}
+
+model UserRole {
+  userId    String
+  role      Role
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, role])
+}
+
+/// One row per issued code. Only a hash of the code is stored.
+model OtpCode {
+  id        String    @id @default(cuid())
+  phone     String
+  codeHash  String
+  attempts  Int       @default(0)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([phone, createdAt])
+}
+
+/// Every OTP request, kept for rate limiting and bot detection.
+model OtpRequestLog {
+  id        String   @id @default(cuid())
+  phone     String
+  ip        String
+  deviceId  String?
+  createdAt DateTime @default(now())
+
+  @@index([phone, createdAt])
+  @@index([ip, createdAt])
+  @@index([deviceId, createdAt])
+}
+
+enum BlockScope {
+  phone
+  ip
+  device
+}
+
+model Block {
+  id        String     @id @default(cuid())
+  scope     BlockScope
+  value     String
+  reason    String
+  until     DateTime
+  createdAt DateTime   @default(now())
+
+  @@index([scope, value, until])
+}
+
+model RefreshToken {
+  id         String    @id @default(cuid())
+  userId     String
+  tokenHash  String    @unique
+  activeRole Role
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+/// Every tunable business number lives here (architecture §6). Missing keys fall back to code defaults.
+model Setting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  action    String
+  entity    String
+  entityId  String?
+  before    Json?
+  after     Json?
+  ip        String?
+  createdAt DateTime @default(now())
+
+  @@index([entity, entityId])
+  @@index([actorId, createdAt])
+}
+
+enum FileVisibility {
+  private
+  public
+}
+
+model FileObject {
+  id         String         @id @default(cuid())
+  ownerId    String?
+  visibility FileVisibility
+  key        String         @unique
+  mime       String
+  size       Int
+  createdAt  DateTime       @default(now())
+  owner      User?          @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+}
+
+enum SmsStatus {
+  sent
+  failed
+}
+
+model SmsMessage {
+  id        String    @id @default(cuid())
+  provider  String
+  to        String
+  kind      String
+  /// OTP codes are never stored; the text is masked for those.
+  text      String
+  status    SmsStatus
+  error     String?
+  createdAt DateTime  @default(now())
+
+  @@index([to, createdAt])
+}

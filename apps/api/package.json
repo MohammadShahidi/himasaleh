@@ -1,0 +1,51 @@
+{
+  "name": "@hm/api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "prisma generate && tsc -p tsconfig.build.json",
+    "dev": "prisma generate && nest start --watch",
+    "start": "prisma migrate deploy && node dist/main.js",
+    "typecheck": "prisma generate && tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "db:migrate": "node --env-file=.env ./node_modules/prisma/build/index.js migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "dev:buckets": "node --env-file=.env scripts/dev-buckets.mjs",
+    "db:check": "prisma migrate deploy && prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1148.0",
+    "@aws-sdk/lib-storage": "^3.1148.0",
+    "@aws-sdk/s3-request-presigner": "^3.1148.0",
+    "@hm/shared": "workspace:*",
+    "@nestjs/common": "^12.1.2",
+    "@nestjs/core": "^12.1.2",
+    "@nestjs/jwt": "^12.0.2",
+    "@nestjs/platform-express": "^12.1.2",
+    "@prisma/adapter-pg": "7.10.0",
+    "@prisma/client": "7.10.0",
+    "busboy": "^1.6.0",
+    "cookie-parser": "^1.4.7",
+    "nestjs-pino": "^5.3.1",
+    "pg": "^8.23.1",
+    "pg-boss": "^12.37.1",
+    "pino": "^10.4.0",
+    "pino-http": "^11.0.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "zod": "^4.6.5",
+    "prisma": "7.10.0"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^12.0.8",
+    "@types/busboy": "^1.5.4",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.20.5",
+    "@types/pg": "^8.23.1",
+    "pino-pretty": "^13.2.0",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.3"
+  },
+  "type": "module"
+}
