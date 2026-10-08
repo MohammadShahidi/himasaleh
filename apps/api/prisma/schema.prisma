@@ -160,6 +160,10 @@ model SmsMessage {
   text      String
   status    SmsStatus
   error     String?
+  /// provider's message id (sms.ir: messageId)
+  providerRef String?
+  /// credit charged, as reported by the provider
+  cost      String?
   createdAt DateTime  @default(now())
 
   @@index([to, createdAt])

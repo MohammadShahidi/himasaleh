@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ENV, type Env } from '../env.js';
 import { PrismaService } from '../prisma/prisma.service.js';
-import type { SmsProvider } from './sms.provider.js';
+import type { SmsProvider, SmsReceipt } from './sms.provider.js';
 
 export const SMS_PROVIDERS = Symbol('SMS_PROVIDERS');
 
@@ -35,12 +35,14 @@ export class SmsService {
     await this.deliver(to, kind, text, (p) => p.send(to, text));
   }
 
-  private async deliver(to: string, kind: string, loggedText: string, op: (p: SmsProvider) => Promise<void>) {
+  private async deliver(to: string, kind: string, loggedText: string, op: (p: SmsProvider) => Promise<SmsReceipt>) {
     const errors: string[] = [];
     for (const p of this.providers) {
       try {
-        await op(p);
-        await this.prisma.smsMessage.create({ data: { provider: p.name, to, kind, text: loggedText, status: 'sent' } });
+        const r = await op(p);
+        await this.prisma.smsMessage.create({
+          data: { provider: p.name, to, kind, text: loggedText, status: 'sent', providerRef: r.ref ?? null, cost: r.cost ?? null },
+        });
         return;
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
