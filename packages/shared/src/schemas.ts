@@ -27,6 +27,8 @@ export const otpVerifySchema = z.object({
     .string()
     .transform((v) => digitsOnly(v))
     .pipe(z.string().length(OTP_LENGTH, 'کد تایید باید ۵ رقم باشد')),
+  /** Role picked on the sign-in screen; used if the account holds it. */
+  preferredRole: z.enum(ROLES).optional(),
   /** Present on sign-up; ignored for an existing account. */
   signup: z
     .object({
@@ -50,3 +52,15 @@ export const sessionUserSchema = z.object({
   activeRole: z.enum(ROLES),
 });
 export type SessionUser = z.infer<typeof sessionUserSchema>;
+
+/** «درخواست مشاوره» from the public site (process doc §8). */
+export const consultRequestSchema = z.object({
+  phone: mobileSchema,
+  topic: z.string().trim().min(1, 'یک موضوع انتخاب کنید.').max(60),
+  /** product name when opened from «استعلام قیمت» */
+  ctx: z.string().trim().max(120).optional(),
+  note: z.string().trim().max(1000, 'توضیح خیلی طولانی است').optional(),
+});
+export type ConsultRequest = z.input<typeof consultRequestSchema>;
+
+export const DEFAULT_CONSULT_TOPICS = ['استعلام قیمت', 'خرید عمده پروژه', 'برآورد مصالح', 'پیگیری سفارش', 'همکاری راننده / فروشنده'];

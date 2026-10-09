@@ -12,7 +12,9 @@
   },
   "dependencies": {
     "@hm/shared": "workspace:*",
+    "@tabler/icons-react": "^3.49.0",
     "@tanstack/react-query": "^5.104.1",
+    "leaflet": "^1.9.4",
     "next": "^16.4.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
@@ -21,6 +23,7 @@
   "devDependencies": {
     "@serwist/turbopack": "^9.5.13",
     "@tailwindcss/postcss": "^4.3.3",
+    "@types/leaflet": "^1.9.22",
     "@types/node": "^22.20.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",

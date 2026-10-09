@@ -25,6 +25,8 @@ const schema = z.object({
   /** Placeholder name inside that template, without #. */
   SMS_IR_OTP_PARAM: z.string().min(1).default('Code'),
 
+  NOMINATIM_URL: z.string().url().default('https://nominatim.openstreetmap.org'),
+
   S3_ENDPOINT: z.string().url(),
   S3_REGION: z.string().default('us-east-1'),
   S3_ACCESS_KEY: z.string().min(1),

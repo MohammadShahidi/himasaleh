@@ -168,3 +168,20 @@ model SmsMessage {
 
   @@index([to, createdAt])
 }
+
+/// «درخواست مشاوره» from the public site. A sales expert answers within the SLA (default 24 h).
+model ConsultRequest {
+  id        String    @id @default(cuid())
+  phone     String
+  topic     String
+  ctx       String?
+  note      String?
+  ip        String
+  handledAt DateTime?
+  handledBy String?
+  outcome   String?
+  createdAt DateTime  @default(now())
+
+  @@index([handledAt, createdAt])
+  @@index([phone, createdAt])
+}

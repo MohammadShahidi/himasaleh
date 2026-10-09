@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import type { ReactNode } from 'react';
 import './globals.css';
+import '@/components/ui.css';
+import { ConsultModal } from '@/components/consult-modal';
 import { Providers } from './providers';
 
 // Self-hosted: Google Fonts and other CDNs are unreliable from Iran.
@@ -31,7 +33,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="fa" dir="rtl" className={vazirmatn.variable}>
       <body className="min-h-dvh font-sans">
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <ConsultModal />
+        </Providers>
       </body>
     </html>
   );

@@ -50,7 +50,8 @@ export class AuthController {
     await this.otp.verify(body.phone, body.code, true);
 
     const user = body.signup ? await this.users.signup(body.phone, body.signup) : existing!;
-    const activeRole = body.signup?.role ?? existing!.roles[0]?.role;
+    const held = existing?.roles.map((r) => r.role) ?? [];
+    const activeRole = body.signup?.role ?? (body.preferredRole && held.includes(body.preferredRole) ? body.preferredRole : held[0]);
     if (!activeRole) throw new AppError(HttpStatus.NOT_FOUND, 'SIGNUP_REQUIRED', 'برای این حساب نقشی ثبت نشده است. ثبت‌نام کنید.');
     await this.tokens.issue(res, user.id, activeRole);
     await this.audit.log({ actorId: user.id, action: body.signup ? 'auth.signup' : 'auth.login', entity: 'user', entityId: user.id, after: { role: activeRole }, ip: ipOf(req) });
