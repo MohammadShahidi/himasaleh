@@ -1,0 +1,10 @@
+{
+  "identities": [
+    {
+      "name": "hm-api",
+      "credentials": [{ "accessKey": "REPLACE", "secretKey": "REPLACE" }],
+      "actions": ["Read", "Write", "List", "Tagging"]
+    },
+    { "name": "anonymous", "actions": ["Read:hm-public"] }
+  ]
+}

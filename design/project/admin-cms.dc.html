@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+html,body{margin:0;padding:0;background:#F4F4F5;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Vazirmatn',Tahoma,sans-serif;color:#1a1a1a;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+a:hover{color:#FF5B0F;}
+input,textarea,select,button{font-family:inherit;}
+button{white-space:nowrap;}
+@keyframes hmpane{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+[data-btn]{cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,background-color .3s,color .3s,border-color .3s;}
+[data-btn]:hover{transform:translateY(-2px);}
+[data-btn]:active{transform:scale(.97);}
+[data-field]:focus{outline:none;border-color:#FF5B0F !important;box-shadow:0 0 0 4px rgba(255,91,15,.14);background:#fff !important;}
+[data-nav-i]{transition:all .3s;}
+[data-nav-i]:hover{background:rgba(255,255,255,.06);color:#fff !important;}
+[data-nav-i][data-active="1"]{background:#FF5B0F !important;color:#fff !important;box-shadow:0 10px 24px rgba(255,91,15,.35);}
+[data-tab][data-active="1"]{background:#141414 !important;color:#fff !important;}
+[data-chip]{transition:all .3s;cursor:pointer;white-space:nowrap;}
+[data-chip][data-active="1"]{background:#141414 !important;color:#fff !important;border-color:#141414 !important;}
+[data-li]{transition:all .3s;cursor:pointer;}
+[data-li]:hover{background:#FAFAFA;}
+[data-li][data-active="1"]{background:#FFF8F4 !important;border-color:#FF5B0F !important;}
+[data-up]{transition:all .3s;}
+[data-up]:hover{border-color:#FF5B0F !important;background:#FFF8F4 !important;}
+[data-pane]{animation:hmpane .4s cubic-bezier(.2,.8,.2,1) both;}
+[data-tone]{white-space:nowrap;flex:none;}
+[data-tone="orange"]{background:#FFF0E8;color:#E4500A;}
+[data-tone="green"]{background:#E6F6EC;color:#178A48;}
+[data-tone="gray"]{background:#F0F0F0;color:#666;}
+@media (max-width:1240px){[data-cols]{grid-template-columns:1fr !important;}[data-prev]{position:static !important;}}
+@media (max-width:1000px){[data-side]{display:none !important;}}
+@media (max-width:640px){[data-main]{padding:16px 14px 40px !important;}[data-g2]{grid-template-columns:1fr !important;}}
+</style>
+</helmet>
+<div dir="rtl" style="font-family:'Vazirmatn',Tahoma,sans-serif;background:#F4F4F5;min-height:100vh;display:flex;min-width:0;">
+  <aside data-side="" style="position:sticky;top:0;height:100vh;width:260px;flex:none;background:#141414;color:#fff;display:flex;flex-direction:column;padding:24px 18px;">
+    <a href="index.dc.html" style="display:flex;align-items:center;gap:10px;color:#fff;padding:0 6px;">
+      <img src="assets/logo-light.png" alt="" style="height:40px;width:auto;">
+      <span style="font-size:22px;font-weight:900;white-space:nowrap;"><span style="color:#FF5B0F;">های</span> مصالح</span>
+    </a>
+    <div style="margin-top:10px;padding:0 6px;font-size:12px;font-weight:700;color:#FF8A4F;display:flex;align-items:center;gap:6px;"><i class="ti ti-shield-lock" style="font-size:15px;"></i>پنل مدیریت</div>
+    <nav style="margin-top:24px;display:flex;flex-direction:column;gap:4px;">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="7">
+        <a data-nav-i="" data-active="{{ n.a }}" href="{{ n.href }}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;font-size:15px;font-weight:600;color:#BDBDBD;white-space:nowrap;"><i class="ti ti-{{ n.icon }}" style="font-size:20px;"></i>{{ n.label }}</a>
+      </sc-for>
+    </nav>
+  </aside>
+
+  <main data-main="" style="flex:1;min-width:0;padding:24px 32px 40px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+      <div>
+        <div style="font-size:14px;color:#888;">مدیریت محتوای سایت</div>
+        <h1 style="margin:2px 0 0;font-size:clamp(22px,2.4vw,28px);font-weight:900;color:#141414;">محصولات، دسته‌ها، صفحات و تنظیمات</h1>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <sc-if value="{{ savedMsg }}" hint-placeholder-val="{{ false }}"><span data-tone="{{ savedTone }}" style="font-size:13px;font-weight:800;padding:8px 14px;border-radius:12px;">{{ savedText }}</span></sc-if>
+        <a data-btn="" href="{{ viewHref }}" target="_blank" style="height:44px;border:1.5px solid #141414;border-radius:12px;padding:0 14px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:6px;color:#141414;" style-hover="background:#141414;color:#fff;"><i class="ti ti-external-link" style="font-size:17px;"></i>دیدن در سایت</a>
+        <button data-btn="" onClick="{{ publish }}" style="height:44px;border:none;border-radius:12px;background:#FF5B0F;color:#fff;padding:0 18px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px;box-shadow:0 10px 24px rgba(255,91,15,.3);"><i class="ti ti-world-upload" style="font-size:18px;"></i>انتشار تغییرات</button>
+      </div>
+    </div>
+    <div style="margin-top:18px;display:inline-flex;gap:4px;background:#E9E9EB;border-radius:12px;padding:4px;flex-wrap:wrap;">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+        <button data-tab="" data-active="{{ t.a }}" onClick="{{ t.go }}" style="border:none;background:transparent;border-radius:9px;padding:10px 16px;font-size:14px;font-weight:800;color:#555;cursor:pointer;display:flex;align-items:center;gap:6px;"><i class="ti ti-{{ t.icon }}" style="font-size:17px;"></i>{{ t.t }}</button>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ tProd }}" hint-placeholder-val="{{ true }}">
+      <div data-cols="" style="margin-top:18px;display:grid;grid-template-columns:330px minmax(0,1fr) 300px;gap:18px;align-items:start;">
+        <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:14px;">
+          <div style="position:relative;"><i class="ti ti-search" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#999;font-size:17px;"></i><input data-field="" value="{{ q }}" onChange="{{ setQ }}" placeholder="جستجوی محصول…" style="width:100%;height:44px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:0 38px 0 12px;font-size:14px;"></div>
+          <div style="margin-top:10px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;"><sc-for list="{{ catFilter }}" as="c" hint-placeholder-count="6"><span data-chip="" data-active="{{ c.a }}" onClick="{{ c.pick }}" style="border:1.5px solid #E6E6E6;background:#fff;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700;color:#333;">{{ c.t }}</span></sc-for></div>
+          <button data-btn="" onClick="{{ addProd }}" style="margin-top:10px;width:100%;height:44px;border:1.5px dashed #FF5B0F;background:#FFF8F4;color:#FF5B0F;border-radius:12px;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px;"><i class="ti ti-plus" style="font-size:17px;"></i>محصول جدید</button>
+          <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;max-height:640px;overflow-y:auto;">
+            <sc-for list="{{ prodList }}" as="p" hint-placeholder-count="8">
+              <div data-li="" data-active="{{ p.a }}" onClick="{{ p.pick }}" style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:12px;border:1.5px solid transparent;opacity:{{ p.op }};">
+                <span style="width:46px;height:46px;flex:none;border-radius:10px;background:#EEE center/cover;background-image:url('{{ p.img }}');"></span>
+                <div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:800;color:#222;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ p.name }}</div><div style="font-size:12px;color:#999;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ p.meta }}</div></div>
+                <sc-if value="{{ p.hidden }}" hint-placeholder-val="{{ false }}"><i class="ti ti-eye-off" style="font-size:16px;color:#999;"></i></sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div data-pane="" style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:22px;min-width:0;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+            <div style="font-size:17px;font-weight:900;color:#141414;white-space:nowrap;">ویرایش محصول</div>
+            <div style="display:flex;gap:6px;">
+              <button data-btn="" onClick="{{ dupProd }}" style="height:38px;border:1.5px solid #E6E6E6;background:#fff;border-radius:10px;padding:0 12px;font-size:13px;font-weight:800;display:flex;align-items:center;gap:4px;"><i class="ti ti-copy" style="font-size:16px;"></i>کپی</button>
+              <button data-btn="" onClick="{{ delProd }}" style="height:38px;border:1.5px solid #F6CFC8;background:#fff;color:#C8341E;border-radius:10px;padding:0 12px;font-size:13px;font-weight:800;display:flex;align-items:center;gap:4px;"><i class="ti ti-trash" style="font-size:16px;"></i>حذف</button>
+            </div>
+          </div>
+          <label data-up="" style="position:relative;margin-top:16px;display:block;aspect-ratio:2.2;border:2px dashed #D8D8D8;border-radius:16px;background:#FAFAFA center/cover;background-image:url('{{ pe.img }}');cursor:pointer;overflow:hidden;">
+            <input type="file" accept="image/*" onChange="{{ pe.pickImg }}" style="position:absolute;width:1px;height:1px;opacity:0;">
+            <span style="position:absolute;left:12px;bottom:12px;display:flex;align-items:center;gap:6px;white-space:nowrap;background:rgba(20,20,20,.8);color:#fff;border-radius:10px;padding:8px 12px;font-size:13px;font-weight:800;"><i class="ti ti-photo-edit" style="font-size:17px;"></i>تغییر تصویر</span>
+          </label>
+          <div data-g2="" style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div style="grid-column:1/-1;"><label style="font-size:13px;font-weight:800;color:#333;">نام محصول</label><input data-field="" value="{{ pe.name }}" onChange="{{ pe.set.name }}" style="margin-top:6px;width:100%;height:48px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:0 14px;font-size:15px;font-weight:700;"></div>
+            <div><label style="font-size:13px;font-weight:800;color:#333;">دسته‌بندی</label><div style="position:relative;margin-top:6px;"><select data-field="" value="{{ pe.cat }}" onChange="{{ pe.set.cat }}" style="appearance:none;-webkit-appearance:none;width:100%;height:46px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:0 12px 0 30px;font-size:14px;"><sc-for list="{{ catOpts }}" as="c" hint-placeholder-count="5"><option value="{{ c.k }}">{{ c.name }}</option></sc-for></select><i class="ti ti-chevron-down" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#999;pointer-events:none;"></i></div></div>
+            <div><label style="font-size:13px;font-weight:800;color:#333;">زیرگروه</label><div style="position:relative;margin-top:6px;"><select data-field="" value="{{ pe.sub }}" onChange="{{ pe.set.sub }}" style="appearance:none;-webkit-appearance:none;width:100%;height:46px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:0 12px 0 30px;font-size:14px;"><sc-for list="{{ subOpts }}" as="s" hint-placeholder-count="4"><option value="{{ s }}">{{ s }}</option></sc-for></select><i class="ti ti-chevron-down" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#999;pointer-events:none;"></i></div></div>
+            <div><label style="font-size:13px;font-weight:800;color:#333;">مشخصه کوتاه</label><input data-field="" value="{{ pe.spec }}" onChange="{{ pe.set.spec }}" style="margin-top:6px;width:100%;height:46px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:0 14px;font-size:14px;"></div>
+            <div><label style="font-size:13px;font-weight:800;color:#333;">واحد فروش</label><input data-field="" value="{{ pe.unit }}" onChange="{{ pe.set.unit }}" style="margin-top:6px;width:100%;height:46px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:0 14px;font-size:14px;"></div>
+            <div style="grid-column:1/-1;"><label style="font-size:13px;font-weight:800;color:#333;">توضیحات</label><textarea data-field="" rows="3" value="{{ pe.desc }}" onChange="{{ pe.set.desc }}" placeholder="کاربرد، استاندارد، نکات نگهداری…" style="margin-top:6px;width:100%;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.9;resize:vertical;"></textarea></div>
+          </div>
+          <label style="display:block;margin-top:14px;font-size:13px;font-weight:800;color:#333;">برچسب</label>
+          <div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;"><sc-for list="{{ tagOpts }}" as="t" hint-placeholder-count="3"><span data-chip="" data-active="{{ t.a }}" onClick="{{ t.pick }}" style="border:1.5px solid #E6E6E6;background:#fff;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700;color:#333;">{{ t.t }}</span></sc-for></div>
+          <div onClick="{{ pe.flipOn }}" style="margin-top:14px;display:flex;align-items:center;gap:12px;cursor:pointer;padding:12px;border-radius:14px;background:#FAFAFA;border:1px solid #F0F0F0;">
+            <span style="position:relative;width:42px;height:24px;flex:none;border-radius:999px;background:{{ pe.track }};transition:background .3s;"><span style="position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.2);transform:{{ pe.knob }};transition:transform .35s cubic-bezier(.2,.8,.2,1);"></span></span>
+            <span style="font-size:14px;font-weight:800;color:#222;">نمایش در سایت</span>
+          </div>
+        </div>
+
+        <div data-prev="" style="position:sticky;top:20px;">
+          <div style="font-size:13px;font-weight:800;color:#888;margin-bottom:8px;">پیش‌نمایش در سایت</div>
+          <article style="background:#fff;border-radius:18px;overflow:hidden;border:1px solid #F0F0F0;box-shadow:0 14px 34px rgba(0,0,0,.08);">
+            <div style="position:relative;aspect-ratio:1.45;background:#222 center/cover;background-image:url('{{ pe.img }}');">
+              <sc-if value="{{ pe.hasTag }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:14px;right:14px;background:#FF5B0F;color:#fff;font-size:12px;font-weight:800;padding:5px 12px;border-radius:999px;">{{ pe.tag }}</span></sc-if>
+            </div>
+            <div style="padding:18px;">
+              <div style="font-size:13px;font-weight:700;color:#FF5B0F;">{{ pe.catName }} · {{ pe.sub }}</div>
+              <div style="margin-top:6px;font-size:17px;font-weight:800;color:#141414;line-height:1.6;">{{ pe.name }}</div>
+              <div style="margin-top:10px;font-size:13px;color:#666;line-height:1.9;">• {{ pe.spec }}<br>• واحد فروش: {{ pe.unit }}</div>
+              <div style="margin-top:14px;border:1.5px solid #FF5B0F;color:#FF5B0F;border-radius:10px;padding:9px;text-align:center;font-size:13px;font-weight:800;">استعلام قیمت</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ tCat }}" hint-placeholder-val="{{ false }}">
+      <div data-pane="" style="margin-top:18px;display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;">
+        <sc-for list="{{ cats }}" as="c" hint-placeholder-count="5">
+          <div style="background:#fff;border-radius:20px;border:1px solid #EFEFEF;overflow:hidden;opacity:{{ c.op }};">
+            <label data-up="" style="position:relative;display:block;aspect-ratio:2.4;background:#222 center/cover;background-image:url('{{ c.img }}');cursor:pointer;">
+              <input type="file" accept="image/*" onChange="{{ c.pickImg }}" style="position:absolute;width:1px;height:1px;opacity:0;">
+              <span style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.6),transparent 60%);"></span>
+              <span style="position:absolute;left:10px;bottom:10px;display:flex;align-items:center;gap:6px;white-space:nowrap;background:rgba(20,20,20,.8);color:#fff;border-radius:10px;padding:6px 10px;font-size:12px;font-weight:800;"><i class="ti ti-photo-edit" style="font-size:15px;"></i>تغییر تصویر</span>
+              <span style="position:absolute;right:12px;bottom:10px;display:flex;gap:6px;">
+                <button data-btn="" onClick="{{ c.up }}" aria-label="بالا" style="width:32px;height:32px;border:none;border-radius:9px;background:rgba(255,255,255,.9);"><i class="ti ti-arrow-up" style="font-size:15px;"></i></button>
+                <button data-btn="" onClick="{{ c.down }}" aria-label="پایین" style="width:32px;height:32px;border:none;border-radius:9px;background:rgba(255,255,255,.9);"><i class="ti ti-arrow-down" style="font-size:15px;"></i></button>
+              </span>
+            </label>
+            <div style="padding:16px;display:flex;flex-direction:column;gap:10px;">
+              <input data-field="" value="{{ c.name }}" onChange="{{ c.setName }}" style="width:100%;height:46px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:0 14px;font-size:15px;font-weight:800;">
+              <textarea data-field="" rows="2" value="{{ c.desc }}" onChange="{{ c.setDesc }}" style="width:100%;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:10px 14px;font-size:13px;line-height:1.9;resize:vertical;"></textarea>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <sc-for list="{{ c.subs }}" as="s" hint-placeholder-count="4"><span style="display:flex;align-items:center;gap:4px;white-space:nowrap;background:#F4F4F4;border-radius:999px;padding:5px 6px 5px 12px;font-size:12px;font-weight:700;color:#333;">{{ s.t }}<button data-btn="" onClick="{{ s.del }}" aria-label="حذف" style="width:20px;height:20px;border:none;border-radius:50%;background:#E0E0E0;color:#555;display:flex;align-items:center;justify-content:center;padding:0;"><i class="ti ti-x" style="font-size:12px;"></i></button></span></sc-for>
+              </div>
+              <div style="display:flex;gap:6px;"><input data-field="" value="{{ c.newSub }}" onChange="{{ c.setNewSub }}" placeholder="زیرگروه جدید" style="flex:1;min-width:0;height:40px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:10px;padding:0 12px;font-size:13px;"><button data-btn="" onClick="{{ c.addSub }}" style="height:40px;border:none;border-radius:10px;background:#141414;color:#fff;padding:0 12px;font-size:13px;font-weight:800;">افزودن</button></div>
+              <div onClick="{{ c.flipOn }}" style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;font-weight:800;color:#333;"><span style="position:relative;width:38px;height:22px;flex:none;border-radius:999px;background:{{ c.track }};transition:background .3s;"><span style="position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;background:#fff;transform:{{ c.knob }};transition:transform .35s;"></span></span>نمایش در سایت و منو</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ tPages }}" hint-placeholder-val="{{ false }}">
+      <div data-pane="" style="margin-top:18px;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;"><sc-for list="{{ pageChips }}" as="p" hint-placeholder-count="5"><span data-chip="" data-active="{{ p.a }}" onClick="{{ p.pick }}" style="border:1.5px solid #E6E6E6;background:#fff;border-radius:12px;padding:10px 16px;font-size:14px;font-weight:800;color:#333;display:flex;align-items:center;gap:6px;"><i class="ti ti-{{ p.icon }}" style="font-size:17px;"></i>{{ p.t }}</span></sc-for></div>
+        <div style="margin-top:14px;background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;">
+          <sc-for list="{{ pageFields }}" as="f" hint-placeholder-count="4">
+            <div style="grid-column:{{ f.span }};">
+              <label style="font-size:13px;font-weight:800;color:#333;white-space:nowrap;">{{ f.label }}</label>
+              <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}"><input data-field="" value="{{ f.v }}" onChange="{{ f.set }}" style="margin-top:6px;width:100%;height:48px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:0 14px;font-size:14px;"></sc-if>
+              <sc-if value="{{ f.isArea }}" hint-placeholder-val="{{ false }}"><textarea data-field="" rows="3" value="{{ f.v }}" onChange="{{ f.set }}" style="margin-top:6px;width:100%;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.9;resize:vertical;"></textarea></sc-if>
+              <sc-if value="{{ f.isImg }}" hint-placeholder-val="{{ false }}">
+                <label data-up="" style="position:relative;margin-top:6px;display:block;aspect-ratio:3;border:2px dashed #D8D8D8;border-radius:14px;background:#222 center/cover;background-image:url('{{ f.v }}');cursor:pointer;">
+                  <input type="file" accept="image/*" onChange="{{ f.pick }}" style="position:absolute;width:1px;height:1px;opacity:0;">
+                  <span style="position:absolute;left:10px;bottom:10px;display:flex;align-items:center;gap:6px;white-space:nowrap;background:rgba(20,20,20,.8);color:#fff;border-radius:10px;padding:6px 10px;font-size:12px;font-weight:800;"><i class="ti ti-photo-edit" style="font-size:15px;"></i>تغییر تصویر</span>
+                </label>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ tSet }}" hint-placeholder-val="{{ false }}">
+      <div data-pane="" style="margin-top:18px;background:#fff;border-radius:20px;border:1px solid #EFEFEF;padding:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;">
+        <sc-for list="{{ setFields }}" as="f" hint-placeholder-count="8">
+          <div style="grid-column:{{ f.span }};">
+            <label style="font-size:13px;font-weight:800;color:#333;display:flex;align-items:center;gap:6px;white-space:nowrap;"><i class="ti ti-{{ f.icon }}" style="font-size:16px;color:#FF5B0F;"></i>{{ f.label }}</label>
+            <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}"><input data-field="" dir="{{ f.dir }}" value="{{ f.v }}" onChange="{{ f.set }}" style="margin-top:6px;width:100%;height:48px;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:0 14px;font-size:14px;text-align:{{ f.align }};"></sc-if>
+            <sc-if value="{{ f.isArea }}" hint-placeholder-val="{{ false }}"><textarea data-field="" rows="2" value="{{ f.v }}" onChange="{{ f.set }}" style="margin-top:6px;width:100%;border:1.5px solid #ECECEC;background:#FAFAFA;border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.9;resize:vertical;"></textarea></sc-if>
+            <sc-if value="{{ f.isToggle }}" hint-placeholder-val="{{ false }}"><div onClick="{{ f.flip }}" style="margin-top:6px;display:flex;align-items:center;gap:12px;cursor:pointer;padding:12px;border-radius:12px;background:#FAFAFA;border:1px solid #F0F0F0;"><span style="position:relative;width:42px;height:24px;flex:none;border-radius:999px;background:{{ f.track }};transition:background .3s;"><span style="position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.2);transform:{{ f.knob }};transition:transform .35s;"></span></span><span style="font-size:13px;color:#555;">{{ f.hint }}</span></div></sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  CATS0 = [
+    ['cement', 'c1', 'package', 'سیمان و افزودنی‌ها', ['سیمان پرتلند', 'سیمان سفید', 'چسب و ملات', 'افزودنی بتن']],
+    ['steel', 'c2', 'layout-columns', 'آهن آلات', ['میلگرد', 'تیرآهن', 'ناودانی و نبشی', 'ورق و پروفیل']],
+    ['brick', 'c3', 'wall', 'انواع آجر و بلوک', ['آجر فشاری و نما', 'آجر سفال', 'بلوک سیمانی', 'بلوک سبک']],
+    ['sand', 'c4', 'shovel', 'شن، ماسه و مصالح', ['ماسه', 'شن', 'پوکه و گچ']],
+    ['pipe', 'c5', 'tools', 'لوله و اتصالات', ['لوله پلی‌اتیلن', 'لوله پنج‌لایه', 'لوله PVC', 'اتصالات و شیرآلات']]
+  ];
+  P0 = [
+    ['cement', 'سیمان پرتلند', 'سیمان پرتلند تیپ ۲', 'مناسب بتن‌ریزی و فونداسیون', 'کیسه ۵۰ کیلوگرمی', 'پرفروش'],
+    ['cement', 'سیمان پرتلند', 'سیمان پرتلند تیپ ۱-۴۲۵', 'مقاومت بالا برای اجزای سازه', 'کیسه ۵۰ کیلوگرمی'],
+    ['cement', 'سیمان سفید', 'سیمان سفید', 'مناسب نما، بندکشی و تزئینات', 'کیسه ۴۰ کیلوگرمی'],
+    ['cement', 'چسب و ملات', 'چسب کاشی پودری', 'مناسب نصب کاشی و سرامیک', 'کیسه ۲۰ کیلوگرمی'],
+    ['cement', 'چسب و ملات', 'ملات آماده سیمانی', 'مناسب آجرچینی و بلوک‌چینی', 'کیسه ۲۵ کیلوگرمی'],
+    ['cement', 'افزودنی بتن', 'فوق روان‌کننده بتن', 'کاهش آب و افزایش مقاومت بتن', 'گالن ۲۰ لیتری'],
+    ['cement', 'افزودنی بتن', 'ضدیخ بتن', 'بتن‌ریزی در هوای سرد', 'گالن ۲۰ لیتری'],
+    ['steel', 'میلگرد', 'میلگرد آجدار A3', 'سایز ۸ تا ۳۲', 'شاخه ۱۲ متری', 'پرفروش'],
+    ['steel', 'میلگرد', 'میلگرد ساده A1', 'سایز ۶ تا ۱۴', 'شاخه ۱۲ متری'],
+    ['steel', 'تیرآهن', 'تیرآهن IPE', 'سایز ۱۴ تا ۳۰', 'شاخه ۱۲ متری'],
+    ['steel', 'ناودانی و نبشی', 'ناودانی UNP', 'سایز ۶ تا ۲۰', 'شاخه ۶ متری'],
+    ['steel', 'ناودانی و نبشی', 'نبشی فولادی', 'سایز ۳ تا ۱۰', 'شاخه ۶ متری'],
+    ['steel', 'ورق و پروفیل', 'ورق سیاه ST37', 'ضخامت ۲ تا ۵۰ میلی‌متر', 'برگ'],
+    ['steel', 'ورق و پروفیل', 'قوطی و پروفیل', 'ابعاد ۲۰×۲۰ تا ۱۰۰×۱۰۰', 'شاخه ۶ متری'],
+    ['brick', 'آجر فشاری و نما', 'آجر فشاری', 'ابعاد ۲۰×۱۰×۵ سانتی‌متر', 'قالب', 'پرفروش'],
+    ['brick', 'آجر فشاری و نما', 'آجر نما قزاقی', 'ابعاد ۲۰×۵×۵ سانتی‌متر', 'قالب'],
+    ['brick', 'آجر سفال', 'آجر سفال ۱۰ سوراخ', 'ابعاد ۲۰×۲۰×۱۰ سانتی‌متر', 'قالب'],
+    ['brick', 'بلوک سیمانی', 'بلوک سیمانی ۱۵', 'ابعاد ۴۰×۲۰×۱۵ سانتی‌متر', 'عدد'],
+    ['brick', 'بلوک سبک', 'بلوک هبلکس', 'ابعاد ۶۰×۲۵×۱۰ سانتی‌متر', 'عدد', 'جدید'],
+    ['brick', 'بلوک سبک', 'بلوک لیکا', 'ابعاد ۵۰×۲۰×۱۰ سانتی‌متر', 'عدد'],
+    ['sand', 'ماسه', 'ماسه شسته', 'مناسب بتن و ملات', 'متر مکعب', 'پرفروش'],
+    ['sand', 'ماسه', 'ماسه بادی', 'مناسب اندود و نازک‌کاری', 'متر مکعب'],
+    ['sand', 'شن', 'شن بادامی', 'دانه‌بندی ۶ تا ۱۹ میلی‌متر', 'متر مکعب'],
+    ['sand', 'شن', 'شن نخودی', 'دانه‌بندی ۶ تا ۱۲ میلی‌متر', 'متر مکعب'],
+    ['sand', 'پوکه و گچ', 'پوکه معدنی', 'سبک‌سازی کف و بام', 'متر مکعب'],
+    ['sand', 'پوکه و گچ', 'گچ ساختمانی', 'گیرش معمولی', 'کیسه ۴۰ کیلوگرمی'],
+    ['pipe', 'لوله پلی‌اتیلن', 'لوله پلی‌اتیلن', 'سایز ۲۰ تا ۱۱۰ میلی‌متر', 'رول / شاخه'],
+    ['pipe', 'لوله پنج‌لایه', 'لوله پنج‌لایه', 'سایز ۱۶ تا ۳۲ میلی‌متر', 'رول ۱۰۰ متری', 'پرفروش'],
+    ['pipe', 'لوله PVC', 'لوله PVC فاضلابی', 'سایز ۵۰ تا ۱۶۰ میلی‌متر', 'شاخه ۶ متری'],
+    ['pipe', 'اتصالات و شیرآلات', 'اتصالات پرسی', 'زانو، سه‌راه و بوشن', 'عدد'],
+    ['pipe', 'اتصالات و شیرآلات', 'شیر فلکه برنجی', 'سایز ½ تا ۲ اینچ', 'عدد']
+  ];
+  PAGES0 = {
+    home: { heroTitle1: 'های مصالح', heroTitle2: 'کیفیتی که ماندگار می‌سازد', heroSub: 'تامین و عرضه انواع مصالح ساختمانی با بهترین کیفیت از معتبرترین برندها در سریع‌ترین زمان', heroImg: 'assets/hero.jpg' },
+    products: { heroTitle: 'محصولات های مصالح', heroSub: 'تمام مصالح مورد نیاز پروژه‌تان را بر اساس دسته‌بندی و زیرگروه پیدا کنید و قیمت روز را استعلام بگیرید.', heroImg: 'assets/hero.jpg' },
+    categories: { heroTitle: 'دسته‌بندی محصولات', heroSub: 'پنج گروه اصلی مصالح ساختمانی، از سفت‌کاری تا تاسیسات؛ دسته مورد نظر را انتخاب کنید و مستقیم به زیرگروه‌ها بروید.', heroImg: 'assets/c3.jpg' },
+    about: { heroTitle: 'درباره های مصالح', heroSub: 'بیش از ۱۵ سال همراه سازندگان، پیمانکاران و انبوه‌سازان در تامین مصالح ساختمانی باکیفیت.', heroImg: 'assets/warehouse.jpg', storyTitle: 'از بازار آهن تهران تا کارگاه‌های سراسر کشور', storyP1: 'های مصالح با یک هدف ساده شروع شد: مصالح اصل، با قیمت منصفانه و تحویل به‌موقع. امروز با همکاری مستقیم با تولیدکنندگان معتبر، زنجیره‌ای بدون واسطه ساخته‌ایم که کیفیت را از کارخانه تا کارگاه تضمین می‌کند.', storyP2: 'تیم فنی ما پیش از خرید در کنار شماست تا مصالح مناسب پروژه انتخاب شود و پس از تحویل هم پاسخگوی هر پرسشی هستیم.' },
+    contact: { heroTitle: 'تماس با ما', heroSub: 'برای استعلام قیمت، مشاوره یا ثبت سفارش از هر راهی که راحت‌ترید با ما در ارتباط باشید.', heroImg: 'assets/ctabg.jpg', hours1: '۸:۰۰ تا ۱۸:۰۰', hours2: '۸:۰۰ تا ۱۳:۰۰', hours3: 'تعطیل' }
+  };
+  PDEF = {
+    home: [['heroTitle1', 'عنوان اول هیرو', 't'], ['heroTitle2', 'عنوان دوم هیرو', 't'], ['heroSub', 'متن زیر عنوان', 'a', 1], ['heroImg', 'تصویر هیرو', 'i', 1]],
+    products: [['heroTitle', 'عنوان صفحه', 't'], ['heroSub', 'متن زیر عنوان', 'a'], ['heroImg', 'تصویر بالای صفحه', 'i', 1]],
+    categories: [['heroTitle', 'عنوان صفحه', 't'], ['heroSub', 'متن زیر عنوان', 'a'], ['heroImg', 'تصویر بالای صفحه', 'i', 1]],
+    about: [['heroTitle', 'عنوان صفحه', 't'], ['heroSub', 'متن زیر عنوان', 'a'], ['heroImg', 'تصویر بالای صفحه', 'i', 1], ['storyTitle', 'عنوان «داستان ما»', 't', 1], ['storyP1', 'پاراگراف اول', 'a'], ['storyP2', 'پاراگراف دوم', 'a']],
+    contact: [['heroTitle', 'عنوان صفحه', 't'], ['heroSub', 'متن زیر عنوان', 'a'], ['heroImg', 'تصویر بالای صفحه', 'i', 1], ['hours1', 'ساعت کاری شنبه تا چهارشنبه', 't'], ['hours2', 'ساعت کاری پنجشنبه', 't'], ['hours3', 'جمعه و تعطیلات', 't']]
+  };
+  SET0 = { siteName: 'های مصالح', phone: '021-17345678', mobile: '0912-173-4567', email: 'info@hymasaleh.com', address: 'تهران، بازار آهن، مجتمع تجاری، طبقه ۲، واحد ۵', footerAbout: 'تامین و عرضه انواع مصالح ساختمانی با بهترین کیفیت و قیمت مناسب برای ساخت آینده‌ای بهتر', copyright: 'تمام حقوق این سایت متعلق به های مصالح می‌باشد.', instagram: 'https://instagram.com/haymasaleh', telegram: 'https://t.me/haymasaleh', whatsapp: 'https://wa.me/989121734567', smsSender: 'HAYMASALEH', maintenance: false };
+  state = { cms: null, tab: 0, sel: 0, q: '', cf: 'all', page: 'home', newSub: {}, msg: null };
+  componentDidMount() {
+    let c = null; try { c = JSON.parse(localStorage.getItem('hm_cms') || 'null'); } catch (e) {}
+    const base = { products: this.P0.map((p, i) => ({ id: i + 1, cat: p[0], sub: p[1], name: p[2], spec: p[3], unit: p[4], tag: p[5] || '', img: '', desc: '', on: true })), categories: this.CATS0.map(c2 => ({ k: c2[0], img: `assets/${c2[1]}.jpg`, icon: c2[2], name: c2[3], subs: c2[4].slice(), desc: '', on: true })), pages: this.PAGES0, settings: this.SET0 };
+    this.setState({ cms: c ? { ...base, ...c, pages: { ...base.pages, ...(c.pages || {}) }, settings: { ...base.settings, ...(c.settings || {}) } } : base });
+  }
+  put(p) { this.setState(s => ({ cms: { ...s.cms, ...p }, msg: null })); }
+  readImg(file, cb) {
+    const fr = new FileReader();
+    fr.onload = () => { const im = new Image(); im.onload = () => { const m = 900, r = Math.min(1, m / Math.max(im.width, im.height)); const cv = document.createElement('canvas'); cv.width = im.width * r; cv.height = im.height * r; cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height); cb(cv.toDataURL('image/jpeg', .82)); }; im.src = fr.result; };
+    fr.readAsDataURL(file);
+  }
+  renderVals() {
+    const s = this.state, C = s.cms;
+    if (!C) return { nav: [], tabs: [], tProd: false, tCat: false, tPages: false, tSet: false, prodList: [], cats: [], pageChips: [], pageFields: [], setFields: [], catFilter: [], catOpts: [], subOpts: [], tagOpts: [], pe: { set: {} } };
+    const fa = v => String(v).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    const catOf = k => C.categories.find(c => c.k === k) || C.categories[0];
+    const imgOf = p => p.img || catOf(p.cat).img;
+    const q = s.q.trim();
+    const list = C.products.map((p, i) => ({ p, i })).filter(({ p }) => (s.cf === 'all' || p.cat === s.cf) && (!q || p.name.includes(q)));
+    const sel = Math.min(s.sel, C.products.length - 1), P = C.products[sel] || C.products[0];
+    const setP = patch => this.put({ products: C.products.map((x, i) => i === sel ? { ...x, ...patch } : x) });
+    const setCat = (k, patch) => this.put({ categories: C.categories.map(c => c.k === k ? { ...c, ...patch } : c) });
+    const move = (i, d) => { const a = C.categories.slice(), j = i + d; if (j < 0 || j >= a.length) return; [a[i], a[j]] = [a[j], a[i]]; this.put({ categories: a }); };
+    const pg = C.pages[s.page] || {};
+    const pset = (k, v) => this.put({ pages: { ...C.pages, [s.page]: { ...pg, [k]: v } } });
+    const st = C.settings;
+    const viewMap = { 0: 'products.dc.html', 1: 'categories.dc.html', 2: { home: 'index.dc.html', products: 'products.dc.html', categories: 'categories.dc.html', about: 'about.dc.html', contact: 'contact.dc.html' }[s.page], 3: 'contact.dc.html' };
+    return {
+      nav: [['layout-dashboard', 'داشبورد', 'admin.dc.html'], ['route', 'تخصیص بار', 'admin.dc.html'], ['building-warehouse', 'انبار خودمان', 'admin-inventory.dc.html'], ['adjustments', 'قوانین عملیاتی', 'admin-ops.dc.html'], ['building-store', 'فروشگاه‌ها و رسیدها', 'admin-partners.dc.html'], ['cash', 'مالی و حق‌العمل', 'admin-finance.dc.html'], ['gift', 'پاداش و کش‌بک', 'admin-rewards.dc.html'], ['users-plus', 'معرفی (Referral)', 'admin-referral.dc.html'], ['shield-lock', 'کارکنان و دسترسی', 'admin-team.dc.html'], ['layout-board', 'محتوای سایت', '#']].map(([icon, label, href], i) => ({ icon, label, href, a: i === 6 ? '1' : '0' })),
+      tabs: [['package', 'محصولات'], ['category', 'دسته‌بندی‌ها'], ['file-text', 'صفحات سایت'], ['settings', 'تنظیمات عمومی']].map(([icon, t], i) => ({ icon, t, a: s.tab === i ? '1' : '0', go: () => this.setState({ tab: i }) })),
+      tProd: s.tab === 0, tCat: s.tab === 1, tPages: s.tab === 2, tSet: s.tab === 3,
+      viewHref: viewMap[s.tab],
+      savedMsg: !!s.msg, savedText: s.msg === 'full' ? 'حجم تصاویر زیاد است؛ تصویر کوچک‌تری انتخاب کنید' : 'منتشر شد و در سایت نمایش داده می‌شود', savedTone: s.msg === 'full' ? 'orange' : 'green',
+      publish: () => { try { localStorage.setItem('hm_cms', JSON.stringify(C)); this.setState({ msg: 'ok' }); } catch (e) { this.setState({ msg: 'full' }); } },
+      q: s.q, setQ: e => this.setState({ q: e.target.value }),
+      catFilter: [{ k: 'all', name: 'همه' }, ...C.categories].map(c => ({ t: c.name, a: s.cf === c.k ? '1' : '0', pick: () => this.setState({ cf: c.k }) })),
+      addProd: () => { const cat = s.cf === 'all' ? C.categories[0].k : s.cf, c = catOf(cat); this.put({ products: [...C.products, { id: Date.now(), cat, sub: c.subs[0] || '', name: 'محصول جدید', spec: '', unit: 'عدد', tag: 'جدید', img: '', desc: '', on: true }] }); this.setState({ sel: C.products.length, q: '' }); },
+      prodList: list.map(({ p, i }) => ({ name: p.name, meta: `${catOf(p.cat).name} · ${p.sub}`, img: imgOf(p), a: i === sel ? '1' : '0', op: p.on ? 1 : .5, hidden: !p.on, pick: () => this.setState({ sel: i }) })),
+      dupProd: () => { this.put({ products: [...C.products, { ...P, id: Date.now(), name: P.name + ' (کپی)' }] }); this.setState({ sel: C.products.length }); },
+      delProd: () => { if (!window.confirm(`«${P.name}» حذف شود؟`)) return; this.put({ products: C.products.filter((_, i) => i !== sel) }); this.setState({ sel: Math.max(0, sel - 1) }); },
+      pe: { img: imgOf(P), name: P.name, cat: P.cat, sub: P.sub, spec: P.spec, unit: P.unit, desc: P.desc, catName: catOf(P.cat).name, tag: P.tag, hasTag: !!P.tag,
+        track: P.on ? '#FF5B0F' : '#D5D5D5', knob: P.on ? 'none' : 'translateX(-18px)', flipOn: () => setP({ on: !P.on }),
+        pickImg: e => { const f = e.target.files && e.target.files[0]; if (f) this.readImg(f, url => setP({ img: url })); },
+        set: { name: e => setP({ name: e.target.value }), cat: e => { const k = e.target.value; setP({ cat: k, sub: catOf(k).subs[0] || '' }); }, sub: e => setP({ sub: e.target.value }), spec: e => setP({ spec: e.target.value }), unit: e => setP({ unit: e.target.value }), desc: e => setP({ desc: e.target.value }) } },
+      catOpts: C.categories.map(c => ({ k: c.k, name: c.name })), subOpts: catOf(P.cat).subs,
+      tagOpts: [['', 'بدون برچسب'], ['پرفروش', 'پرفروش'], ['جدید', 'جدید'], ['تخفیف', 'تخفیف']].map(([v, t]) => ({ t, a: P.tag === v ? '1' : '0', pick: () => setP({ tag: v }) })),
+      cats: C.categories.map((c, i) => ({ img: c.img, name: c.name, desc: c.desc, op: c.on ? 1 : .55,
+        pickImg: e => { const f = e.target.files && e.target.files[0]; if (f) this.readImg(f, url => setCat(c.k, { img: url })); },
+        up: e => { e.preventDefault(); move(i, -1); }, down: e => { e.preventDefault(); move(i, 1); },
+        setName: e => setCat(c.k, { name: e.target.value }), setDesc: e => setCat(c.k, { desc: e.target.value }),
+        subs: c.subs.map(t => ({ t, del: () => setCat(c.k, { subs: c.subs.filter(x => x !== t) }) })),
+        newSub: s.newSub[c.k] || '', setNewSub: e => this.setState({ newSub: { ...s.newSub, [c.k]: e.target.value } }),
+        addSub: () => { const v = (s.newSub[c.k] || '').trim(); if (!v || c.subs.includes(v)) return; setCat(c.k, { subs: [...c.subs, v] }); this.setState({ newSub: { ...s.newSub, [c.k]: '' } }); },
+        track: c.on ? '#FF5B0F' : '#D5D5D5', knob: c.on ? 'none' : 'translateX(-16px)', flipOn: () => setCat(c.k, { on: !c.on }) })),
+      pageChips: [['home', 'home', 'صفحه اصلی'], ['products', 'package', 'محصولات'], ['categories', 'category', 'دسته‌بندی‌ها'], ['about', 'info-circle', 'درباره ما'], ['contact', 'phone', 'تماس با ما']].map(([k, icon, t]) => ({ icon, t, a: s.page === k ? '1' : '0', pick: () => this.setState({ page: k }) })),
+      pageFields: (this.PDEF[s.page] || []).map(([k, label, type, full]) => ({ label, v: pg[k] || '', isText: type === 't', isArea: type === 'a', isImg: type === 'i', span: full ? '1 / -1' : 'auto',
+        set: e => pset(k, e.target.value), pick: e => { const f = e.target.files && e.target.files[0]; if (f) this.readImg(f, url => pset(k, url)); } })),
+      setFields: [['siteName', 'نام سایت', 'world', 't'], ['phone', 'تلفن ثابت', 'phone', 't', 'ltr'], ['mobile', 'موبایل / واتساپ', 'device-mobile', 't', 'ltr'], ['email', 'ایمیل', 'mail', 't', 'ltr'], ['address', 'آدرس', 'map-pin', 'a', '', 1], ['footerAbout', 'متن معرفی فوتر', 'align-right', 'a', '', 1], ['copyright', 'متن کپی‌رایت', 'copyright', 't', '', 1], ['instagram', 'اینستاگرام', 'brand-instagram', 't', 'ltr'], ['telegram', 'تلگرام', 'brand-telegram', 't', 'ltr'], ['whatsapp', 'واتساپ', 'brand-whatsapp', 't', 'ltr'], ['smsSender', 'نام فرستنده پیامک', 'message', 't', 'ltr'], ['maintenance', 'حالت تعمیر و نگهداری', 'tool', 'g']]
+        .map(([k, label, icon, type, dir, full]) => ({ label, icon, v: st[k], isText: type === 't', isArea: type === 'a', isToggle: type === 'g', dir: dir || 'rtl', align: dir === 'ltr' ? 'left' : 'right', span: full ? '1 / -1' : 'auto',
+          hint: st.maintenance ? 'فعال — سایت برای بازدیدکنندگان بسته است' : 'غیرفعال — سایت برای همه باز است', track: st[k] ? '#FF5B0F' : '#D5D5D5', knob: st[k] ? 'none' : 'translateX(-18px)',
+          set: e => this.put({ settings: { ...st, [k]: e.target.value } }), flip: () => this.put({ settings: { ...st, [k]: !st[k] } }) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

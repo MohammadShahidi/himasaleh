@@ -1,25 +1,75 @@
-# CODING AGENTS: READ THIS FIRST
+# های مصالح
 
-This is a **handoff bundle** from Claude Design (claude.ai/design).
+بازار آنلاین مصالح ساختمانی: مشتری، مصالح‌فروش و راننده در یک سامانه.
 
-A user mocked up designs in HTML/CSS/JS using an AI design tool, then exported this bundle so a coding agent can implement the designs for real.
+- فرایندهای تاییدشده: [`docs/system-processes.docx`](docs/system-processes.docx)
+- طراحی فنی: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+- دفتر تصمیم‌ها و فرض‌های منتظر تایید: [`docs/DECISIONS.md`](docs/DECISIONS.md)
+- وضعیت و ورودی‌های لازم: [`docs/STATUS.md`](docs/STATUS.md)
+- راهنمای کار برای Claude و توسعه‌دهنده‌ها: [`CLAUDE.md`](CLAUDE.md)
+- طراحی‌های Claude Design (فقط مرجع): [`design/`](design/)
 
-## What you should do — IMPORTANT
+## دیدن نسخهٔ نمایشی روی کامپیوتر خودتان
 
-**Read the chat transcripts first.** There are 2 chat transcript(s) in `chats/`. The transcripts show the full back-and-forth between the user and the design assistant — they tell you **what the user actually wants** and **where they landed** after iterating. Don't skip them. The final HTML files are the output, but the chat is where the intent lives.
+فقط [Docker Desktop](https://www.docker.com/products/docker-desktop/) لازم است.
 
-**Read `project/driver-panel-advanced.dc.html` in full.** The user had this file open when they triggered the handoff, so it's almost certainly the primary design they want built. Read it top to bottom — don't skim. Then **follow its imports**: open every file it pulls in (shared components, CSS, scripts) so you understand how the pieces fit together before you start implementing.
+```sh
+git clone https://github.com/MohammadShahidi/himasaleh.git
+cd himasaleh
+docker compose -f infra/docker-compose.demo.yml up --build
+```
 
-**If anything is ambiguous, ask the user to confirm before you start implementing.** It's much cheaper to clarify scope up front than to build the wrong thing.
+بار اول ساخت چند دقیقه طول می‌کشد. بعد <http://localhost:3000> را باز کنید.
 
-## About the design files
+پیامک در این نسخه واقعی نیست. کد ورود را در یک ترمینال دیگر ببینید:
 
-The design medium is **HTML/CSS/JS** — these are prototypes, not production code. Your job is to **recreate them pixel-perfectly** in whatever technology makes sense for the target codebase (React, Vue, native, whatever fits). Match the visual output; don't copy the prototype's internal structure unless it happens to fit.
+```sh
+docker compose -f infra/docker-compose.demo.yml logs api | grep "OTP"
+```
 
-**Don't render these files in a browser or take screenshots unless the user asks you to.** Everything you need — dimensions, colors, layout rules — is spelled out in the source. Read the HTML and CSS directly; a screenshot won't tell you anything they don't.
+برای خاموش کردن: `Ctrl+C`، و برای پاک کردن کامل: `docker compose -f infra/docker-compose.demo.yml down`.
 
-## Bundle contents
+## ساختار
 
-- `README.md` — this file
-- `chats/` — conversation transcripts (read these!)
-- `project/` — the `مصالح‌یار، اپلیکیشن فروش` project files (HTML prototypes, assets, components)
+| مسیر | محتوا |
+|---|---|
+| `apps/web` | Next.js — سایت، پنل‌ها، PWA |
+| `apps/api` | NestJS + Prisma + pg-boss — API و کارهای زمان‌دار |
+| `packages/shared` | اعتبارسنجی، فرمت پول و عدد فارسی، طرح‌های zod مشترک |
+| `infra` | Docker Compose (توسعه و تولید)، Caddy، پشتیبان‌گیری |
+
+## اجرای محلی
+
+Node 22، pnpm 10 و Docker لازم است.
+
+```sh
+pnpm install
+pnpm dev:infra                         # PostgreSQL + S3 (SeaweedFS) در Docker
+cp apps/api/.env.example apps/api/.env
+pnpm --filter @hm/shared build
+pnpm --filter @hm/api dev:buckets      # ساخت دو bucket محلی
+pnpm --filter @hm/api db:migrate
+pnpm dev:api                           # http://localhost:4000/api
+pnpm dev:web                           # http://localhost:3000
+```
+
+پیامک در توسعه شبیه‌سازی می‌شود: کد تایید در لاگ API چاپ می‌شود (`[primary] OTP → 0912…`).
+
+## بررسی‌ها
+
+```sh
+pnpm -r typecheck
+pnpm -r test
+```
+
+همین‌ها به‌علاوهٔ بررسی migrationها و ساخت ایمیج‌ها در GitHub Actions اجرا می‌شوند.
+
+## استقرار
+
+```sh
+cp infra/.env.example infra/.env       # پر کردن مقادیر روی سرور
+docker compose -f infra/docker-compose.yml up -d --build
+# اگر S3 جدا ندارید:  --profile storage  و  infra/seaweedfs-s3.json
+```
+
+پشتیبان‌گیری شبانه: `infra/backup.sh` (توضیح داخل فایل).

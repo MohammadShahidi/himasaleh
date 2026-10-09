@@ -1,0 +1,37 @@
+{
+  "name": "@hm/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@hm/shared": "workspace:*",
+    "@tabler/icons-react": "^3.49.0",
+    "@tanstack/react-query": "^5.104.1",
+    "leaflet": "^1.9.4",
+    "next": "^16.4.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@serwist/turbopack": "^9.5.13",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/leaflet": "^1.9.22",
+    "@types/node": "^22.20.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "esbuild": "^0.28.2",
+    "serwist": "^9.5.13",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~6.0.3",
+    "vazirmatn": "^33.0.3",
+    "vitest": "^5.0.3"
+  }
+}

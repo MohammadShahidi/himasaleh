@@ -1,0 +1,14 @@
+{
+  "name": "himasaleh",
+  "private": true,
+  "packageManager": "pnpm@10.33.0",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "dev:infra": "docker compose -f infra/docker-compose.dev.yml up -d",
+    "dev:api": "pnpm --filter @hm/api dev",
+    "dev:web": "pnpm --filter @hm/web dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test"
+  }
+}

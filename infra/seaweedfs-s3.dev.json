@@ -1,0 +1,10 @@
+{
+  "identities": [
+    {
+      "name": "hm-dev",
+      "credentials": [{ "accessKey": "hm-dev-key", "secretKey": "hm-dev-secret" }],
+      "actions": ["Admin", "Read", "Write", "List", "Tagging"]
+    },
+    { "name": "anonymous", "actions": ["Read:hm-public"] }
+  ]
+}

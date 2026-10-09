@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#141414">
+<link rel="manifest" href="manifest.webmanifest">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+html,body{margin:0;padding:0;background:#EDEDED;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Vazirmatn',Tahoma,sans-serif;color:#141414;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;}
+@keyframes hmpane{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+@keyframes hmpulse{0%{box-shadow:0 0 0 0 rgba(255,91,15,.55);}100%{box-shadow:0 0 0 18px rgba(255,91,15,0);}}
+@keyframes hmpop{0%{transform:scale(.4);opacity:0;}60%{transform:scale(1.12);opacity:1;}100%{transform:scale(1);}}
+[data-big]{cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .3s,filter .2s;}
+[data-big]:active{transform:scale(.96);filter:brightness(.95);}
+[data-tabb][data-active="1"]{color:#FF5B0F !important;}
+[data-tabb][data-active="1"] [data-tab-ic]{background:#FFF0E8 !important;}
+[data-pane]{animation:hmpane .45s cubic-bezier(.2,.8,.2,1) both;}
+[data-step-b][data-st="done"]{background:#141414 !important;color:#fff !important;}
+[data-step-b][data-st="cur"]{background:#FF5B0F !important;color:#fff !important;animation:hmpulse 1.8s infinite;}
+</style>
+</helmet>
+<div dir="rtl" style="font-family:'Vazirmatn',Tahoma,sans-serif;background:#EDEDED;min-height:100vh;">
+  <div style="max-width:560px;margin:0 auto;min-height:100vh;background:#F6F6F6;position:relative;padding-bottom:calc(110px + env(safe-area-inset-bottom));">
+
+    <div style="padding:calc(8px + env(safe-area-inset-top)) 10px 0;background:#141414;"><dc-import name="RoleSwitch" current="driver" radius="16px" hint-size="100%,0px"></dc-import></div>
+    <header style="position:sticky;top:0;z-index:20;background:#141414;color:#fff;padding:calc(14px + env(safe-area-inset-top)) 18px 14px;display:flex;align-items:center;gap:12px;">
+      <span style="width:52px;height:52px;flex:none;border-radius:50%;background:#FF5B0F;display:flex;align-items:center;justify-content:center;"><i class="ti ti-steering-wheel" style="font-size:28px;"></i></span>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:20px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ name }}</div>
+        <div dir="ltr" style="margin-top:4px;display:inline-flex;align-items:stretch;height:28px;border:2px solid #fff;border-radius:5px;overflow:hidden;background:#fff;color:#141414;font-weight:900;">
+          <div style="width:16px;background:#1E4FD8;"></div>
+          <div style="display:flex;align-items:center;gap:5px;padding:0 7px;font-size:15px;">{{ pl.a }}<span style="font-size:13px;">{{ pl.l }}</span>{{ pl.b }}</div>
+          <div style="border-left:2px solid #141414;padding:0 6px;display:flex;align-items:center;font-size:13px;">{{ pl.c }}</div>
+        </div>
+      </div>
+      <button data-big="" onClick="{{ toggleOn }}" aria-label="وضعیت کار" style="height:56px;min-width:108px;border:none;border-radius:16px;background:{{ onBg }};color:#fff;font-size:16px;font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:0 12px;">
+        <i class="ti ti-{{ onIcon }}" style="font-size:22px;"></i>{{ onText }}
+      </button>
+    </header>
+
+    <sc-if value="{{ pending }}" hint-placeholder-val="{{ false }}">
+      <div data-pane="" style="margin:16px;background:#FFF3EC;border:2px solid #FF5B0F;border-radius:22px;padding:20px;text-align:center;">
+        <i class="ti ti-hourglass-high" style="font-size:52px;color:#FF5B0F;"></i>
+        <div style="margin-top:8px;font-size:22px;font-weight:900;">مدارک شما در حال بررسی است</div>
+        <div style="margin-top:6px;font-size:17px;color:#555;line-height:1.9;">وقتی تایید شد، پیامک می‌آید.</div>
+        <button data-big="" onClick="{{ approveDemo }}" style="margin-top:14px;border:2px solid #FF5B0F;background:#fff;color:#FF5B0F;border-radius:14px;padding:12px 18px;font-size:15px;font-weight:800;">نمایش حالت تایید شده (نمونه)</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ tabHome }}" hint-placeholder-val="{{ true }}">
+      <div data-pane="" style="padding:16px;display:flex;flex-direction:column;gap:16px;">
+        <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+          <div data-pane="" style="background:#22A45D;color:#fff;border-radius:20px;padding:16px 18px;display:flex;align-items:center;gap:12px;font-size:18px;font-weight:900;box-shadow:0 12px 26px rgba(34,164,93,.3);"><i class="ti ti-circle-check" style="font-size:30px;flex:none;"></i>{{ toast }}</div>
+        </sc-if>
+        
+        <sc-for list="{{ rewards }}" as="w" hint-placeholder-count="1">
+          <div data-pane="" style="position:relative;overflow:hidden;border-radius:26px;padding:20px;background:linear-gradient(135deg,#FF5B0F,#FF8A3D);color:#fff;box-shadow:0 14px 30px rgba(255,91,15,.3);">
+            <i class="ti ti-{{ w.icon }}" style="position:absolute;left:-8px;bottom:-18px;font-size:120px;opacity:.18;"></i>
+            <div style="position:relative;display:flex;align-items:center;gap:12px;"><span style="width:56px;height:56px;flex:none;border-radius:16px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ w.icon }}" style="font-size:30px;"></i></span><div style="min-width:0;"><div style="font-size:15px;font-weight:700;opacity:.9;">{{ w.kind }}</div><div style="font-size:20px;font-weight:900;line-height:1.5;">{{ w.title }}</div></div></div>
+            <div style="position:relative;margin-top:10px;font-size:28px;font-weight:900;">{{ w.panelBig }}</div>
+            <div style="position:relative;margin-top:2px;font-size:17px;line-height:1.8;opacity:.95;">{{ w.panelSmall }}</div>
+          </div>
+        </sc-for>
+        <sc-if value="{{ hasTrip }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+            <sc-for list="{{ steps }}" as="t" hint-placeholder-count="4">
+              <div data-step-b="" data-st="{{ t.st }}" style="border-radius:16px;background:#fff;color:#999;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;">
+                <i class="ti ti-{{ t.icon }}" style="font-size:28px;"></i>
+                <span style="font-size:13px;font-weight:800;line-height:1.4;">{{ t.short }}</span>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="background:#fff;border-radius:26px;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.06);">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+              <span style="font-size:15px;font-weight:800;color:#FF5B0F;">قدم {{ curFa }} از ۴</span>
+              <button data-big="" onClick="{{ speak }}" aria-label="گوش بده" style="height:48px;border:none;border-radius:14px;background:#F1F1F1;color:#141414;font-size:15px;font-weight:800;display:flex;align-items:center;gap:6px;padding:0 14px;"><i class="ti ti-volume" style="font-size:22px;"></i>گوش بده</button>
+            </div>
+            <div style="margin-top:12px;display:flex;align-items:center;gap:14px;">
+              <span style="width:72px;height:72px;flex:none;border-radius:22px;background:#FFF0E8;color:#FF5B0F;display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ step.icon }}" style="font-size:40px;"></i></span>
+              <div style="font-size:24px;font-weight:900;line-height:1.5;">{{ step.title }}</div>
+            </div>
+            <div style="margin-top:14px;background:#F6F6F6;border-radius:18px;padding:16px;display:flex;align-items:center;gap:12px;">
+              <i class="ti ti-{{ step.placeIcon }}" style="font-size:32px;color:{{ step.placeColor }};"></i>
+              <div style="min-width:0;"><div style="font-size:19px;font-weight:900;">{{ step.place }}</div><div style="margin-top:2px;font-size:16px;color:#666;line-height:1.8;">{{ step.addr }}</div></div>
+            </div>
+            <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <a data-big="" href="{{ step.map }}" target="_blank" rel="noopener" style="height:64px;border-radius:18px;background:#1E4FD8;color:#fff;font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;"><i class="ti ti-map-2" style="font-size:26px;"></i>مسیریابی</a>
+              <a data-big="" href="{{ step.tel }}" style="height:64px;border-radius:18px;background:#141414;color:#fff;font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;"><i class="ti ti-phone" style="font-size:26px;"></i>{{ step.telLabel }}</a>
+            </div>
+            <sc-if value="{{ needPhoto }}" hint-placeholder-val="{{ false }}">
+              <label data-big="" style="margin-top:12px;height:72px;border-radius:18px;border:3px dashed {{ photoBorder }};background:{{ photoBg }};display:flex;align-items:center;justify-content:center;gap:10px;font-size:18px;font-weight:900;color:#141414;cursor:pointer;">
+                <input type="file" accept="image/*" capture="environment" onChange="{{ pickPhoto }}" style="position:absolute;width:1px;height:1px;opacity:0;">
+                <i class="ti ti-{{ photoIcon }}" style="font-size:30px;color:#FF5B0F;"></i>{{ photoText }}
+              </label>
+            </sc-if>
+            <button data-big="" onClick="{{ advance }}" style="margin-top:12px;width:100%;height:84px;border:none;border-radius:22px;background:#22A45D;color:#fff;font-size:24px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 14px 30px rgba(34,164,93,.35);opacity:{{ advOp }};"><i class="ti ti-circle-check" style="font-size:34px;"></i>{{ step.btn }}</button>
+          </div>
+
+          <div style="background:#fff;border-radius:26px;padding:20px;">
+            <div style="font-size:20px;font-weight:900;display:flex;align-items:center;gap:8px;"><i class="ti ti-package" style="font-size:26px;color:#FF5B0F;"></i>بار شما</div>
+            <div style="margin-top:12px;font-size:22px;font-weight:900;">{{ load.goods }}</div>
+            <div style="margin-top:4px;font-size:18px;color:#555;">{{ load.weight }}</div>
+            <div style="margin-top:16px;font-size:18px;font-weight:900;">یادتان باشد</div>
+            <div style="margin-top:10px;display:flex;flex-direction:column;gap:10px;">
+              <sc-for list="{{ load.rules }}" as="r" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;gap:14px;background:#F6F6F6;border-radius:16px;padding:12px 14px;">
+                  <span style="width:50px;height:50px;flex:none;border-radius:14px;background:{{ r.bg }};color:{{ r.c }};display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ r.icon }}" style="font-size:28px;"></i></span>
+                  <span style="font-size:17px;font-weight:700;line-height:1.7;">{{ r.t }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <button data-big="" onClick="{{ openWb }}" style="margin-top:14px;width:100%;height:60px;border:2px solid #E2E2E2;background:#fff;border-radius:18px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:18px;font-weight:900;color:#1E4FD8;"><i class="ti ti-file-invoice" style="font-size:24px;"></i>دیدن برگ حمل کامل</button>
+          </div>
+
+          <div style="background:#141414;color:#fff;border-radius:26px;padding:20px;">
+            <div style="font-size:17px;color:#BBB;">بعد از تحویل به کیف پول شما می‌آید</div>
+            <div style="margin-top:6px;font-size:32px;font-weight:900;color:#3DDC84;">{{ money.net }}</div>
+            <div style="margin-top:10px;background:rgba(255,255,255,.08);border-radius:16px;padding:14px;font-size:17px;line-height:2;">
+              <div style="display:flex;justify-content:space-between;gap:10px;"><span>کرایه این بار:</span><b>{{ money.gross }}</b></div>
+              <div style="display:flex;justify-content:space-between;gap:10px;color:#FFB48F;"><span>سهم های مصالح:</span><b>{{ money.fee }}</b></div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ doneTrip }}" hint-placeholder-val="{{ false }}">
+          <div data-pane="" style="background:#fff;border-radius:26px;padding:30px 20px;text-align:center;">
+            <div style="width:110px;height:110px;margin:0 auto;border-radius:50%;background:#22A45D;color:#fff;display:flex;align-items:center;justify-content:center;animation:hmpop .7s cubic-bezier(.2,.8,.2,1) both;"><i class="ti ti-check" style="font-size:64px;"></i></div>
+            <div style="margin-top:20px;font-size:26px;font-weight:900;">بار تحویل شد. دستتان درد نکند!</div>
+            <div style="margin-top:8px;font-size:18px;color:#555;line-height:1.9;">بار بعدی را از دکمه «بار جدید» پایین صفحه بگیرید.</div>
+            <button data-big="" onClick="{{ goOffers }}" style="margin-top:20px;width:100%;height:76px;border:none;border-radius:22px;background:#FF5B0F;color:#fff;font-size:22px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:10px;"><i class="ti ti-bell-ringing" style="font-size:30px;"></i>دیدن بارهای جدید</button>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ tabOffers }}" hint-placeholder-val="{{ false }}">
+      <div data-pane="" style="padding:16px;display:flex;flex-direction:column;gap:16px;">
+        <div style="font-size:24px;font-weight:900;padding:4px 4px 0;">بارهای جدید {{ city }}</div>
+        <sc-if value="{{ locked }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border-radius:24px;padding:30px 20px;text-align:center;">
+            <i class="ti ti-{{ lockIcon }}" style="font-size:56px;color:#BBB;"></i>
+            <div style="margin-top:10px;font-size:20px;font-weight:900;line-height:1.8;">{{ lockText }}</div>
+            <sc-if value="{{ offDuty }}" hint-placeholder-val="{{ false }}"><button data-big="" onClick="{{ toggleOn }}" style="margin-top:16px;width:100%;height:72px;border:none;border-radius:20px;background:#22A45D;color:#fff;font-size:21px;font-weight:900;">سر کارم، بار می‌خواهم</button></sc-if>
+          </div>
+        </sc-if>
+        <sc-if value="{{ showOffers }}" hint-placeholder-val="{{ true }}">
+          <sc-for list="{{ offers }}" as="o" hint-placeholder-count="2">
+            <div style="background:#fff;border-radius:26px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.06);border:3px solid {{ o.border }};">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+                <span style="font-size:22px;font-weight:900;">{{ o.goods }}</span>
+                <button data-big="" onClick="{{ o.speak }}" aria-label="گوش بده" style="width:52px;height:52px;flex:none;border:none;border-radius:14px;background:#F1F1F1;color:#141414;display:flex;align-items:center;justify-content:center;"><i class="ti ti-volume" style="font-size:24px;"></i></button>
+              </div>
+              <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
+                <div style="display:flex;align-items:center;gap:12px;font-size:18px;"><span style="width:44px;height:44px;flex:none;border-radius:12px;background:#FFF0E8;color:#FF5B0F;display:flex;align-items:center;justify-content:center;"><i class="ti ti-building-store" style="font-size:24px;"></i></span><span><b>بار بزن:</b> {{ o.from }}</span></div>
+                <div style="display:flex;justify-content:center;color:#CCC;"><i class="ti ti-arrow-down" style="font-size:24px;"></i></div>
+                <div style="display:flex;align-items:center;gap:12px;font-size:18px;"><span style="width:44px;height:44px;flex:none;border-radius:12px;background:#E6F6EC;color:#178A48;display:flex;align-items:center;justify-content:center;"><i class="ti ti-flag" style="font-size:24px;"></i></span><span><b>ببر به:</b> {{ o.to }}</span></div>
+              </div>
+              <div style="margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
+                <div style="background:#F6F6F6;border-radius:14px;padding:10px 4px;"><i class="ti ti-weight" style="font-size:24px;color:#666;"></i><div style="font-size:17px;font-weight:900;">{{ o.weight }}</div></div>
+                <div style="background:#F6F6F6;border-radius:14px;padding:10px 4px;"><i class="ti ti-road" style="font-size:24px;color:#666;"></i><div style="font-size:17px;font-weight:900;">{{ o.dist }}</div></div>
+                <div style="background:#F6F6F6;border-radius:14px;padding:10px 4px;"><i class="ti ti-clock" style="font-size:24px;color:#666;"></i><div style="font-size:17px;font-weight:900;">{{ o.when }}</div></div>
+              </div>
+              <div style="margin-top:14px;background:#F2FBF5;border-radius:18px;padding:14px;text-align:center;">
+                <div style="font-size:16px;color:#178A48;font-weight:700;">پول شما</div>
+                <div style="font-size:28px;font-weight:900;color:#178A48;">{{ o.net }}</div>
+              </div>
+              <sc-if value="{{ o.open }}" hint-placeholder-val="{{ true }}">
+                <div style="margin-top:14px;display:grid;grid-template-columns:1fr 2fr;gap:10px;">
+                  <button data-big="" onClick="{{ o.reject }}" style="height:80px;border:none;border-radius:20px;background:#FDECEA;color:#C8341E;font-size:20px;font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center;"><i class="ti ti-x" style="font-size:30px;"></i>نه</button>
+                  <button data-big="" onClick="{{ o.accept }}" style="height:80px;border:none;border-radius:20px;background:#22A45D;color:#fff;font-size:22px;font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 12px 26px rgba(34,164,93,.35);"><i class="ti ti-check" style="font-size:32px;"></i>قبول می‌کنم</button>
+                </div>
+                <div style="margin-top:8px;text-align:center;font-size:15px;color:#E4500A;font-weight:800;"><i class="ti ti-clock" style="font-size:16px;"></i> {{ o.left }} فرصت دارید</div>
+              </sc-if>
+              <sc-if value="{{ o.taken }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:14px;height:64px;border-radius:18px;background:#22A45D;color:#fff;font-size:19px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;"><i class="ti ti-circle-check" style="font-size:26px;"></i>قبول شد — بار بعدی شماست</div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ tabMoney }}" hint-placeholder-val="{{ false }}">
+      <div data-pane="" style="padding:16px;display:flex;flex-direction:column;gap:16px;">
+        <sc-for list="{{ rewards }}" as="w" hint-placeholder-count="1">
+          <div data-pane="" style="position:relative;overflow:hidden;border-radius:26px;padding:20px;background:linear-gradient(135deg,#FF5B0F,#FF8A3D);color:#fff;box-shadow:0 14px 30px rgba(255,91,15,.3);">
+            <i class="ti ti-{{ w.icon }}" style="position:absolute;left:-8px;bottom:-18px;font-size:120px;opacity:.18;"></i>
+            <div style="position:relative;display:flex;align-items:center;gap:12px;"><span style="width:56px;height:56px;flex:none;border-radius:16px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ w.icon }}" style="font-size:30px;"></i></span><div style="min-width:0;"><div style="font-size:15px;font-weight:700;opacity:.9;">{{ w.kind }}</div><div style="font-size:20px;font-weight:900;line-height:1.5;">{{ w.title }}</div></div></div>
+            <div style="position:relative;margin-top:10px;font-size:28px;font-weight:900;">{{ w.panelBig }}</div>
+            <div style="position:relative;margin-top:2px;font-size:17px;line-height:1.8;opacity:.95;">{{ w.panelSmall }}</div>
+          </div>
+        </sc-for>
+        <div style="background:#141414;color:#fff;border-radius:26px;padding:24px;text-align:center;">
+          <div style="font-size:18px;color:#BBB;">پول کیف پول شما</div>
+          <div style="margin-top:6px;font-size:36px;font-weight:900;color:{{ walletC }};">{{ wallet }}</div>
+          <div style="margin-top:8px;font-size:16px;color:#DDD;line-height:1.8;">{{ walletNote }}</div>
+          <button data-big="" onClick="{{ topup }}" style="margin-top:16px;width:100%;height:72px;border:none;border-radius:20px;background:#FF5B0F;color:#fff;font-size:21px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:10px;"><i class="ti ti-plus" style="font-size:28px;"></i>شارژ ۵۰۰ هزار تومان</button>
+        </div>
+        <dc-import name="ReferCard" role="driver" hint-size="100%,860px"></dc-import>
+        <div style="background:#fff;border-radius:26px;padding:20px;">
+          <div style="font-size:20px;font-weight:900;">این ماه</div>
+          <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="background:#F6F6F6;border-radius:16px;padding:14px;text-align:center;"><i class="ti ti-truck" style="font-size:30px;color:#FF5B0F;"></i><div style="font-size:26px;font-weight:900;">{{ tripsFa }}</div><div style="font-size:16px;color:#666;">بار زدید</div></div>
+            <div style="background:#F6F6F6;border-radius:16px;padding:14px;text-align:center;"><i class="ti ti-cash" style="font-size:30px;color:#22A45D;"></i><div style="font-size:22px;font-weight:900;">{{ earned }}</div><div style="font-size:16px;color:#666;">درآمد</div></div>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:26px;padding:20px;">
+          <div style="font-size:20px;font-weight:900;">آخرین پول‌ها</div>
+          <div style="margin-top:10px;display:flex;flex-direction:column;gap:10px;">
+            <sc-for list="{{ tx }}" as="t" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:12px;background:#F6F6F6;border-radius:16px;padding:12px 14px;">
+                <span style="width:46px;height:46px;flex:none;border-radius:50%;background:{{ t.bg }};color:#fff;display:flex;align-items:center;justify-content:center;"><i class="ti ti-{{ t.icon }}" style="font-size:24px;"></i></span>
+                <span style="flex:1;font-size:17px;font-weight:700;">{{ t.t }}</span>
+                <span style="font-size:18px;font-weight:900;color:{{ t.c }};white-space:nowrap;">{{ t.v }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ tabHelp }}" hint-placeholder-val="{{ false }}">
+      <div data-pane="" style="padding:16px;display:flex;flex-direction:column;gap:14px;">
+        <div style="background:#fff;border-radius:26px;padding:20px;">
+          <div style="font-size:21px;font-weight:900;display:flex;align-items:center;gap:8px;"><i class="ti ti-map-pin" style="font-size:26px;color:#FF5B0F;"></i>محل سکونت من</div>
+          <div style="margin-top:4px;font-size:16px;color:#666;line-height:1.8;">بارهای نزدیک خانه‌تان اول برای شما فرستاده می‌شود.</div>
+          <div style="margin-top:12px;"><dc-import name="MapPicker" on-pick="{{ onLoc }}" lat="{{ locLat }}" lng="{{ locLng }}" height="300px" confirm-label="همین‌جاست، ذخیره کن" hint-size="100%,500px"></dc-import></div>
+          <sc-if value="{{ locSaved }}" hint-placeholder-val="{{ false }}"><div style="margin-top:10px;font-size:16px;font-weight:800;color:#178A48;display:flex;align-items:center;gap:6px;"><i class="ti ti-circle-check" style="font-size:22px;"></i>{{ locText }}</div></sc-if>
+        </div>
+        <div style="font-size:24px;font-weight:900;padding:4px;">کمک لازم دارید؟</div>
+        <a data-big="" href="tel:02117245678" style="height:96px;border-radius:24px;background:#22A45D;color:#fff;font-size:24px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:12px;"><i class="ti ti-phone-call" style="font-size:40px;"></i>زنگ به پشتیبانی</a>
+        <a data-big="" href="https://wa.me/989121734567" target="_blank" rel="noopener" style="height:84px;border-radius:24px;background:#fff;color:#141414;font-size:21px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:12px;border:2px solid #E2E2E2;"><i class="ti ti-brand-whatsapp" style="font-size:34px;color:#22A45D;"></i>پیام در واتساپ</a>
+        <a data-big="" href="driver-register.dc.html" style="height:84px;border-radius:24px;background:#fff;color:#141414;font-size:21px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:12px;border:2px solid #E2E2E2;"><i class="ti ti-id" style="font-size:34px;color:#FF5B0F;"></i>عوض کردن مدارک</a>
+                <a href="login.dc.html" style="text-align:center;font-size:15px;color:#888;padding:6px;">خروج از حساب</a>
+      </div>
+    </sc-if>
+
+    <nav style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:560px;z-index:30;background:#fff;border-top:1px solid #E6E6E6;padding:8px 8px calc(8px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);gap:4px;box-shadow:0 -10px 30px rgba(0,0,0,.06);">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+        <button data-big="" data-tabb="" data-active="{{ t.a }}" onClick="{{ t.go }}" style="position:relative;border:none;background:transparent;color:#777;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;font-size:15px;font-weight:900;">
+          <span data-tab-ic="" style="width:60px;height:40px;border-radius:14px;display:flex;align-items:center;justify-content:center;transition:background .3s;"><i class="ti ti-{{ t.icon }}" style="font-size:28px;"></i></span>{{ t.label }}
+          <sc-if value="{{ t.dot }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:2px;right:calc(50% - 26px);min-width:22px;height:22px;border-radius:999px;background:#E0371F;color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center;padding:0 5px;">{{ t.n }}</span></sc-if>
+        </button>
+      </sc-for>
+    </nav>
+  
+    <sc-if value="{{ wbOpen }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closeWb }}" style="position:fixed;inset:0;z-index:200;background:rgba(10,10,10,.55);display:flex;align-items:flex-end;justify-content:center;">
+        <div data-pane="" onClick="{{ stop }}" style="width:100%;max-width:560px;max-height:92vh;overflow-y:auto;background:#F6F6F6;border-radius:26px 26px 0 0;padding:12px 12px calc(20px + env(safe-area-inset-bottom));">
+          <div style="display:flex;align-items:center;gap:10px;padding:4px 6px 12px;">
+            <span style="flex:1;font-size:21px;font-weight:900;">برگ حمل</span>
+            <button data-big="" onClick="{{ closeWb }}" aria-label="بستن" style="width:52px;height:52px;border:none;border-radius:16px;background:#141414;color:#fff;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x" style="font-size:26px;"></i></button>
+          </div>
+          <dc-import name="WaybillCard" data="{{ wbData }}" hint-size="100%,760px"></dc-import>
+          <button data-big="" onClick="{{ closeWb }}" style="margin-top:12px;width:100%;height:64px;border:none;border-radius:18px;background:#141414;color:#fff;font-size:19px;font-weight:900;">بستن</button>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { loc: null, tab: 0, on: true, pending: false, trip: 1, photo: false, err: false, offers: {}, tick: 0, drv: null, fee: null, wallet: 1200000 };
+  WB = {"no":"۱۴۰۵۰۷۱۲-۸۸۴۱","status":"در مسیر","track":"HM-58213","fromTitle":"مصالح فروشی البرز — کرج","fromAddr":"کرج، جاده ملارد، بعد از پل فردیس","distance":"۴۲ کیلومتر","toTitle":"کارگاه پروژه ونک","toAddr":"تهران، ونک، خیابان ملاصدرا، پلاک ۱۸","rows":[{"k":"کالا","v":"سیمان پرتلند تیپ ۲ — ۲۰۰ کیسه"},{"k":"وزن","v":"۱۰ تن"},{"k":"کرایه","v":"۸٬۵۰۰٬۰۰۰ تومان"},{"k":"نوع پرداخت","v":"پرداخت‌شده به حساب های مصالح — نقد نگیرید"}],"driverName":"حسن کریمی","vehicle":"کامیون ۱۰ چرخ کفی","p1":"۱۲","pl":"ع","p2":"۳۴۵","p3":"۶۷","notes":["با فروشنده بار را بشمارید و عکس بگیرید","پوشاندن بار با برزنت الزامی است","هنگام تحویل، برگ حمل را صاحب بار امضا کند"],"hasAdmin":false,"adminNote":""};
+  STEPS = [
+    { icon: 'navigation', short: 'برو بار', title: 'برو سر بار', placeIcon: 'building-store', placeColor: '#FF5B0F', place: 'مصالح فروشی البرز', addr: 'کرج، جاده ملارد، بعد از پل فردیس', tel: 'tel:02636124500', telLabel: 'زنگ به انبار', btn: 'رسیدم سر بار', say: 'قدم اول. برو سر بار. مصالح فروشی البرز، کرج، جاده ملارد. وقتی رسیدی دکمه سبز را بزن.' },
+    { icon: 'packages', short: 'بار بزن', title: 'با فروشنده بار را بشمار، عکس بگیر', placeIcon: 'building-store', placeColor: '#FF5B0F', place: 'مصالح فروشی البرز', addr: '۲۰۰ کیسه سیمان — با فروشنده بشمار، عکس بگیر، برزنت بکش، برگ حمل بگیر', tel: 'tel:02636124500', telLabel: 'زنگ به انبار', btn: 'بار زدم، راه افتادم', say: 'قدم دوم. دویست کیسه سیمان بار بزن. با فروشنده کیسه‌ها را بشمار و از بار عکس بگیر. روی بار برزنت بکش و برگ حمل بگیر.' },
+    { icon: 'truck', short: 'برو مقصد', title: 'برو به مقصد', placeIcon: 'flag', placeColor: '#178A48', place: 'کارگاه ونک', addr: 'تهران، ونک، خیابان ملاصدرا، پلاک ۱۸', tel: 'tel:09121112233', telLabel: 'زنگ به صاحب بار', btn: 'رسیدم مقصد', say: 'قدم سوم. برو به تهران، ونک، خیابان ملاصدرا. وقتی رسیدی دکمه سبز را بزن.' },
+    { icon: 'signature', short: 'تحویل', title: 'بار را تحویل بده و امضا بگیر', placeIcon: 'flag', placeColor: '#178A48', place: 'مهندس رضایی', addr: 'بار را با صاحب بار بشمار، برگ حمل را امضا کند و از آن عکس بگیر', tel: 'tel:09121112233', telLabel: 'زنگ به صاحب بار', btn: 'تحویل دادم', say: 'قدم آخر. بار را با صاحب بار بشمار. برگ حمل را امضا کند. از آن عکس بگیر و دکمه سبز را بزن. پول شما بعد از تحویل به کیف پول می‌آید.' }
+  ];
+  OFF = [
+    { id: 1, goods: 'ماسه — ۱۲ متر', from: 'مصالح ولیعصر، شادآباد', to: 'سعادت‌آباد', weight: '۱۸ تن', dist: '۲۴ کیلومتر', when: 'امروز ۲ ظهر', fare: 5800000, ttl: 900 },
+    { id: 2, goods: 'گچ — ۳۰۰ کیسه', from: 'انبار پارس، جاده ساوه', to: 'پرند', weight: '۱۲ تن', dist: '۳۱ کیلومتر', when: 'فردا صبح', fare: 4900000, ttl: 1680 }
+  ];
+  componentDidMount() {
+    let d = null, f = null; try { d = JSON.parse(localStorage.getItem('hm_driver') || 'null'); f = JSON.parse(localStorage.getItem('hm_fee') || 'null'); } catch (e) {}
+    let loc = null; try { loc = JSON.parse(localStorage.getItem('hm_driver_loc') || 'null'); } catch (e) {}
+    this.setState({ drv: d, fee: f, loc, pending: !!(d && !d.approved) });
+    this.iv = setInterval(() => this.setState(s => ({ tick: s.tick + 1 })), 1000);
+  }
+  rwd() { let c = null; try { c = JSON.parse(localStorage.getItem('hm_rewards') || 'null'); } catch (e) {} c = c && c.length ? c : [{ id: 1, type: 'goal', role: 'driver', title: 'چالش ۱۰ بار در هفته', on: true, amount: 0, panelBig: '۲ میلیون تومان جایزه', panelSmall: 'اگر این هفته ۱۰ بار بزنید' }, { id: 2, type: 'cash', role: 'supplier', title: 'کش‌بک فروش سیمان', on: true, amount: 0, panelBig: '۱٪ از فروش شما برمی‌گردد', panelSmall: 'تا سقف ۵ میلیون تومان در این ماه' }, { id: 3, type: 'cash', role: 'contractor', title: 'کش‌بک ۲٪ خرید پروژه', on: true, amount: 0, panelBig: '۲٪ کش‌بک به کیف پول', panelSmall: 'روی هر خرید تا پایان مهر' }]; return c.filter(x => x.on && x.panel !== false && x.role === 'driver').map(x => ({ ...x, icon: { bonus: 'gift', cash: 'receipt-refund', goal: 'trophy' }[x.type], kind: { bonus: 'پاداش برای شما', cash: 'کش‌بک برای شما', goal: 'طرح تشویقی' }[x.type] })); }
+  componentWillUnmount() { clearInterval(this.iv); try { speechSynthesis.cancel(); } catch (e) {} }
+  say(t) { try { const u = new SpeechSynthesisUtterance(t); u.lang = 'fa-IR'; u.rate = .9; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) {} }
+  renderVals() {
+    const s = this.state, fa = v => String(v).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    const words = n => { n = Math.round(n / 1000) * 1000; const m = Math.floor(n / 1e6), k = Math.round((n % 1e6) / 1000); return [m ? fa(m) + ' میلیون' : '', k ? fa(k) + ' هزار' : ''].filter(Boolean).join(' و ') + ' تومان'; };
+    const d = s.drv || {}, plate = d.plate || ['12', 'ع', '345', '67'];
+    const pct = (s.fee && s.fee.drv != null) ? s.fee.drv : 8, wMin = ((s.fee && s.fee.walletMin) || 500) * 1000;
+    const done = s.trip > 4, st = this.STEPS[Math.min(s.trip, 4) - 1];
+    const rw = this.rwd(), bonus = rw.reduce((a, x) => a + (x.type === 'bonus' ? x.amount || 0 : 0), 0);
+    const locked = s.pending || !s.on, wal = s.wallet + bonus - (done ? 8500000 * pct / 100 : 0);
+    const nOpen = this.OFF.filter(o => !s.offers[o.id]).length;
+    return {
+      onLoc: p => { const v = { lat: p.lat, lng: p.lng, address: p.address }; try { localStorage.setItem('hm_driver_loc', JSON.stringify(v)); } catch (e) {} this.setState({ loc: v }); clearTimeout(this.locT); this.locT = setTimeout(() => { this.setState({ tab: 0, toast: 'محل سکونت ثبت شد. برگشتیم به بار شما.' }); window.scrollTo({ top: 0, behavior: 'smooth' }); clearTimeout(this.toastT); this.toastT = setTimeout(() => this.setState({ toast: '' }), 4000); }, 800); },
+      hasToast: !!s.toast, toast: s.toast || '',
+      locLat: (s.loc && s.loc.lat) || undefined, locLng: (s.loc && s.loc.lng) || undefined, locSaved: !!s.loc, locText: s.loc ? 'ذخیره شد: ' + (s.loc.address || 'مکان روی نقشه') : '', noLoc: !s.loc,
+      rewards: rw,
+      name: d.name && d.name.trim() ? d.name : 'حسن کریمی', city: d.city || 'تهران',
+      pl: { a: fa(plate[0]), l: plate[1], b: fa(plate[2]), c: fa(plate[3]) },
+      onText: s.on ? 'سر کارم' : 'استراحت', onIcon: s.on ? 'player-play' : 'player-pause', onBg: s.on ? '#22A45D' : '#666',
+      toggleOn: () => this.setState({ on: !s.on }),
+      pending: s.pending, approveDemo: () => { this.setState({ pending: false }); try { localStorage.setItem('hm_driver', JSON.stringify({ ...d, approved: true })); } catch (e) {} },
+      tabHome: s.tab === 0, tabOffers: s.tab === 1, tabMoney: s.tab === 2, tabHelp: s.tab === 3,
+      tabs: [['truck', 'بار من'], ['bell-ringing', 'بار جدید'], ['wallet', 'پول من'], ['headset', 'کمک']].map(([icon, label], i) => ({ icon, label, a: s.tab === i ? '1' : '0', dot: i === 1 && nOpen > 0 && !locked, n: fa(nOpen), go: () => { this.setState({ tab: i }); window.scrollTo(0, 0); } })),
+      hasTrip: !done, doneTrip: done, curFa: fa(Math.min(s.trip, 4)),
+      steps: this.STEPS.map((t, i) => ({ icon: t.icon, short: t.short, st: i + 1 < s.trip ? 'done' : i + 1 === s.trip ? 'cur' : 'todo' })),
+      step: { ...st, map: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(st.addr.split('—')[0])}` },
+      speak: () => this.say(st.say),
+      needPhoto: s.trip === 4, photoText: s.photo ? 'عکس گرفته شد' : 'عکس برگ حمل امضا شده', photoIcon: s.photo ? 'circle-check' : 'camera',
+      photoBorder: s.err && !s.photo ? '#E0371F' : (s.photo ? '#22A45D' : '#CCC'), photoBg: s.photo ? '#F2FBF5' : '#fff',
+      pickPhoto: e => { if (e.target.files && e.target.files[0]) this.setState({ photo: true, err: false }); },
+      advOp: s.trip === 4 && !s.photo ? .5 : 1,
+      advance: () => { if (s.trip === 4 && !s.photo) { this.say('اول از برگ حمل امضا شده عکس بگیر.'); return this.setState({ err: true }); } this.setState({ trip: s.trip + 1 }); window.scrollTo({ top: 0, behavior: 'smooth' }); },
+      load: { goods: 'سیمان — ۲۰۰ کیسه', weight: '۱۰ تن',
+        rules: [
+          { icon: 'tent', t: 'روی بار برزنت بکشید؛ سیمان نباید خیس شود', bg: '#E8EFFD', c: '#1E4FD8' },
+          { icon: 'list-numbers', t: 'کیسه‌ها را موقع بار زدن بشمارید', bg: '#FFF0E8', c: '#E4500A' },
+          { icon: 'cash', t: 'نقد نگیرید؛ مشتری قبلاً پرداخت کرده', bg: '#E6F6EC', c: '#178A48' },
+          { icon: 'signature', t: 'از صاحب بار امضا بگیرید و عکس بفرستید', bg: '#F0F0F0', c: '#444' }
+        ] },
+      wbOpen: !!this.state.wbOpen, openWb: () => this.setState({ wbOpen: true }), closeWb: () => this.setState({ wbOpen: false }), stop: e => e.stopPropagation(), wbData: this.WB,
+      money: { net: words(8500000 * (1 - pct / 100)), gross: words(8500000), fee: words(8500000 * pct / 100) },
+      goOffers: () => this.setState({ tab: 1 }),
+      locked, showOffers: !locked, offDuty: !s.pending && !s.on,
+      lockIcon: s.pending ? 'lock' : 'moon', lockText: s.pending ? 'بعد از تایید مدارک، بارها اینجا می‌آید' : 'الان در حال استراحت هستید',
+      offers: this.OFF.filter(o => s.offers[o.id] !== 'rej').map(o => { const t = s.offers[o.id] === 'ok'; const left = Math.max(0, o.ttl - s.tick); return {
+        ...o, net: words(o.fare * (1 - pct / 100)), open: !t, taken: t, border: t ? '#22A45D' : '#fff', left: fa(Math.ceil(left / 60)) + ' دقیقه',
+        speak: () => this.say(`بار ${o.goods}. از ${o.from} به ${o.to}. پول شما ${words(o.fare * (1 - pct / 100))}.`),
+        accept: () => this.setState(st2 => ({ offers: { ...st2.offers, [o.id]: 'ok' } })), reject: () => this.setState(st2 => ({ offers: { ...st2.offers, [o.id]: 'rej' } })) }; }),
+      wallet: words(wal), walletC: wal < wMin ? '#FF6B5B' : '#3DDC84',
+      walletNote: wal < wMin ? 'پول کیف پول کم است. برای گرفتن بار، شارژ کنید.' : 'سهم های مصالح از بارهایی که نقد می‌گیرید، از اینجا کم می‌شود.',
+      topup: () => this.setState({ wallet: s.wallet + 500000 }),
+      tripsFa: fa(23 + (done ? 1 : 0)), earned: done ? '۵۷ میلیون' : '۴۹ میلیون',
+      tx: [
+        ...rw.filter(x => x.type === 'bonus' && x.amount).map(x => ({ icon: 'gift', bg: '#FF5B0F', t: 'پاداش: ' + x.title, v: '+ ' + words(x.amount), c: '#E4500A' })),
+        ...(done ? [{ icon: 'minus', bg: '#E4500A', t: 'سهم های مصالح — بار سیمان', v: '− ' + words(8500000 * pct / 100), c: '#E4500A' }] : []),
+        { icon: 'plus', bg: '#22A45D', t: 'کرایه بار آجر', v: '+ ' + words(6200000), c: '#178A48' },
+        { icon: 'minus', bg: '#E4500A', t: 'سهم های مصالح — بار آجر', v: '− ' + words(496000), c: '#E4500A' },
+        { icon: 'plus', bg: '#1E4FD8', t: 'شارژ کیف پول', v: '+ ' + words(1000000), c: '#1E4FD8' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

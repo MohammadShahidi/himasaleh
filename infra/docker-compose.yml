@@ -1,0 +1,67 @@
+# Production: proxy, web, api, postgres (+ s3 only if you have no S3 service).
+# Usage on the server:  cp infra/.env.example infra/.env  (fill it)  &&  docker compose -f infra/docker-compose.yml up -d --build
+name: himasaleh
+services:
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports: ["80:80", "443:443", "443:443/udp"]
+    environment:
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on: [web, api]
+
+  web:
+    build:
+      context: ..
+      dockerfile: infra/web.Dockerfile
+      args:
+        NEXT_PUBLIC_BRAND_NAME: ${BRAND_NAME}
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ..
+      dockerfile: infra/api.Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://hm:${POSTGRES_PASSWORD}@postgres:5432/hm
+      COOKIE_SECURE: "true"
+      APP_DOMAIN: ${DOMAIN}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: hm
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: hm
+    volumes: [pg:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hm"]
+      interval: 5s
+      retries: 20
+
+  # Only when there is no external S3 service: `docker compose --profile storage up -d`.
+  s3:
+    profiles: [storage]
+    image: chrislusf/seaweedfs:latest
+    restart: unless-stopped
+    command: server -dir=/data -s3 -s3.port=8333 -s3.config=/etc/seaweedfs/s3.json
+    volumes:
+      - s3:/data
+      - ./seaweedfs-s3.json:/etc/seaweedfs/s3.json:ro
+
+volumes:
+  pg:
+  s3:
+  caddy-data:
+  caddy-config:
