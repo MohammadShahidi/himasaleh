@@ -9,7 +9,10 @@ RUN pnpm install --frozen-lockfile --filter @hm/web...
 COPY packages/shared packages/shared
 COPY apps/web apps/web
 ARG NEXT_PUBLIC_BRAND_NAME="های مصالح"
-ENV NEXT_PUBLIC_BRAND_NAME=$NEXT_PUBLIC_BRAND_NAME NEXT_TELEMETRY_DISABLED=1
+# Next.js fixes the /api proxy target at build time, so it is a build argument, not a runtime env.
+# "api" is the service name in both compose files.
+ARG API_INTERNAL_URL=http://api:4000
+ENV NEXT_PUBLIC_BRAND_NAME=$NEXT_PUBLIC_BRAND_NAME API_INTERNAL_URL=$API_INTERNAL_URL NEXT_TELEMETRY_DISABLED=1
 RUN pnpm --filter @hm/shared build && pnpm --filter @hm/web build
 
 FROM node:22-alpine

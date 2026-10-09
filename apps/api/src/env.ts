@@ -36,6 +36,8 @@ const schema = z.object({
   /** Base URL that serves the public bucket, e.g. https://cdn.example.com/public-bucket */
   S3_PUBLIC_BASE_URL: z.string().url(),
   S3_FORCE_PATH_STYLE: bool.default(true),
+  /** Create the buckets at startup (local demo only). */
+  S3_AUTO_CREATE_BUCKETS: bool.default(false),
 }).superRefine((e, ctx) => {
   const usesSmsIr = e.SMS_PRIMARY_PROVIDER === 'smsir' || e.SMS_BACKUP_PROVIDER === 'smsir';
   if (usesSmsIr && !e.SMS_IR_API_KEY) ctx.addIssue({ code: 'custom', path: ['SMS_IR_API_KEY'], message: 'required when sms.ir is a provider' });

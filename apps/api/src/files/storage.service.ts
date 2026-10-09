@@ -1,15 +1,15 @@
 import type { Readable } from 'node:stream';
-import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { CreateBucketCommand, GetObjectCommand, HeadBucketCommand, S3Client } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, type OnModuleInit } from '@nestjs/common';
 import { ENV, type Env } from '../env.js';
 
 export type Visibility = 'private' | 'public';
 
 /** S3-compatible object storage (ArvanCloud, MinIO, ...). */
 @Injectable()
-export class StorageService {
+export class StorageService implements OnModuleInit {
   private readonly s3: S3Client;
 
   constructor(@Inject(ENV) private readonly env: Env) {
@@ -19,6 +19,18 @@ export class StorageService {
       forcePathStyle: env.S3_FORCE_PATH_STYLE,
       credentials: { accessKeyId: env.S3_ACCESS_KEY, secretAccessKey: env.S3_SECRET_KEY },
     });
+  }
+
+  /** Local demo/development only: create missing buckets. Production buckets are made by whoever runs the storage. */
+  async onModuleInit() {
+    if (!this.env.S3_AUTO_CREATE_BUCKETS) return;
+    for (const Bucket of [this.env.S3_BUCKET_PRIVATE, this.env.S3_BUCKET_PUBLIC]) {
+      try {
+        await this.s3.send(new HeadBucketCommand({ Bucket }));
+      } catch {
+        await this.s3.send(new CreateBucketCommand({ Bucket }));
+      }
+    }
   }
 
   bucket(v: Visibility) {

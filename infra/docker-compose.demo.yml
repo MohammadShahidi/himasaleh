@@ -1,0 +1,62 @@
+# Local demo: the whole app on your own computer with one command. Not for production.
+#
+#   docker compose -f infra/docker-compose.demo.yml up --build
+#
+# Then open http://localhost:3000
+# SMS is simulated: the sign-in code appears in the logs of the api service:
+#   docker compose -f infra/docker-compose.demo.yml logs -f api
+name: himasaleh-demo
+services:
+  web:
+    image: himasaleh-demo-web
+    build:
+      context: ..
+      dockerfile: infra/web.Dockerfile
+    ports: ["3000:3000"]
+    depends_on: [api]
+
+  api:
+    image: himasaleh-demo-api
+    build:
+      context: ..
+      dockerfile: infra/api.Dockerfile
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://hm:hm@postgres:5432/hm
+      JWT_SECRET: demo-only-jwt-secret-not-for-production
+      OTP_PEPPER: demo-only-otp-pepper-not-for-production
+      COOKIE_SECURE: "false"
+      APP_DOMAIN: localhost
+      SMS_PRIMARY_PROVIDER: fake
+      SMS_BACKUP_PROVIDER: none
+      S3_ENDPOINT: http://s3:8333
+      S3_ACCESS_KEY: hm-dev-key
+      S3_SECRET_KEY: hm-dev-secret
+      S3_BUCKET_PRIVATE: hm-private
+      S3_BUCKET_PUBLIC: hm-public
+      S3_PUBLIC_BASE_URL: http://localhost:8333/hm-public
+      S3_AUTO_CREATE_BUCKETS: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      s3:
+        condition: service_started
+    restart: on-failure
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: hm
+      POSTGRES_PASSWORD: hm
+      POSTGRES_DB: hm
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hm"]
+      interval: 3s
+      retries: 20
+
+  s3:
+    image: chrislusf/seaweedfs:latest
+    command: server -dir=/data -s3 -s3.port=8333 -s3.config=/etc/seaweedfs/s3.json
+    ports: ["8333:8333"]
+    volumes:
+      - ./seaweedfs-s3.dev.json:/etc/seaweedfs/s3.json:ro

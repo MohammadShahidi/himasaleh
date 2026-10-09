@@ -6,6 +6,26 @@
 - طراحی فنی: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 - طراحی‌های Claude Design (فقط مرجع): [`design/`](design/)
 
+## دیدن نسخهٔ نمایشی روی کامپیوتر خودتان
+
+فقط [Docker Desktop](https://www.docker.com/products/docker-desktop/) لازم است.
+
+```sh
+git clone https://github.com/MohammadShahidi/himasaleh.git
+cd himasaleh
+docker compose -f infra/docker-compose.demo.yml up --build
+```
+
+بار اول ساخت چند دقیقه طول می‌کشد. بعد <http://localhost:3000> را باز کنید.
+
+پیامک در این نسخه واقعی نیست. کد ورود را در یک ترمینال دیگر ببینید:
+
+```sh
+docker compose -f infra/docker-compose.demo.yml logs api | grep "OTP"
+```
+
+برای خاموش کردن: `Ctrl+C`، و برای پاک کردن کامل: `docker compose -f infra/docker-compose.demo.yml down`.
+
 ## ساختار
 
 | مسیر | محتوا |

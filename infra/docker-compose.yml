@@ -21,8 +21,6 @@ services:
       args:
         NEXT_PUBLIC_BRAND_NAME: ${BRAND_NAME}
     restart: unless-stopped
-    environment:
-      API_INTERNAL_URL: http://api:4000
 
   api:
     build:
