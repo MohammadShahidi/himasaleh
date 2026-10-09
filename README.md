@@ -4,6 +4,9 @@
 
 - فرایندهای تاییدشده: [`docs/system-processes.docx`](docs/system-processes.docx)
 - طراحی فنی: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+- دفتر تصمیم‌ها و فرض‌های منتظر تایید: [`docs/DECISIONS.md`](docs/DECISIONS.md)
+- وضعیت و ورودی‌های لازم: [`docs/STATUS.md`](docs/STATUS.md)
+- راهنمای کار برای Claude و توسعه‌دهنده‌ها: [`CLAUDE.md`](CLAUDE.md)
 - طراحی‌های Claude Design (فقط مرجع): [`design/`](design/)
 
 ## دیدن نسخهٔ نمایشی روی کامپیوتر خودتان
