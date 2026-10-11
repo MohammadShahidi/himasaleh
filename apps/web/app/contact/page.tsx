@@ -49,9 +49,9 @@ export default function ContactPage() {
         </div>
 
         <div data-reveal="left" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          <div id="map" style={{ position: 'relative', flex: 1, minHeight: 300, borderRadius: 24, overflow: 'hidden', background: '#EEE', boxShadow: '0 14px 40px rgba(0,0,0,.08)' }}>
+          <div id="map" style={{ position: 'relative', isolation: 'isolate', zIndex: 0, flex: 1, minHeight: 300, borderRadius: 24, overflow: 'hidden', background: '#EEE', boxShadow: '0 14px 40px rgba(0,0,0,.08)' }}>
             <ShopMap lat={lat} lon={lon} />
-            <a data-btn="" data-hv-glow="" href={mapLink} target="_blank" rel="noopener" style={{ position: 'absolute', right: 16, bottom: 16, background: '#141414', color: '#fff', fontSize: 14, fontWeight: 700, padding: '12px 18px', borderRadius: 12, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="map-pin" size={18} />مسیریابی</a>
+            <a data-btn="" data-hv-glow="" href={mapLink} target="_blank" rel="noopener" style={{ position: 'absolute', zIndex: 2, right: 16, bottom: 16, background: '#141414', color: '#fff', fontSize: 14, fontWeight: 700, padding: '12px 18px', borderRadius: 12, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="map-pin" size={18} />مسیریابی</a>
           </div>
           <Spot style={{ borderRadius: 24, background: 'radial-gradient(420px circle at var(--mx,50%) var(--my,30%),rgba(255,91,15,.2),transparent 55%),#161616', color: '#fff', padding: 28 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 18, fontWeight: 800 }}><Icon name="clock-hour-4" size={24} style={{ color: '#FF5B0F' }} />ساعات کاری</div>

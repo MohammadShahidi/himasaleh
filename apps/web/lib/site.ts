@@ -11,7 +11,7 @@ export const SITE = {
   tagline: 'مصالح ساختمانی با کیفیت، مطمئن، ماندگار',
   phone: '021-91301752',
   mobile: '0998-717-1752',
-  email: 'info@hymasaleh.com',
+  email: 'info@himasaleh.ir',
   address: 'فردیس، بلوار امام خمینی، خیابان شهید قدیمی، نبش کوچه اقاقیا، پلاک ۲۲',
   // Exact pin given by the owner.
   geo: { lat: 35.7205642, lon: 50.9650277 },
