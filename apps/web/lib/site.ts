@@ -10,13 +10,11 @@ export const SITE = {
   brandEn: 'Hi Masaleh',
   tagline: 'مصالح ساختمانی با کیفیت، مطمئن، ماندگار',
   phone: '021-91301752',
-  // The owner has not given a mobile/WhatsApp number yet; the UI hides it while this is empty.
-  mobile: '',
-  email: 'info@hymasaleh.com',
+  mobile: '0998-717-1752',
+  email: 'info@himasaleh.ir',
   address: 'فردیس، بلوار امام خمینی، خیابان شهید قدیمی، نبش کوچه اقاقیا، پلاک ۲۲',
-  // Approximate: the middle of بلوار امام خمینی in Fardis (Nominatim has no entry for the street itself).
-  // Replace with the exact pin of the shop.
-  geo: { lat: 35.724, lon: 50.9729 },
+  // Exact pin given by the owner.
+  geo: { lat: 35.7205642, lon: 50.9650277 },
   foundedYear: '۱۴۰۵',
   footerAbout: 'تامین و عرضه انواع مصالح ساختمانی با بهترین کیفیت و قیمت مناسب برای ساخت آینده‌ای بهتر',
   copyright: 'تمام حقوق این سایت متعلق به های مصالح می‌باشد.',
@@ -26,7 +24,7 @@ export const SITE = {
     { d: 'جمعه و تعطیلات', t: 'تعطیل' },
   ],
   socials: [
-    { icon: 'brand-whatsapp', href: '#' },
+    { icon: 'brand-whatsapp', href: 'https://wa.me/989987171752' },
     { icon: 'brand-telegram', href: '#' },
     { icon: 'brand-linkedin', href: '#' },
     { icon: 'brand-instagram', href: '#' },

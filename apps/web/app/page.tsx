@@ -1,6 +1,7 @@
 import { toFaDigits } from '@hm/shared';
 import Link from 'next/link';
 import { Icon, type IconName } from '@/components/icon';
+import { CategoryStrip } from '@/components/site/category-strip';
 import { ConsultTrigger } from '@/components/site/consult-trigger';
 import { Counter } from '@/components/site/counter';
 import { HeroVisual } from '@/components/site/hero-visual';
@@ -71,17 +72,8 @@ export default function Home() {
         <div data-reveal="" style={badge}>محصولات ما</div>
         <h2 data-reveal="" data-delay="1" style={{ margin: '18px 0 0', fontSize: 'clamp(28px,3vw,38px)', fontWeight: 900, color: '#141414' }}>مشاهده دسته‌بندی محصولات</h2>
         <p data-reveal="" data-delay="2" style={{ margin: '20px 0 0', fontSize: 'clamp(15px,1.3vw,18px)', color: '#6B6B6B' }}>انواع مصالح ساختمانی با کیفیت بالا و قیمت مناسب</p>
-        <div data-cat-grid="" data-hscroll="" style={{ marginTop: 52, paddingTop: 10, display: 'grid', gridTemplateColumns: 'repeat(5,minmax(0,1fr))', gap: 'clamp(12px,2vw,30px)' }}>
-          {CATEGORIES.map((c, i) => (
-            <div key={c.key} data-reveal="" data-delay={i}>
-              <Link data-card="" data-lift="" href={categoryHref(c.key)} style={{ display: 'block', background: '#fff', borderRadius: 16, overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.08)' }}>
-                <div style={{ aspectRatio: 1.25, overflow: 'hidden' }}><div data-zoom="" style={{ width: '100%', height: '100%', backgroundImage: `url('${c.img}')`, backgroundSize: 'cover', backgroundPosition: 'center' }} /></div>
-                <div data-cat-label="" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'clamp(4px,0.7vw,10px)', padding: 'clamp(16px,1.8vw,24px) 6px', fontSize: 'clamp(11px,1.15vw,16px)', fontWeight: 700, color: '#141414', whiteSpace: 'nowrap' }}>
-                  <Icon name={c.icon} size={24} style={{ color: '#FF5B0F' }} /><span>{c.name}</span>
-                </div>
-              </Link>
-            </div>
-          ))}
+        <div data-reveal="">
+          <CategoryStrip />
         </div>
         <div data-reveal="">
           <Link data-btn="" data-hv-fill="" href="/products" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginTop: 38, border: '1.5px solid #FF5B0F', color: '#FF5B0F', fontSize: 16, fontWeight: 700, padding: '17px 38px', borderRadius: 12 }}>

@@ -187,4 +187,10 @@ html.rv [data-reveal].is-in { opacity: 1; transform: none; filter: none; }
 [data-hv-fill]:hover { background: #ff5b0f !important; color: #fff !important; box-shadow: 0 12px 30px rgba(255,91,15,.35); }
 [data-hv-dark]:hover { background: #141414 !important; color: #fff !important; }
 [data-hv-glow]:hover { box-shadow: 0 14px 34px rgba(255,91,15,.45); color: #fff !important; }
-.hm-shopmap .leaflet-tile-pane { filter: grayscale(1) contrast(1.05); }
+
+/* Home category strip (CategoryStrip): a scroll container driven by JS, so it can also be dragged and swiped. */
+.hm-marquee { overflow-x: auto; overflow-y: hidden; padding: 10px 0 24px; cursor: grab; user-select: none; -webkit-user-select: none; scrollbar-width: none; -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); }
+.hm-marquee::-webkit-scrollbar { display: none; }
+.hm-marquee:active { cursor: grabbing; }
+.hm-marquee-track { display: flex; gap: 24px; width: max-content; padding-inline-end: 24px; }
+.hm-marquee-card { flex: none; width: clamp(200px, 22vw, 260px); }
