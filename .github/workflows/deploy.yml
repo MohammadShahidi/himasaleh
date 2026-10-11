@@ -1,0 +1,58 @@
+name: Deploy
+
+# Runs after CI succeeds on main (or manually). Builds the images in CI, pushes them to the registry
+# and restarts the stack on the server over SSH — the server only pulls, it never builds.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency: deploy
+
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    env:
+      # Secrets: REGISTRY_USER, REGISTRY_PASSWORD, SSH_PRIVATE_KEY, SSH_KNOWN_HOSTS
+      # Variables: REGISTRY (host/path, e.g. registry.example.ir/himasaleh), SSH_HOST, DOMAIN
+      REGISTRY: ${{ vars.REGISTRY }}
+      TAG: ${{ github.event.workflow_run.head_sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - name: Log in to the registry
+        run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login "${REGISTRY%%/*}" -u "${{ secrets.REGISTRY_USER }}" --password-stdin
+      - name: Build and push images
+        run: |
+          docker build -f infra/api.Dockerfile -t "$REGISTRY/hm-api:$TAG" -t "$REGISTRY/hm-api:latest" .
+          docker build -f infra/web.Dockerfile -t "$REGISTRY/hm-web:$TAG" -t "$REGISTRY/hm-web:latest" .
+          for i in hm-api hm-web; do docker push "$REGISTRY/$i:$TAG"; docker push "$REGISTRY/$i:latest"; done
+      - name: Prepare SSH
+        run: |
+          install -m 700 -d ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
+          echo "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+      - name: Sync compose files
+        run: scp -i ~/.ssh/id_deploy infra/docker-compose.yml infra/Caddyfile infra/backup.sh deploy@${{ vars.SSH_HOST }}:/srv/himasaleh/infra/
+      - name: Pull and restart
+        run: |
+          ssh -i ~/.ssh/id_deploy deploy@${{ vars.SSH_HOST }} "
+            set -e
+            cd /srv/himasaleh/infra
+            echo '${{ secrets.REGISTRY_PASSWORD }}' | docker login '${REGISTRY%%/*}' -u '${{ secrets.REGISTRY_USER }}' --password-stdin
+            sed -i '/^HM_REGISTRY=/d;/^HM_TAG=/d' .env
+            printf 'HM_REGISTRY=%s\nHM_TAG=%s\n' '$REGISTRY' '$TAG' >> .env
+            docker compose pull
+            docker compose up -d --remove-orphans
+            docker image prune -f
+          "
+      - name: Smoke test
+        run: |
+          for i in $(seq 1 20); do
+            curl -fsS "https://${{ vars.DOMAIN }}/api/health" && exit 0 || sleep 6
+          done
+          echo "health check failed"; exit 1
