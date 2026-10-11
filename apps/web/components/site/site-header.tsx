@@ -4,15 +4,16 @@
 // progress, back-to-top, PWA install button, and the page-wide scroll-reveal behaviour.
 import { toFaDigits } from '@hm/shared';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@/components/icon';
 import { CATEGORIES, categoryHref, openConsult, SITE, type SiteSection, telHref } from '@/lib/site';
 
-const NAV: { key: SiteSection; label: string; href: string }[] = [
+const NAV: { key: SiteSection | 'projects'; label: string; href: string }[] = [
   { key: 'home', label: 'خانه', href: '/' },
   { key: 'products', label: 'محصولات', href: '/products' },
   { key: 'categories', label: 'دسته‌بندی‌ها', href: '/categories' },
-  { key: '', label: 'پروژه‌ها', href: '/about#timeline' },
+  { key: 'projects', label: 'پروژه‌ها', href: '/about#timeline' },
   { key: 'about', label: 'درباره ما', href: '/about' },
   { key: 'contact', label: 'تماس با ما', href: '/contact' },
 ];
@@ -81,7 +82,20 @@ function useReveal() {
   }, []);
 }
 
-export function SiteHeader({ active = '' }: { active?: SiteSection }) {
+export function SiteHeader({ active: section = '' }: { active?: SiteSection }) {
+  // «پروژه‌ها» is the timeline section of /about, so it is the active item while that hash is open.
+  // Client-side navigation uses pushState (no hashchange event), so the nav links also set it on click.
+  const pathname = usePathname();
+  const [hash, setHash] = useState('');
+  useEffect(() => {
+    const sync = () => setHash(window.location.hash);
+    sync();
+    window.addEventListener('hashchange', sync);
+    window.addEventListener('popstate', sync);
+    return () => { window.removeEventListener('hashchange', sync); window.removeEventListener('popstate', sync); };
+  }, [pathname]);
+  const active: SiteSection | 'projects' = section === 'about' && hash === '#timeline' ? 'projects' : section;
+
   const [menu, setMenu] = useState(false);
   const [prod, setProd] = useState(false);
   const [install, setInstall] = useState<BeforeInstallPromptEvent | null>(null);
@@ -193,7 +207,7 @@ export function SiteHeader({ active = '' }: { active?: SiteSection }) {
                   </div>
                 </div>
               ) : (
-                <Link key={n.label} data-nl="" data-active={n.key && active === n.key ? '1' : '0'} href={n.href} style={navLink}>{n.label}</Link>
+                <Link key={n.label} data-nl="" data-active={n.key && active === n.key ? '1' : '0'} href={n.href} onClick={() => setHash(n.href.includes('#') ? '#' + n.href.split('#')[1] : '')} style={navLink}>{n.label}</Link>
               ),
             )}
           </nav>

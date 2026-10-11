@@ -96,3 +96,95 @@ html.rv [data-reveal].is-in { opacity: 1; transform: none; filter: none; }
 @media (max-width: 900px) { [data-auth] { grid-template-columns: 1fr !important; } [data-auth-art] { display: none !important; } }
 
 @media (prefers-reduced-motion: reduce) { html.rv [data-reveal] { opacity: 1 !important; transform: none !important; filter: none !important; transition: none !important; } }
+
+/* Public pages (home, products, categories, about, contact) — hover/media rules from the designs' <style> blocks */
+[data-feat-ic] { transition: all .5s cubic-bezier(.2,.8,.2,1); }
+[data-feat]:hover [data-feat-ic], [data-ccard]:hover [data-feat-ic] { background: #ff5b0f !important; color: #fff !important; transform: translateY(-6px) rotate(-8deg); box-shadow: 0 14px 30px rgba(255,91,15,.35); }
+[data-zoom] { transition: transform 1.4s cubic-bezier(.2,.8,.2,1); }
+[data-card]:hover [data-zoom] { transform: scale(1.1); }
+[data-hscroll]::-webkit-scrollbar { display: none; }
+[data-lift] { transition: transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s, background-color .45s; }
+@keyframes hm-kb { to { transform: scale(1.07) translate(-1%,-1%); } }
+@keyframes hm-float { to { transform: translateY(-14px); } }
+@keyframes hm-orb { from { opacity: .35; transform: scale(.9); } to { opacity: .9; transform: scale(1.15); } }
+.hm-kb { animation: hm-kb 16s ease-in-out infinite alternate; }
+.hm-float { animation: hm-float 3.4s ease-in-out infinite alternate; }
+.hm-orb { animation: hm-orb 4.2s ease-in-out infinite alternate; }
+@media (prefers-reduced-motion: reduce) { .hm-kb, .hm-float, .hm-orb { animation: none; } }
+
+/* Home */
+@media (max-width: 900px) {
+  [data-hero] { border-bottom-left-radius: 50% 60px !important; padding-bottom: 120px !important; }
+  [data-hero-grid] { grid-template-columns: 1fr !important; padding-top: 130px !important; padding-bottom: 0 !important; text-align: center; }
+  [data-hero-grid] > div { min-width: 0 !important; }
+  [data-hero-title2] { white-space: normal !important; }
+  [data-hero-btns] { justify-content: center; }
+  [data-hero-img] { position: relative !important; width: 100% !important; height: auto !important; aspect-ratio: 1.05; margin-top: 10px; -webkit-mask-image: linear-gradient(to bottom,transparent 0%,#000 18%,#000 75%,transparent) !important; mask-image: linear-gradient(to bottom,transparent 0%,#000 18%,#000 75%,transparent) !important; }
+  [data-feat-grid] { grid-template-columns: repeat(2,minmax(0,1fr)) !important; row-gap: 34px; }
+  [data-feat]:nth-child(2n) { border-left: none !important; }
+  [data-cat-grid] { display: flex !important; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin: 0 -20px; padding: 10px 20px 24px !important; }
+  [data-cat-grid] > * { flex: 0 0 40%; scroll-snap-align: start; }
+  [data-cat-label] { font-size: 14px !important; }
+  [data-stats-grid] { grid-template-columns: repeat(2,minmax(0,1fr)) !important; row-gap: 34px; }
+  [data-stat]:nth-child(2n) { border-left: none !important; }
+  [data-why] { grid-template-columns: 1fr !important; gap: 44px !important; }
+  [data-cta] { padding: 44px 28px !important; flex-direction: column; align-items: stretch !important; text-align: center; }
+  [data-cta-btns] { width: 100% !important; }
+  [data-drv] { grid-template-columns: 1fr !important; gap: 40px !important; }
+  [data-drv-steps] { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 560px) {
+  [data-hero-btns] { flex-direction: column; align-items: stretch; gap: 22px !important; }
+  [data-hero-btns] > a { justify-content: center; }
+  [data-feat] { padding: 4px 8px !important; }
+  [data-feat-desc] { font-size: 13px !important; }
+  [data-cat-grid] > * { flex-basis: 60%; }
+}
+
+/* Products */
+[data-cat-btn], [data-sub-btn], [data-chip] { transition: all .35s cubic-bezier(.2,.8,.2,1); }
+[data-cat-btn]:hover { background: #fff6f1 !important; }
+[data-cat-btn][data-active="1"] { background: #ff5b0f !important; color: #fff !important; box-shadow: 0 10px 24px rgba(255,91,15,.3); }
+[data-cat-btn][data-active="1"] [data-cnt] { background: rgba(255,255,255,.22) !important; color: #fff !important; }
+[data-cat-btn][data-active="1"] [data-ic] { color: #fff !important; }
+[data-sub-btn]:hover { color: #ff5b0f !important; }
+[data-sub-btn][data-active="1"] { color: #ff5b0f !important; font-weight: 800 !important; }
+[data-sub-btn][data-active="1"] [data-dot] { background: #ff5b0f !important; box-shadow: 0 0 0 4px #ffe3d5; }
+[data-chip][data-active="1"] { background: #ff5b0f !important; border-color: #ff5b0f !important; color: #fff !important; }
+@media (max-width: 1150px) { [data-pgrid] { grid-template-columns: repeat(2,minmax(0,1fr)) !important; } }
+@media (max-width: 900px) { [data-shop] { grid-template-columns: 1fr !important; gap: 24px !important; } [data-side] { display: none !important; } [data-mfilter] { display: flex !important; } }
+@media (max-width: 520px) { [data-pgrid] { grid-template-columns: 1fr !important; } [data-topbar] { flex-direction: column; align-items: stretch !important; } }
+
+/* Categories */
+[data-bento] > *:nth-child(-n+2) { grid-column: span 3; }
+[data-bento] > *:nth-child(n+3) { grid-column: span 2; }
+[data-bento] > *:nth-child(-n+2) [data-bcard] { min-height: 440px; }
+[data-bcard] [data-arrow] { transition: all .5s cubic-bezier(.2,.8,.2,1); }
+[data-bcard]:hover [data-arrow] { background: #ff5b0f !important; border-color: #ff5b0f !important; transform: rotate(-45deg); }
+[data-subchip] { transition: all .3s; }
+[data-subchip]:hover { background: #ff5b0f !important; border-color: #ff5b0f !important; color: #fff !important; }
+[data-step]:hover [data-step-n] { background: #ff5b0f !important; color: #fff !important; transform: scale(1.08); }
+[data-step-n] { transition: all .45s cubic-bezier(.2,.8,.2,1); }
+@media (max-width: 900px) { [data-bento] { grid-template-columns: 1fr !important; } [data-bento] > * { grid-column: auto !important; } [data-bento] > * [data-bcard] { min-height: 380px !important; } [data-steps] { grid-template-columns: repeat(2,minmax(0,1fr)) !important; } }
+@media (max-width: 520px) { [data-steps] { grid-template-columns: 1fr !important; } }
+
+/* About */
+[data-tl-item]:hover [data-tl-dot] { background: #ff5b0f !important; box-shadow: 0 0 0 8px rgba(255,91,15,.18) !important; }
+[data-tl-dot] { transition: all .45s cubic-bezier(.2,.8,.2,1); }
+@media (max-width: 900px) { [data-story] { grid-template-columns: 1fr !important; gap: 48px !important; } [data-values] { grid-template-columns: repeat(2,minmax(0,1fr)) !important; } [data-tl] { grid-template-columns: 1fr !important; gap: 0 !important; } [data-tl-line] { display: none !important; } [data-tl-item] { flex-direction: row !important; text-align: right !important; align-items: flex-start !important; gap: 18px !important; padding-bottom: 28px; border-right: 2px solid #f0e0d6; margin-right: 9px; padding-right: 22px; } [data-tl-item] [data-tl-dot] { margin-right: -34px; } }
+@media (max-width: 520px) { [data-values] { grid-template-columns: 1fr !important; } }
+
+/* Contact */
+@media (max-width: 1000px) { [data-ccards] { grid-template-columns: repeat(2,minmax(0,1fr)) !important; } }
+@media (max-width: 900px) { [data-contact] { grid-template-columns: 1fr !important; } }
+@media (max-width: 560px) { [data-ccards] { grid-template-columns: 1fr !important; } [data-frow] { grid-template-columns: 1fr !important; } }
+
+/* Button hover variants (the designs' style-hover) */
+[data-hv="invert-light"]:hover { background: #fff !important; color: #141414 !important; }
+[data-hv="invert-dark"]:hover { background: #141414 !important; color: #fff !important; }
+[data-hv="glow"]:hover { box-shadow: 0 14px 34px rgba(255,91,15,.45); color: #fff !important; }
+[data-hv-link]:hover { color: #ff5b0f !important; }
+[data-hv-fill]:hover { background: #ff5b0f !important; color: #fff !important; box-shadow: 0 12px 30px rgba(255,91,15,.35); }
+[data-hv-dark]:hover { background: #141414 !important; color: #fff !important; }
+[data-hv-glow]:hover { box-shadow: 0 14px 34px rgba(255,91,15,.45); color: #fff !important; }
+.hm-shopmap .leaflet-tile-pane { filter: grayscale(1) contrast(1.05); }

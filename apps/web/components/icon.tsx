@@ -1,5 +1,5 @@
 import {
-  IconAlertCircle, IconAlertTriangle, IconArrowLeft, IconArrowRight, IconBrandInstagram, IconBrandLinkedin, IconBrandTelegram, IconBrandWhatsapp, IconBuilding, IconBuildingSkyscraper, IconBuildingStore, IconCash, IconCheck, IconChevronDown, IconChevronLeft, IconChevronUp, IconCircleCheck, IconClock, IconCurrentLocation, IconDeviceMobile, IconDiscount, IconDiscountCheck, IconDownload, IconFileInvoice, IconGift, IconHandFinger, IconHeadset, IconHelmet, IconHome, IconId, IconInfoCircle, IconLayoutColumns, IconLayoutDashboard, IconLoader2, IconLockDollar, IconMail, IconMap2, IconMapPin, IconMapPinFilled, IconMenu2, IconMessage2, IconMessageQuestion, IconMinus, IconPackage, IconPercentage, IconPhone, IconPlus, IconPointFilled, IconReceipt2, IconRefresh, IconSearch, IconSend, IconShieldCheck, IconShieldLock, IconShovel, IconSteeringWheel, IconSwitchHorizontal, IconTools, IconTruck, IconTruckDelivery, IconUser, IconUserCircle, IconUserStar, IconWall, IconX,
+  IconAlertCircle, IconAlertTriangle, IconArrowLeft, IconArrowRight, IconAward, IconCategory, IconClipboardCheck, IconClockBolt, IconClockHour4, IconHeartHandshake, IconLayoutGrid, IconMoodEmpty, IconScale, IconBrandInstagram, IconBrandLinkedin, IconBrandTelegram, IconBrandWhatsapp, IconBuilding, IconBuildingSkyscraper, IconBuildingStore, IconCash, IconCheck, IconChevronDown, IconChevronLeft, IconChevronUp, IconCircleCheck, IconClock, IconCurrentLocation, IconDeviceMobile, IconDiscount, IconDiscountCheck, IconDownload, IconFileInvoice, IconGift, IconHandFinger, IconHeadset, IconHelmet, IconHome, IconId, IconInfoCircle, IconLayoutColumns, IconLayoutDashboard, IconLoader2, IconLockDollar, IconMail, IconMap2, IconMapPin, IconMapPinFilled, IconMenu2, IconMessage2, IconMessageQuestion, IconMinus, IconPackage, IconPercentage, IconPhone, IconPlus, IconPointFilled, IconReceipt2, IconRefresh, IconSearch, IconSend, IconShieldCheck, IconShieldLock, IconShovel, IconSteeringWheel, IconSwitchHorizontal, IconTools, IconTruck, IconTruckDelivery, IconUser, IconUserCircle, IconUserStar, IconWall, IconX,
   type Icon as TablerIcon,
 } from '@tabler/icons-react';
 import type { CSSProperties } from 'react';
@@ -13,6 +13,15 @@ const ICONS = {
   'alert-triangle': IconAlertTriangle,
   'arrow-left': IconArrowLeft,
   'arrow-right': IconArrowRight,
+  'award': IconAward,
+  'category': IconCategory,
+  'clipboard-check': IconClipboardCheck,
+  'clock-bolt': IconClockBolt,
+  'clock-hour-4': IconClockHour4,
+  'heart-handshake': IconHeartHandshake,
+  'layout-grid': IconLayoutGrid,
+  'mood-empty': IconMoodEmpty,
+  'scale': IconScale,
   'brand-instagram': IconBrandInstagram,
   'brand-linkedin': IconBrandLinkedin,
   'brand-telegram': IconBrandTelegram,

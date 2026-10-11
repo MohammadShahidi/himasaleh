@@ -1,19 +1,30 @@
 import type { IconName } from '@/components/icon';
 
 /**
- * Site content defaults from the designs. In phase 4 these come from the CMS («محتوای سایت»);
- * until then this file is the single source, so header and footer cannot disagree.
+ * Site content defaults. In phase 4 these come from the CMS («محتوای سایت»);
+ * until then this file is the single source, so header, footer and the public pages cannot disagree.
  */
 export const SITE = {
   brandAccent: 'های',
   brandRest: 'مصالح',
-  // The header design showed 021-17245678 and the footer/CMS default 021-17345678; the CMS default is used.
-  phone: '021-17345678',
-  mobile: '0912-173-4567',
+  brandEn: 'Hi Masaleh',
+  tagline: 'مصالح ساختمانی با کیفیت، مطمئن، ماندگار',
+  phone: '021-91301752',
+  // The owner has not given a mobile/WhatsApp number yet; the UI hides it while this is empty.
+  mobile: '',
   email: 'info@hymasaleh.com',
-  address: 'تهران، بازار آهن، مجتمع تجاری، طبقه ۲، واحد ۵',
+  address: 'فردیس، بلوار امام خمینی، خیابان شهید قدیمی، نبش کوچه اقاقیا، پلاک ۲۲',
+  // Approximate: the middle of بلوار امام خمینی in Fardis (Nominatim has no entry for the street itself).
+  // Replace with the exact pin of the shop.
+  geo: { lat: 35.724, lon: 50.9729 },
+  foundedYear: '۱۴۰۵',
   footerAbout: 'تامین و عرضه انواع مصالح ساختمانی با بهترین کیفیت و قیمت مناسب برای ساخت آینده‌ای بهتر',
   copyright: 'تمام حقوق این سایت متعلق به های مصالح می‌باشد.',
+  hours: [
+    { d: 'شنبه تا چهارشنبه', t: '۸:۰۰ تا ۱۸:۰۰' },
+    { d: 'پنجشنبه', t: '۸:۰۰ تا ۱۳:۰۰' },
+    { d: 'جمعه و تعطیلات', t: 'تعطیل' },
+  ],
   socials: [
     { icon: 'brand-whatsapp', href: '#' },
     { icon: 'brand-telegram', href: '#' },
@@ -28,15 +39,17 @@ export interface Category {
   key: string;
   icon: IconName;
   name: string;
+  img: string;
+  desc: string;
   subs: string[];
 }
 
 export const CATEGORIES: Category[] = [
-  { key: 'cement', icon: 'package', name: 'سیمان و افزودنی‌ها', subs: ['سیمان پرتلند', 'سیمان سفید', 'چسب و ملات', 'افزودنی بتن'] },
-  { key: 'steel', icon: 'layout-columns', name: 'آهن آلات', subs: ['میلگرد', 'تیرآهن', 'ناودانی و نبشی', 'ورق و پروفیل'] },
-  { key: 'brick', icon: 'wall', name: 'انواع آجر و بلوک', subs: ['آجر فشاری و نما', 'آجر سفال', 'بلوک سیمانی', 'بلوک سبک'] },
-  { key: 'sand', icon: 'shovel', name: 'شن، ماسه و مصالح', subs: ['ماسه', 'شن', 'پوکه و گچ'] },
-  { key: 'pipe', icon: 'tools', name: 'لوله و اتصالات', subs: ['لوله پلی‌اتیلن', 'لوله پنج‌لایه', 'لوله PVC', 'اتصالات و شیرآلات'] },
+  { key: 'cement', icon: 'package', name: 'سیمان و افزودنی‌ها', img: '/c1.jpg', desc: 'انواع سیمان پرتلند و سفید، چسب و ملات آماده و افزودنی‌های تخصصی بتن.', subs: ['سیمان پرتلند', 'سیمان سفید', 'چسب و ملات', 'افزودنی بتن'] },
+  { key: 'steel', icon: 'layout-columns', name: 'آهن آلات', img: '/c2.jpg', desc: 'میلگرد، تیرآهن، ناودانی، نبشی و ورق برای اسکلت و سازه‌های فلزی.', subs: ['میلگرد', 'تیرآهن', 'ناودانی و نبشی', 'ورق و پروفیل'] },
+  { key: 'brick', icon: 'wall', name: 'انواع آجر و بلوک', img: '/c3.jpg', desc: 'آجر فشاری و نما، سفال و بلوک‌های سیمانی و سبک.', subs: ['آجر فشاری و نما', 'آجر سفال', 'بلوک سیمانی', 'بلوک سبک'] },
+  { key: 'sand', icon: 'shovel', name: 'شن، ماسه و مصالح', img: '/c4.jpg', desc: 'ماسه شسته و بادی، شن دانه‌بندی‌شده، پوکه و گچ.', subs: ['ماسه', 'شن', 'پوکه و گچ'] },
+  { key: 'pipe', icon: 'tools', name: 'لوله و اتصالات', img: '/c5.jpg', desc: 'لوله‌های پلی‌اتیلن، پنج‌لایه و PVC به همراه اتصالات و شیرآلات.', subs: ['لوله پلی‌اتیلن', 'لوله پنج‌لایه', 'لوله PVC', 'اتصالات و شیرآلات'] },
 ];
 
 export const categoryHref = (key: string, sub?: string) => `/products?cat=${key}${sub ? `&sub=${encodeURIComponent(sub)}` : ''}`;
