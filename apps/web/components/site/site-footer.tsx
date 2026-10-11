@@ -48,7 +48,7 @@ export function SiteFooter() {
           <div style={heading}>اطلاعات تماس</div>
           <div style={{ ...list, color: '#444' }}>
             <a href={telHref(SITE.phone)} style={contactRow}><Icon name="phone" size={20} style={{ color: '#FF5B0F' }} /><span dir="ltr" style={{ whiteSpace: 'nowrap' }}>{toFaDigits(SITE.phone)}</span></a>
-            <a href={telHref(SITE.mobile)} style={contactRow}><Icon name="device-mobile" size={20} style={{ color: '#FF5B0F' }} /><span dir="ltr" style={{ whiteSpace: 'nowrap' }}>{toFaDigits(SITE.mobile)}</span></a>
+            {SITE.mobile && <a href={telHref(SITE.mobile)} style={contactRow}><Icon name="device-mobile" size={20} style={{ color: '#FF5B0F' }} /><span dir="ltr" style={{ whiteSpace: 'nowrap' }}>{toFaDigits(SITE.mobile)}</span></a>}
             <a href={`mailto:${SITE.email}`} style={contactRow}><Icon name="mail" size={20} style={{ color: '#FF5B0F' }} /><span dir="ltr" style={{ whiteSpace: 'nowrap' }}>{SITE.email}</span></a>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, lineHeight: 1.9 }}><Icon name="map-pin" size={20} style={{ color: '#FF5B0F', marginTop: 3 }} /><span>{SITE.address}</span></div>
           </div>
