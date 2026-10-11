@@ -5,9 +5,11 @@ import { CurrentUser, Roles } from '../auth/decorators.js';
 import { type AppRequest, type AuthUser, ipOf } from '../common/request.js';
 import { ZodPipe } from '../common/zod.pipe.js';
 import { ENV, type Env } from '../env.js';
+import { DriversService } from '../drivers/drivers.service.js';
 import { TripsService } from './trips.service.js';
 
 const statusSchema = z.object({ online: z.boolean() });
+const locationSchema = z.object({ lat: z.number().min(-90).max(90), lng: z.number().min(-180).max(180), address: z.string().trim().max(300).optional() });
 const progressSchema = z.object({
   step: z.number().int().min(1).max(4),
   events: z.array(z.object({
@@ -30,7 +32,15 @@ const testTripSchema = z.object({
 @Controller('driver')
 @Roles('driver')
 export class DriverPanelController {
-  constructor(private readonly trips: TripsService) {}
+  constructor(
+    private readonly trips: TripsService,
+    private readonly drivers: DriversService,
+  ) {}
+
+  @Put('location')
+  location(@Body(new ZodPipe(locationSchema)) body: z.output<typeof locationSchema>, @CurrentUser() user: AuthUser) {
+    return this.drivers.updateLocation(user.id, body);
+  }
 
   /** «سر کارم» / «استراحت» */
   @Put('status')

@@ -179,6 +179,14 @@ export class DriversService {
     return { path: `/o/${token}`, url: `${scheme}://${this.env.APP_DOMAIN}/o/${token}` };
   }
 
+  /** The home location can be changed after approval too (driver panel, «محل سکونت من»); it only steers which loads come first. */
+  async updateLocation(userId: string, loc: { lat: number; lng: number; address?: string | undefined }) {
+    const p = await this.prisma.driverProfile.findUnique({ where: { userId } });
+    if (!p) throw new AppError(HttpStatus.NOT_FOUND, 'NO_REGISTRATION', 'ثبت‌نام راننده پیدا نشد.');
+    await this.prisma.driverProfile.update({ where: { id: p.id }, data: { lat: loc.lat, lng: loc.lng, ...(loc.address && !p.address ? { address: loc.address } : {}) } });
+    return { lat: loc.lat, lng: loc.lng };
+  }
+
   /** Sends the registration to an expert once everything required is present. */
   async submit(userId: string, ip: string) {
     const p = await this.profileOf(userId);
