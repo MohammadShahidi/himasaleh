@@ -24,6 +24,11 @@ const schema = z.object({
   SMS_IR_OTP_TEMPLATE_ID: z.coerce.number().int().positive().optional(),
   /** Placeholder name inside that template, without #. */
   SMS_IR_OTP_PARAM: z.string().min(1).default('Code'),
+  /** sms.ir template ids of the other approved messages (docs/SMS-TEMPLATES.md). Optional: without one, that message is not sent. */
+  SMS_IR_TPL_DRIVER_APPROVED: z.coerce.number().int().positive().optional(),
+  SMS_IR_TPL_DRIVER_REJECTED: z.coerce.number().int().positive().optional(),
+  SMS_IR_TPL_OWNER_VIDEO_REMINDER: z.coerce.number().int().positive().optional(),
+  SMS_IR_TPL_DRIVER_CANCEL_WARNING: z.coerce.number().int().positive().optional(),
 
   NOMINATIM_URL: z.string().url().default('https://nominatim.openstreetmap.org'),
 

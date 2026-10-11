@@ -13,8 +13,9 @@ function setup(primaryFails: boolean, backup?: Partial<SmsProvider>) {
     name: 'primary',
     sendOtp: vi.fn(async () => { if (primaryFails) throw new Error('down'); return { ref: '89545112', cost: '1' }; }),
     send: vi.fn(async () => ({})),
+    sendTemplate: vi.fn(async () => ({})),
   };
-  const providers = [primary, ...(backup ? [{ name: 'backup', sendOtp: vi.fn(async () => ({})), send: vi.fn(async () => ({})), ...backup } as SmsProvider] : [])];
+  const providers = [primary, ...(backup ? [{ name: 'backup', sendOtp: vi.fn(async () => ({})), send: vi.fn(async () => ({})), sendTemplate: vi.fn(async () => ({})), ...backup } as SmsProvider] : [])];
   return { svc: new SmsService(providers, env, prisma), rows, primary, providers };
 }
 
@@ -37,5 +38,20 @@ describe('SmsService', () => {
   it('throws when every provider fails', async () => {
     const { svc } = setup(true, { sendOtp: vi.fn(async () => { throw new Error('also down'); }) });
     await expect(svc.sendOtp('09123456789', '12345')).rejects.toBeInstanceOf(SmsUnavailableError);
+  });
+});
+
+describe('SmsService templates', () => {
+  it('sends a template and trims parameters to 25 characters', async () => {
+    const { svc, primary, rows } = setup(false);
+    await svc.sendTemplate('09123456789', 'driver_rejected', { NAME: 'ا'.repeat(40), DOC: 'برگ سبز', REASON: 'ناخوانا بودن' });
+    const params = (primary.sendTemplate as ReturnType<typeof vi.fn>).mock.calls[0]![2] as Record<string, string>;
+    expect(params.NAME).toHaveLength(25);
+    expect(rows[0]).toMatchObject({ status: 'sent' });
+  });
+
+  it('notifySafely swallows a failure so approval or rejection is never rolled back by an SMS outage', async () => {
+    const { svc } = setup(true);
+    await expect(svc.notifySafely('09123456789', 'driver_approved', { NAME: 'علی' })).resolves.toBeUndefined();
   });
 });

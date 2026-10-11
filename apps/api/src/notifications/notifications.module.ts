@@ -11,6 +11,12 @@ function build(kind: string, label: string, env: Env): SmsProvider | null {
       apiKey: env.SMS_IR_API_KEY!,
       otpTemplateId: env.SMS_IR_OTP_TEMPLATE_ID!,
       otpParam: env.SMS_IR_OTP_PARAM,
+      templates: {
+        ...(env.SMS_IR_TPL_DRIVER_APPROVED ? { driver_approved: env.SMS_IR_TPL_DRIVER_APPROVED } : {}),
+        ...(env.SMS_IR_TPL_DRIVER_REJECTED ? { driver_rejected: env.SMS_IR_TPL_DRIVER_REJECTED } : {}),
+        ...(env.SMS_IR_TPL_OWNER_VIDEO_REMINDER ? { owner_video_reminder: env.SMS_IR_TPL_OWNER_VIDEO_REMINDER } : {}),
+        ...(env.SMS_IR_TPL_DRIVER_CANCEL_WARNING ? { driver_cancel_warning: env.SMS_IR_TPL_DRIVER_CANCEL_WARNING } : {}),
+      },
     });
   return null;
 }

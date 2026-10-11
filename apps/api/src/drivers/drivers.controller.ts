@@ -29,6 +29,13 @@ export class DriversController {
     return this.drivers.attach(user.id, body);
   }
 
+  /** The link the owner opens to record the consent video; the driver copies and forwards it. */
+  @Post('owner/video-link')
+  @HttpCode(HttpStatus.OK)
+  ownerVideoLink(@CurrentUser() user: AuthUser, @Req() req: AppRequest) {
+    return this.drivers.ownerVideoLink(user.id, ipOf(req));
+  }
+
   @Post('submit')
   @HttpCode(HttpStatus.OK)
   submit(@CurrentUser() user: AuthUser, @Req() req: AppRequest) {

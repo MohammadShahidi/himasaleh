@@ -1,3 +1,4 @@
+import type { SmsTemplateKey } from './sms-templates.js';
 import type { SmsProvider, SmsReceipt } from './sms.provider.js';
 
 export interface SmsIrConfig {
@@ -6,6 +7,8 @@ export interface SmsIrConfig {
   otpTemplateId: number;
   /** The template's placeholder name, without the surrounding #. */
   otpParam: string;
+  /** Template ids of the other approved messages; a missing one makes that message fail (and be logged). */
+  templates?: Partial<Record<SmsTemplateKey, number>>;
   baseUrl?: string;
   timeoutMs?: number;
 }
@@ -32,6 +35,12 @@ export class SmsIrProvider implements SmsProvider {
 
   sendOtp(to: string, code: string): Promise<SmsReceipt> {
     return this.verify(to, this.cfg.otpTemplateId, { [this.cfg.otpParam]: code });
+  }
+
+  sendTemplate(to: string, key: SmsTemplateKey, params: Record<string, string>): Promise<SmsReceipt> {
+    const id = this.cfg.templates?.[key];
+    if (!id) throw new SmsIrError(`no sms.ir template id configured for ${key}`);
+    return this.verify(to, id, params);
   }
 
   /**

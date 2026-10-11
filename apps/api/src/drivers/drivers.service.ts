@@ -1,10 +1,12 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { createHash, randomBytes } from 'node:crypto';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import {
   type DriverProfileData, type KycAttach, type KycKind, kycSubjectOf, needsOwnerAuthorization, ownerProofOk, requiredKinds, VIDEO_KINDS,
   type OwnerRelation,
 } from '@hm/shared';
 import { AuditService } from '../audit/audit.service.js';
 import { AppError } from '../common/errors.js';
+import { ENV, type Env } from '../env.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 
 /** States in which the driver may still change the registration. */
@@ -15,6 +17,7 @@ export class DriversService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
+    @Inject(ENV) private readonly env: Env,
   ) {}
 
   private async profileOf(userId: string) {
@@ -152,6 +155,25 @@ export class DriversService {
       },
     });
     return { id: item.id, kind: item.kind, status: item.status };
+  }
+
+  /**
+   * Issues the link a different owner opens to record the consent video. The driver copies it from the panel and
+   * sends it himself (no SMS). Issuing again replaces the old link; only a hash of the token is stored.
+   */
+  async ownerVideoLink(userId: string, ip: string) {
+    const p = await this.profileOf(userId);
+    const owner = p?.vehicles[0]?.owner;
+    if (!p || !owner) throw new AppError(HttpStatus.BAD_REQUEST, 'NO_OWNER', 'مالک خودرو شما خودتان است؛ لینک ضبط لازم نیست.');
+    if (p.status === 'approved' || p.status === 'blocked') throw new AppError(HttpStatus.CONFLICT, 'DRIVER_LOCKED', 'ثبت‌نام شما بسته شده است.');
+    const token = randomBytes(6).toString('base64url');
+    await this.prisma.vehicleOwner.update({
+      where: { id: owner.id },
+      data: { videoTokenHash: createHash('sha256').update(token).digest('hex'), videoLinkSentAt: new Date(), videoReminderSentAt: null },
+    });
+    await this.audit.log({ actorId: userId, action: 'driver.ownerLink', entity: 'driver', entityId: p.id, ip });
+    const scheme = this.env.NODE_ENV === 'production' ? 'https' : 'http';
+    return { path: `/o/${token}`, url: `${scheme}://${this.env.APP_DOMAIN}/o/${token}` };
   }
 
   /** Sends the registration to an expert once everything required is present. */

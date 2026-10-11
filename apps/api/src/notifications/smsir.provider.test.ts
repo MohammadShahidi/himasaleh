@@ -39,3 +39,15 @@ describe('SmsIrProvider', () => {
     expect(f).not.toHaveBeenCalled();
   });
 });
+
+describe('SmsIrProvider templates', () => {
+  it('sends a template by its configured id and fails clearly when none is set', async () => {
+    const fetchImpl = vi.fn(async () => new Response(JSON.stringify({ status: 1, data: { messageId: 7, cost: 1 } }), { status: 200 }));
+    const p = new SmsIrProvider('primary', { apiKey: 'k', otpTemplateId: 1, otpParam: 'Code', templates: { driver_approved: 127995 } }, fetchImpl as unknown as typeof fetch);
+    await p.sendTemplate('09123456789', 'driver_approved', { NAME: 'علی' });
+    const body = JSON.parse((fetchImpl.mock.calls[0] as unknown as [string, { body: string }])[1].body) as { templateId: number; parameters: unknown[] };
+    expect(body.templateId).toBe(127995);
+    expect(body.parameters).toEqual([{ name: 'NAME', value: 'علی' }]);
+    expect(() => p.sendTemplate('09123456789', 'driver_rejected', {})).toThrow(/no sms.ir template id/);
+  });
+});

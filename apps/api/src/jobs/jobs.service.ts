@@ -11,6 +11,9 @@ import { PrismaService } from '../prisma/prisma.service.js';
 export class JobsService implements OnModuleInit, OnApplicationShutdown {
   private readonly logger = new Logger(JobsService.name);
   readonly boss: PgBoss;
+  private markReady!: () => void;
+  /** Resolves when the queue runner is up; other modules await it before registering their queues. */
+  readonly ready = new Promise<void>((resolve) => { this.markReady = resolve; });
 
   constructor(
     @Inject(ENV) env: Env,
@@ -25,6 +28,15 @@ export class JobsService implements OnModuleInit, OnApplicationShutdown {
     await this.boss.createQueue('auth.cleanup');
     await this.boss.schedule('auth.cleanup', '30 3 * * *');
     await this.boss.work('auth.cleanup', async () => this.cleanupAuth());
+    this.markReady();
+  }
+
+  /** Registers a repeating job (cron) and its handler. Safe to call from any module's onModuleInit. */
+  async every(queue: string, cron: string, handler: () => Promise<void>) {
+    await this.ready;
+    await this.boss.createQueue(queue);
+    await this.boss.schedule(queue, cron);
+    await this.boss.work(queue, async () => handler());
   }
 
   async onApplicationShutdown() {

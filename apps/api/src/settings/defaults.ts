@@ -27,6 +27,9 @@ export const SETTING_DEFAULTS = {
   'consult.maxPerPhonePerHour': 3,
   'consult.maxPerIpPerHour': 20,
   'consult.slaHours': 24,
+
+  /** Hours after the owner's video link was issued before the driver is reminded (once). */
+  'kyc.ownerVideoReminderHours': 24,
 } as const;
 
 export type SettingKey = keyof typeof SETTING_DEFAULTS;

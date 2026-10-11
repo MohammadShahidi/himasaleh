@@ -68,8 +68,11 @@ export function ownerProofOk(relation: OwnerRelation, have: ReadonlySet<KycKind>
   return videoOk && authOk;
 }
 
-/** Fixed short reasons an expert picks when rejecting an item. Each is ≤25 characters: it travels as an SMS parameter. */
-export const REJECT_REASONS = ['تصویر ناخوانا', 'مدرک ناقص', 'مدرک منقضی‌شده', 'اطلاعات نامطابق', 'تصویر قطع‌شده', 'ویدیو نامفهوم', 'متن را کامل نخوانده'] as const;
+/**
+ * The fixed reasons an expert picks from when rejecting an item (owner's decision, ۱۴۰۵/۰۷/۱۹).
+ * Each travels as the REASON parameter of the rejection SMS, which allows at most 25 characters.
+ */
+export const REJECT_REASONS = ['ناخوانا بودن', 'نامرتبط بودن', 'جعلی بودن', 'مدرک منقضی', 'تصویر قطع شده'] as const;
 export type RejectReason = (typeof REJECT_REASONS)[number];
 
 const nationalIdSchema = z
