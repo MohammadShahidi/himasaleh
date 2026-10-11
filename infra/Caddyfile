@@ -1,6 +1,11 @@
-# TLS certificates are obtained and renewed automatically.
-{$DOMAIN} {
+# TLS uses the Let's Encrypt certificate certbot already issued for the domain (renewed via the
+# webroot below; the renewal hook reloads this proxy — see infra/server-setup.sh).
+{$DOMAIN}, www.{$DOMAIN} {
+	tls /etc/letsencrypt/live/{$DOMAIN}/fullchain.pem /etc/letsencrypt/live/{$DOMAIN}/privkey.pem
 	encode zstd gzip
+
+	@www host www.{$DOMAIN}
+	redir @www https://{$DOMAIN}{uri} permanent
 
 	handle /api/* {
 		reverse_proxy api:4000
@@ -15,6 +20,13 @@
 	}
 }
 
-www.{$DOMAIN} {
-	redir https://{$DOMAIN}{uri} permanent
+# Plain HTTP: certbot HTTP-01 renewals, everything else goes to HTTPS.
+http://{$DOMAIN}, http://www.{$DOMAIN} {
+	handle /.well-known/acme-challenge/* {
+		root * /var/www/certbot
+		file_server
+	}
+	handle {
+		redir https://{$DOMAIN}{uri} permanent
+	}
 }

@@ -1,5 +1,7 @@
 # Production: proxy, web, api, postgres (+ s3 only if you have no S3 service).
-# Usage on the server:  cp infra/.env.example infra/.env  (fill it)  &&  docker compose -f infra/docker-compose.yml up -d --build
+# Images are built in CI and pulled from the registry (HM_REGISTRY / HM_TAG, set by the deploy workflow): the server is too small to build.
+# Manual start: cp infra/.env.example infra/.env (fill it) && docker compose -f infra/docker-compose.yml pull && docker compose -f infra/docker-compose.yml up -d
+# TLS: Caddy serves the certbot certificate already issued for the domain (/etc/letsencrypt, see Caddyfile).
 name: himasaleh
 services:
   proxy:
@@ -10,11 +12,14 @@ services:
       DOMAIN: ${DOMAIN}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/certbot:/var/www/certbot:ro
       - caddy-data:/data
       - caddy-config:/config
     depends_on: [web, api]
 
   web:
+    image: ${HM_REGISTRY:-local}/hm-web:${HM_TAG:-latest}
     build:
       context: ..
       dockerfile: infra/web.Dockerfile
@@ -23,6 +28,7 @@ services:
     restart: unless-stopped
 
   api:
+    image: ${HM_REGISTRY:-local}/hm-api:${HM_TAG:-latest}
     build:
       context: ..
       dockerfile: infra/api.Dockerfile
