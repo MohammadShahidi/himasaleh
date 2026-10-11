@@ -10,6 +10,7 @@ import { GeoModule } from './geo/geo.module.js';
 import { KycModule } from './kyc/kyc.module.js';
 import { FinanceModule } from './finance/finance.module.js';
 import { TripsModule } from './trips/trips.module.js';
+import { IdentityModule } from './identity/identity.module.js';
 import { HealthController } from './health/health.controller.js';
 import { JobsModule } from './jobs/jobs.module.js';
 import { NotificationsModule } from './notifications/notifications.module.js';
@@ -37,6 +38,7 @@ import { SettingsModule } from './settings/settings.module.js';
     DriversModule,
     KycModule,
     FinanceModule,
+    IdentityModule,
     TripsModule,
     GeoModule,
   ],

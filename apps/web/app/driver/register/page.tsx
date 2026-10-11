@@ -1,7 +1,13 @@
-import { PanelPlaceholder } from '@/components/panel-placeholder';
+import { SiteHeader } from '@/components/site/site-header';
+import { DriverWizard } from './wizard';
 
 export const metadata = { title: 'ثبت‌نام راننده' };
 
 export default function DriverRegister() {
-  return <PanelPlaceholder roles={['driver']} title="بارگذاری مدارک راننده" phase="فاز ۱" />;
+  return (
+    <>
+      <SiteHeader active="" />
+      <DriverWizard />
+    </>
+  );
 }

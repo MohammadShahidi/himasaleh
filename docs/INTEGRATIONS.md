@@ -15,6 +15,12 @@
 
 ## شاهکار — جیبیت (راننده و مالک، فاز ۱)
 
-منبع: <https://developers.jibit.ir/#/operations/ideMatchNationalCodeAndMobileNumber>
+منبع: <https://developers.jibit.ir/#/operations/ideMatchNationalCodeAndMobileNumber> (متن را مالک فرستاد، ۱۴۰۵/۰۷/۲۰)
 
-**هنوز خوانده نشد.** دامنهٔ `developers.jibit.ir` از ماشین توسعه باز نمی‌شود (اتصال TLS قطع می‌شود؛ `jibit.ir` باز است). برای نوشتن آداپتور لازم است متن همان صفحه (نشانی، روش احراز هویت و گرفتن توکن، بدنهٔ درخواست و پاسخ، کدهای خطا) یا فایل OpenAPI آن در مخزن گذاشته شود. تا آن موقع تطابق موبایل و کد ملی را کارشناس دستی تأیید می‌کند ([`DECISIONS.md`](DECISIONS.md) بند ۱۰).
+- `GET https://napi.jibit.ir/ide/v1/services/matching?nationalCode=…&mobileNumber=…` — بررسی اینکه کد ملی و موبایل مال یک نفرند (پشتوانه: شاهکار).
+- پارامترهای query (الزامی): `nationalCode` (۱۰ رقم معتبر)، `mobileNumber`.
+- هدرها: `Authorization` (الزامی)، `X-TRACK-ID` (اختیاری؛ در پاسخ موفق برمی‌گردد).
+- پاسخ `200`: `{ "matched": true | false }`.
+- وقتی همهٔ ارائه‌دهنده‌های پشت آن بدون نتیجه بمانند، خطای `handler.too_many_requests` می‌دهد.
+- **ننوشته در متن دریافتی:** نحوهٔ گرفتن مقدار `Authorization` (مثلاً توکن از کلید و رمز API) و کدهای خطای دیگر. آداپتور فعلاً مقدار کامل هدر را از `JIBIT_AUTHORIZATION` می‌خواند؛ اگر توکن منقضی می‌شود، باید مستند «گرفتن توکن» هم داده شود تا خودکار تمدید شود.
+- **در کد:** `apps/api/src/identity` — `SHAHKAR_PROVIDER=jibit` و `JIBIT_AUTHORIZATION` (فقط روی سرور). با ارسال ثبت‌نام، تطابق موبایل ↔ کد ملی راننده (با موبایل حسابش) و مالک (با موبایلی که راننده نوشته) خودکار بررسی و در `shahkarResult` مدرک کارت ملی ذخیره می‌شود. خطا یا قطعی جلوی ثبت‌نام را نمی‌گیرد؛ کارشناس نتیجه (`matched`، `error`) را می‌بیند و می‌تواند دستی تصمیم بگیرد. بدون پیکربندی (`manual`) همه‌چیز دستی است.

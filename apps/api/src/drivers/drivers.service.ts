@@ -7,6 +7,7 @@ import {
 import { AuditService } from '../audit/audit.service.js';
 import { AppError } from '../common/errors.js';
 import { ENV, type Env } from '../env.js';
+import { IdentityService } from '../identity/identity.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 
 /** States in which the driver may still change the registration. */
@@ -18,6 +19,7 @@ export class DriversService {
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
     @Inject(ENV) private readonly env: Env,
+    private readonly identity: IdentityService,
   ) {}
 
   private async profileOf(userId: string) {
@@ -198,6 +200,8 @@ export class DriversService {
 
     await this.prisma.driverProfile.update({ where: { id: p.id }, data: { status: 'submitted', submittedAt: new Date() } });
     await this.audit.log({ actorId: userId, action: 'driver.submit', entity: 'driver', entityId: p.id, ip });
+    // Automatic mobile ↔ national ID check; a failure here never blocks the submission.
+    await this.identity.verifyRegistration(p.id).catch(() => undefined);
     return this.me(userId);
   }
 }

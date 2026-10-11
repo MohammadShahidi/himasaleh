@@ -1,5 +1,5 @@
 import {
-  IconAlertCircle, IconAlertTriangle, IconArrowLeft, IconArrowRight, IconAward, IconCategory, IconClipboardCheck, IconClockBolt, IconClockHour4, IconHeartHandshake, IconLayoutGrid, IconMoodEmpty, IconScale, IconBrandInstagram, IconBrandLinkedin, IconBrandTelegram, IconBrandWhatsapp, IconBuilding, IconBuildingSkyscraper, IconBuildingStore, IconCash, IconCheck, IconChevronDown, IconChevronLeft, IconChevronUp, IconCircleCheck, IconClock, IconCurrentLocation, IconDeviceMobile, IconDiscount, IconDiscountCheck, IconDownload, IconFileInvoice, IconGift, IconHandFinger, IconHeadset, IconHelmet, IconHome, IconId, IconInfoCircle, IconLayoutColumns, IconLayoutDashboard, IconLoader2, IconLockDollar, IconMail, IconMap2, IconMapPin, IconMapPinFilled, IconMenu2, IconMessage2, IconMessageQuestion, IconMinus, IconPackage, IconPercentage, IconPhone, IconPlus, IconPointFilled, IconReceipt2, IconRefresh, IconSearch, IconSend, IconShieldCheck, IconShieldLock, IconShovel, IconSteeringWheel, IconSwitchHorizontal, IconTools, IconTruck, IconTruckDelivery, IconUser, IconUserCircle, IconUserStar, IconWall, IconX,
+  IconShare, IconPhoneCall, IconVolume, IconLock, IconMoon, IconListNumbers, IconTent, IconSignature, IconFlag, IconPackages, IconNavigation, IconWallet, IconBellRinging, IconPlayerPause, IconPlayerPlay, IconCar, IconCopy, IconChecklist, IconLicense, IconFileCertificate, IconFileCheck, IconCamera, IconCircleCheckFilled, IconTrash, IconUpload, IconVideo, IconQuote, IconIdBadge2, IconUsers, IconUserCheck, IconAlertCircle, IconAlertTriangle, IconArrowLeft, IconArrowRight, IconAward, IconCategory, IconClipboardCheck, IconClockBolt, IconClockHour4, IconHeartHandshake, IconLayoutGrid, IconMoodEmpty, IconScale, IconBrandInstagram, IconBrandLinkedin, IconBrandTelegram, IconBrandWhatsapp, IconBuilding, IconBuildingSkyscraper, IconBuildingStore, IconCash, IconCheck, IconChevronDown, IconChevronLeft, IconChevronUp, IconCircleCheck, IconClock, IconCurrentLocation, IconDeviceMobile, IconDiscount, IconDiscountCheck, IconDownload, IconFileInvoice, IconGift, IconHandFinger, IconHeadset, IconHelmet, IconHome, IconId, IconInfoCircle, IconLayoutColumns, IconLayoutDashboard, IconLoader2, IconLockDollar, IconMail, IconMap2, IconMapPin, IconMapPinFilled, IconMenu2, IconMessage2, IconMessageQuestion, IconMinus, IconPackage, IconPercentage, IconPhone, IconPlus, IconPointFilled, IconReceipt2, IconRefresh, IconSearch, IconSend, IconShieldCheck, IconShieldLock, IconShovel, IconSteeringWheel, IconSwitchHorizontal, IconTools, IconTruck, IconTruckDelivery, IconUser, IconUserCircle, IconUserStar, IconWall, IconX,
   type Icon as TablerIcon,
 } from '@tabler/icons-react';
 import type { CSSProperties } from 'react';
@@ -9,6 +9,36 @@ import type { CSSProperties } from 'react';
  * tree-shaken SVGs instead of shipping the whole font; add a name here when a design needs it.
  */
 const ICONS = {
+  'share': IconShare,
+  'phone-call': IconPhoneCall,
+  'volume': IconVolume,
+  'lock': IconLock,
+  'moon': IconMoon,
+  'list-numbers': IconListNumbers,
+  'tent': IconTent,
+  'signature': IconSignature,
+  'flag': IconFlag,
+  'packages': IconPackages,
+  'navigation': IconNavigation,
+  'wallet': IconWallet,
+  'bell-ringing': IconBellRinging,
+  'player-pause': IconPlayerPause,
+  'player-play': IconPlayerPlay,
+  'car': IconCar,
+  'copy': IconCopy,
+  'checklist': IconChecklist,
+  'license': IconLicense,
+  'file-certificate': IconFileCertificate,
+  'file-check': IconFileCheck,
+  'camera': IconCamera,
+  'circle-check-filled': IconCircleCheckFilled,
+  'trash': IconTrash,
+  'upload': IconUpload,
+  'video': IconVideo,
+  'quote': IconQuote,
+  'id-badge-2': IconIdBadge2,
+  'users': IconUsers,
+  'user-check': IconUserCheck,
   'alert-circle': IconAlertCircle,
   'alert-triangle': IconAlertTriangle,
   'arrow-left': IconArrowLeft,

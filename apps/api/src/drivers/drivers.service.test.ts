@@ -14,7 +14,7 @@ function setup(opts: { status?: string; owner?: { id: string; relation: string; 
     fileObject: { findUnique: vi.fn().mockResolvedValue(opts.file ?? null) },
   };
   const audit = { log: vi.fn().mockResolvedValue(undefined) };
-  return { svc: new DriversService(prisma as never, audit as never, { NODE_ENV: 'test', APP_DOMAIN: 'example.ir' } as never), prisma, audit };
+  return { svc: new DriversService(prisma as never, audit as never, { NODE_ENV: 'test', APP_DOMAIN: 'example.ir' } as never, { verifyRegistration: vi.fn().mockResolvedValue(undefined) } as never), prisma, audit };
 }
 
 const now = new Date();
