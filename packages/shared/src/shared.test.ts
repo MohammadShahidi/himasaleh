@@ -82,6 +82,12 @@ describe('driver registration rules', () => {
     expect(r.vehicle.plate2).toBe('345');
   });
 
+  it('saves without the address step; the address is only required to submit', () => {
+    const { province, city, serviceCities, address, ...noLocation } = base;
+    void province; void city; void serviceCities; void address;
+    expect(driverProfileInputSchema.safeParse(noLocation).success).toBe(true);
+  });
+
   it('rejects a bad national id and an incomplete plate', () => {
     expect(driverProfileInputSchema.safeParse({ ...base, nationalId: '1234567890' }).success).toBe(false);
     expect(driverProfileInputSchema.safeParse({ ...base, vehicle: { ...base.vehicle, plate2: '34' } }).success).toBe(false);

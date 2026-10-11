@@ -116,10 +116,11 @@ export const driverProfileInputSchema = z.object({
   }),
   /** `null` when the driver owns the vehicle. */
   owner: vehicleOwnerInputSchema.nullable(),
-  province: z.string().trim().min(2).max(40),
-  city: z.string().trim().min(2).max(40),
-  serviceCities: z.array(z.string().trim().min(2).max(40)).min(1, 'حداقل یک شهر سرویس انتخاب کنید').max(12),
-  address: z.string().trim().min(6, 'نشانی را کامل بنویسید').max(300),
+  // Step 5. Optional while saving (documents are uploaded before the address step); the server requires all of them on submit.
+  province: z.string().trim().min(2).max(40).optional(),
+  city: z.string().trim().min(2).max(40).optional(),
+  serviceCities: z.array(z.string().trim().min(2).max(40)).max(12).default([]),
+  address: z.string().trim().min(6, 'نشانی را کامل بنویسید').max(300).optional(),
   postalCode: z.string().transform((v) => digitsOnly(v)).pipe(z.string().regex(/^\d{10}$/, 'کد پستی ۱۰ رقم است')).optional(),
   lat: z.number().min(-90).max(90).optional(),
   lng: z.number().min(-180).max(180).optional(),

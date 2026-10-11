@@ -5,7 +5,7 @@ type Item = { kind: string; status: string; createdAt: Date };
 
 function setup(opts: { status?: string; owner?: { id: string; relation: string; videoLinkSentAt: Date | null } | null; items?: Item[]; file?: { id: string; ownerId: string; mime: string } | null }) {
   const profile = {
-    id: 'd1', userId: 'u1', status: opts.status ?? 'draft', address: 'تهران، خیابان آزادی', serviceCities: ['تهران'],
+    id: 'd1', userId: 'u1', status: opts.status ?? 'draft', address: 'تهران، خیابان آزادی', province: 'تهران', city: 'تهران', serviceCities: ['تهران'],
     vehicles: [{ id: 'v1', owner: opts.owner ?? null }],
   };
   const prisma = {

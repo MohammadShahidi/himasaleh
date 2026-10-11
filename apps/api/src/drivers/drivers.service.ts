@@ -94,8 +94,9 @@ export class DriversService {
     const fields = {
       firstName: profile.firstName, lastName: profile.lastName, nationalId: profile.nationalId,
       licenseNo: profile.licenseNo ?? null, refCode: profile.refCode ?? null,
-      province: profile.province, city: profile.city, serviceCities: [...new Set([profile.city, ...profile.serviceCities])],
-      address: profile.address, postalCode: profile.postalCode ?? null, lat: profile.lat ?? null, lng: profile.lng ?? null,
+      province: profile.province ?? null, city: profile.city ?? null,
+      serviceCities: [...new Set([...(profile.city ? [profile.city] : []), ...profile.serviceCities])],
+      address: profile.address ?? null, postalCode: profile.postalCode ?? null, lat: profile.lat ?? null, lng: profile.lng ?? null,
     };
     const vehicleFields = {
       type: vehicle.type, body: vehicle.body, capacityTon: vehicle.capacityTon ?? null, year: vehicle.year ?? null,
@@ -182,7 +183,7 @@ export class DriversService {
     if (!p) throw new AppError(HttpStatus.CONFLICT, 'NO_REGISTRATION', 'اول اطلاعات فردی و خودرو را ثبت کنید.');
     if (!(EDITABLE as readonly string[]).includes(p.status)) throw new AppError(HttpStatus.CONFLICT, 'ALREADY_SUBMITTED', 'ثبت‌نام شما قبلاً ارسال شده است.');
     const vehicle = p.vehicles[0];
-    if (!vehicle || !p.address || !p.serviceCities.length)
+    if (!vehicle || !p.address || !p.city || !p.province || !p.serviceCities.length)
       throw new AppError(HttpStatus.BAD_REQUEST, 'INCOMPLETE', 'اطلاعات ثبت‌نام کامل نیست.');
 
     const owner = vehicle.owner;
