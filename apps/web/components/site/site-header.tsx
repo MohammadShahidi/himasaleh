@@ -2,6 +2,7 @@
 
 // Port of design/project/SiteHeader.dc.html: glass header, mega menu, mobile drawer, scroll
 // progress, back-to-top, PWA install button, and the page-wide scroll-reveal behaviour.
+import { toFaDigits } from '@hm/shared';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@/components/icon';
@@ -148,7 +149,7 @@ export function SiteHeader({ active = '' }: { active?: SiteSection }) {
 
       <div ref={hdrRef} style={{ position: 'fixed', top: 0, right: 0, left: 0, zIndex: 60, paddingTop: 'env(safe-area-inset-top)', transition: 'background-color .45s,box-shadow .45s' }}>
         <header ref={innerRef} data-wrap="" style={{ position: 'relative', maxWidth: 1280, margin: '0 auto', padding: '26px clamp(20px,3vw,40px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'clamp(12px,2vw,24px)', transition: 'padding .45s cubic-bezier(.2,.8,.2,1)' }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#fff' }}>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#fff', marginInlineEnd: 'clamp(20px,3.5vw,56px)' }}>
             <img src="/logo-light.png" alt="" style={{ height: 48, width: 'auto', display: 'block' }} />
             <span style={{ fontSize: 26, fontWeight: 900, letterSpacing: '-0.5px', whiteSpace: 'nowrap' }}><span style={{ color: '#FF5B0F' }}>{SITE.brandAccent}</span> {SITE.brandRest}</span>
           </Link>
@@ -199,7 +200,7 @@ export function SiteHeader({ active = '' }: { active?: SiteSection }) {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(12px,1.8vw,26px)', whiteSpace: 'nowrap' }}>
             <a data-hide-narrow="" href={telHref(SITE.phone)} dir="ltr" style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#fff', fontSize: 15, fontWeight: 600 }}>
-              <Icon name="headset" size={22} /><span style={{ whiteSpace: 'nowrap' }}>{SITE.phone}</span>
+              <Icon name="headset" size={22} /><span style={{ whiteSpace: 'nowrap' }}>{toFaDigits(SITE.phone)}</span>
             </a>
             <Link data-btn="" data-login="" href="/login" style={{ display: 'flex', alignItems: 'center', gap: 8, height: 46, padding: '0 18px', borderRadius: 10, border: '1px solid rgba(255,255,255,.18)', background: 'rgba(255,255,255,.06)', backdropFilter: 'blur(10px)', color: '#fff', fontSize: 15, fontWeight: 700 }}>
               <Icon name="user-circle" size={21} /><span data-login-txt="">ورود / ثبت‌نام</span>
@@ -249,7 +250,7 @@ export function SiteHeader({ active = '' }: { active?: SiteSection }) {
               <Icon name="user-circle" size={20} />ورود / ثبت‌نام
             </Link>
             <a href={telHref(SITE.phone)} dir="ltr" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, color: '#fff', fontSize: 16, fontWeight: 600 }}>
-              <Icon name="headset" size={20} style={{ color: '#FF5B0F' }} />{SITE.phone}
+              <Icon name="headset" size={20} style={{ color: '#FF5B0F' }} />{toFaDigits(SITE.phone)}
             </a>
             <button data-btn="" onClick={consult} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#FF5B0F', color: '#fff', border: 'none', fontSize: 16, fontWeight: 700, padding: 16, borderRadius: 12 }}>
               <Icon name="message-2" size={18} />درخواست مشاوره

@@ -257,7 +257,7 @@ export function LoginFlow() {
               <div style={{ position: 'relative', marginTop: 8 }}>
                 <Icon name="device-mobile" size={20} style={fieldIcon} />
                 <input data-field="" type="tel" inputMode="numeric" dir="ltr" autoComplete="tel" value={phone} disabled={!!pendingCode}
-                  onChange={(e) => setPhone(digitsOnly(e.target.value, 11))} onKeyDown={(e) => { if (e.key === 'Enter') void sendCode(); }} placeholder="0912 345 6789"
+                  onChange={(e) => setPhone(digitsOnly(e.target.value, 11))} onKeyDown={(e) => { if (e.key === 'Enter') void sendCode(); }} placeholder="۰۹۱۲ ۳۴۵ ۶۷۸۹"
                   style={{ ...field, height: 56, border: `1.5px solid ${err && !okPhone ? '#E0371F' : '#ECECEC'}`, fontSize: 17, fontWeight: 600, letterSpacing: 1, textAlign: 'left' }} />
               </div>
               {err && !okPhone && <div style={errLine}><Icon name="alert-circle" size={16} />شماره موبایل معتبر وارد کنید</div>}
