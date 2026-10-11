@@ -10,7 +10,7 @@ import { MapPicker } from '@/components/map-picker';
 import { RoleSwitch } from '@/components/role-switch';
 import { WaybillCard, type WaybillData } from '@/components/waybill-card';
 import { ApiError, api } from '@/lib/api';
-import { initNativePush } from '@/lib/native-bridge';
+import { type AppUpdate, appUpdateStatus, initNativePush } from '@/lib/native-bridge';
 import { pendingSteps, queueStep, syncQueue } from '@/lib/offline-queue';
 import { useSession } from '@/lib/session';
 import { SITE, telHref } from '@/lib/site';
@@ -63,6 +63,7 @@ export function DriverPanel() {
   const [net, setNet] = useState(true);
   const [queued, setQueued] = useState<{ tripId: string; step: number }[]>([]);
   const [delivered, setDelivered] = useState(false);
+  const [update, setUpdate] = useState<AppUpdate | null>(null);
   const stopRef = useRef(false);
 
   const enabled = !!user && !forbidden;
@@ -94,6 +95,7 @@ export function DriverPanel() {
     window.addEventListener('online', on); window.addEventListener('offline', off);
     void refreshQueue(); void flush();
     void initNativePush((p) => router.push(p));
+    void appUpdateStatus().then(setUpdate);
     const t = setInterval(() => { if (navigator.onLine) void flush(); }, 20_000);
     return () => { window.removeEventListener('online', on); window.removeEventListener('offline', off); clearInterval(t); stopRef.current = true; try { speechSynthesis.cancel(); } catch { /* none */ } };
   }, [enabled, flush, refreshQueue, router]);
@@ -159,6 +161,17 @@ export function DriverPanel() {
   const pending = status === 'submitted';
   const locked = pending || !online;
   const showDone = delivered && !trip;
+
+  if (update?.required) {
+    return (
+      <main dir="rtl" style={{ minHeight: '100dvh', background: '#141414', color: '#fff', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 24, gap: 16 }}>
+        <Icon name="refresh" size={64} style={{ color: '#FF5B0F' }} />
+        <div style={{ fontSize: 26, fontWeight: 900 }}>نسخهٔ تازه آمده است</div>
+        <div style={{ fontSize: 18, lineHeight: 1.9, color: '#CCC', maxWidth: 360 }}>برای ادامه، اپ را به‌روز کنید.</div>
+        {update.storeUrl && <a data-big="" href={update.storeUrl} style={{ marginTop: 8, height: 72, minWidth: 260, borderRadius: 20, background: '#FF5B0F', color: '#fff', fontSize: 21, fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>به‌روزرسانی</a>}
+      </main>
+    );
+  }
 
   const tabs: [IconName, string][] = [['truck', 'بار من'], ['bell-ringing', 'بار جدید'], ['wallet', 'پول من'], ['headset', 'کمک']];
 

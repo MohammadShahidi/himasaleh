@@ -5,6 +5,8 @@ interface PushPlugin {
   checkPermissions(): Promise<{ receive: string }>;
   requestPermissions(): Promise<{ receive: string }>;
   register(): Promise<void>;
+  /** Android 8+: the channel must exist before a push names it (the server sends channel_id `loads` or `general`). */
+  createChannel?(c: { id: string; name: string; description?: string; importance: number; visibility?: number; vibration?: boolean; lights?: boolean }): Promise<void>;
   addListener(event: string, cb: (data: never) => void): Promise<unknown>;
 }
 interface CapacitorGlobal { isNativePlatform?: () => boolean; Plugins?: { PushNotifications?: PushPlugin; App?: { getInfo(): Promise<{ build: string; version: string }> } } }
@@ -28,6 +30,9 @@ export async function initNativePush(open: (path: string) => void): Promise<void
     if (perm.receive !== 'granted') perm = await push.requestPermissions();
     if (perm.receive !== 'granted') return;
     const info = await cap()?.Plugins?.App?.getInfo().catch(() => undefined);
+    // `loads` rings loudly (importance 5 = max); everything else is a normal notification.
+    await push.createChannel?.({ id: 'loads', name: 'بار جدید', description: 'اعلان بار جدید با صدای بلند', importance: 5, visibility: 1, vibration: true, lights: true }).catch(() => undefined);
+    await push.createChannel?.({ id: 'general', name: 'اعلان‌های عمومی', importance: 3, visibility: 1 }).catch(() => undefined);
     await push.addListener('registration', ((t: { value: string }) => {
       void api('/devices', { method: 'POST', json: { token: t.value, ...(info ? { appVersion: info.version } : {}) } }).catch(() => undefined);
     }) as (d: never) => void);
@@ -43,5 +48,20 @@ export async function initNativePush(open: (path: string) => void): Promise<void
     await push.register();
   } catch {
     started = false; // try again next time the panel opens
+  }
+}
+
+export interface AppUpdate { required: boolean; available: boolean; storeUrl: string }
+
+/** Asks the server whether this app build is still allowed (public endpoint, so it works before sign-in). Null outside the app. */
+export async function appUpdateStatus(): Promise<AppUpdate | null> {
+  if (!inNativeApp()) return null;
+  try {
+    const info = await cap()?.Plugins?.App?.getInfo();
+    const code = Number(info?.build ?? 0) || 0;
+    const r = await api<{ updateRequired: boolean; updateAvailable: boolean; storeUrl: string }>(`/app/config?platform=android&versionCode=${code}`);
+    return { required: r.updateRequired, available: r.updateAvailable, storeUrl: r.storeUrl };
+  } catch {
+    return null; // offline: never lock the driver out because the check failed
   }
 }
