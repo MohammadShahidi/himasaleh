@@ -37,6 +37,9 @@ const schema = z.object({
   /** Firebase service-account JSON (the whole file's content). Server only; never in the repo or the app. */
   FCM_SERVICE_ACCOUNT_JSON: z.string().min(1).optional(),
 
+  /** Enables the test-load tool for staff (POST /dev/test-trips). Off by default; turn on only on dev and acceptance servers. */
+  ENABLE_DEV_TOOLS: bool.default(false),
+
   NOMINATIM_URL: z.string().url().default('https://nominatim.openstreetmap.org'),
 
   S3_ENDPOINT: z.string().url(),

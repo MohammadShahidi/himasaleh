@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  applyBp, consentScripts, driverProfileInputSchema, formatToman, formatTomanWords, isNationalId, isSheba, normalizeMobile, ownerProofOk, REJECT_REASONS, requiredKinds,
+  applyBp, consentScripts, jalaliYmd, toJalali, driverProfileInputSchema, formatToman, formatTomanWords, isNationalId, isSheba, normalizeMobile, ownerProofOk, REJECT_REASONS, requiredKinds,
   otpVerifySchema, toEnDigits, toFaDigits,
 } from './index.js';
 
@@ -119,5 +119,18 @@ describe('driver registration rules', () => {
     expect(s.driver).toContain('حسن کریمی');
     expect(s.owner).toContain('حمید کریمی');
     expect(consentScripts({ driverName: 'ا', driverNationalId: '۱', plate: 'پ' }).owner).toBeNull();
+  });
+});
+
+describe('jalali', () => {
+  it('converts known dates', () => {
+    expect(toJalali(2026, 10, 12)).toEqual([1405, 7, 20]);
+    expect(toJalali(2026, 3, 21)).toEqual([1405, 1, 1]);
+    expect(toJalali(2024, 3, 20)).toEqual([1403, 1, 1]);
+  });
+  it('uses the Tehran day, not the UTC day', () => {
+    // 20:45 UTC on 2026-10-11 is already 00:15 on the 12th in Tehran.
+    expect(jalaliYmd(new Date('2026-10-11T20:45:00Z'))).toBe('14050720');
+    expect(jalaliYmd(new Date('2026-10-11T12:00:00Z'))).toBe('14050719');
   });
 });

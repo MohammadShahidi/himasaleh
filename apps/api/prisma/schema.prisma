@@ -253,6 +253,8 @@ model DriverProfile {
   user     User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   vehicles Vehicle[]
   kycItems KycItem[]
+  trips    Trip[]
+  offers   DispatchOffer[]
 
   @@index([status, submittedAt])
   @@index([nationalId])
@@ -453,4 +455,116 @@ model NotificationLog {
 
   @@index([userId, createdAt])
   @@index([type, createdAt])
+}
+
+// ───────────────────────── Phase 1: dispatch and trips ─────────────────────────
+
+enum TripStatus {
+  /// offers are out, nobody accepted yet
+  open
+  assigned
+  /// the driver is at the seller
+  loading
+  /// loaded, waybill issued, on the road
+  in_transit
+  /// at the destination
+  arrived
+  delivered
+  cancelled
+}
+
+/// A load to carry. In phase 1 it is created by the dev test tool; from phase 2 it belongs to an Order.
+model Trip {
+  id          String     @id @default(cuid())
+  status      TripStatus @default(open)
+  /// 1 go to the seller · 2 load · 3 go to the destination · 4 deliver and get the signed waybill photo · 5 done
+  step        Int        @default(1)
+  /// who accepted the offer
+  driverId    String?
+  /// «۱۴۰۵۰۷۱۲-۸۸۴۱»
+  waybillNo   String     @unique
+  /// «HM-58213»
+  trackCode   String     @unique
+  goods       String
+  weightText  String?
+  fromTitle   String
+  fromAddr    String
+  fromPhone   String?
+  fromLat     Float?
+  fromLng     Float?
+  toTitle     String
+  toAddr      String
+  toContact   String?
+  toPhone     String?
+  toLat       Float?
+  toLng       Float?
+  distanceKm  Int?
+  whenText    String?
+  /// loading and delivery notes shown to the driver (list of strings)
+  notes       Json?
+  /// internal note, never shown to the driver (process doc: waybill)
+  internalNote String?
+  /// what the customer paid for carrying (rials); the driver sees fare minus the platform share
+  fareRial    BigInt
+  /// platform share of the fare in basis points, copied when the offer was made (never changes afterwards)
+  driverFeeBp Int
+  feeSource   String     @default("default")
+  isTest      Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  acceptedAt  DateTime?
+  deliveredAt DateTime?
+
+  driver DriverProfile? @relation(fields: [driverId], references: [id])
+  offers DispatchOffer[]
+  events TripEvent[]
+
+  @@index([status, createdAt])
+  @@index([driverId, status])
+}
+
+enum OfferStatus {
+  pending
+  accepted
+  rejected
+  expired
+  /// another driver accepted first
+  taken
+}
+
+/// A load offered to one driver. The first to accept wins; the rest become `taken`.
+model DispatchOffer {
+  id          String      @id @default(cuid())
+  tripId      String
+  driverId    String
+  status      OfferStatus @default(pending)
+  fareRial    BigInt
+  driverFeeBp Int
+  expiresAt   DateTime
+  createdAt   DateTime    @default(now())
+  respondedAt DateTime?
+
+  trip   Trip          @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  driver DriverProfile @relation(fields: [driverId], references: [id], onDelete: Cascade)
+
+  @@unique([tripId, driverId])
+  @@index([driverId, status, expiresAt])
+}
+
+/// One step the driver took, with the phone's own clock (it may have been offline).
+model TripEvent {
+  id          String   @id @default(cuid())
+  tripId      String
+  step        Int
+  clientAt    DateTime
+  serverAt    DateTime @default(now())
+  lat         Float?
+  lng         Float?
+  photoFileId String?
+  /// the app's counter; makes a re-sent batch harmless
+  clientSeq   Int?
+
+  trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  @@unique([tripId, step])
+  @@index([tripId])
 }

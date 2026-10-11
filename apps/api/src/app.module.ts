@@ -8,6 +8,8 @@ import { DriversModule } from './drivers/drivers.module.js';
 import { FilesModule } from './files/files.module.js';
 import { GeoModule } from './geo/geo.module.js';
 import { KycModule } from './kyc/kyc.module.js';
+import { FinanceModule } from './finance/finance.module.js';
+import { TripsModule } from './trips/trips.module.js';
 import { HealthController } from './health/health.controller.js';
 import { JobsModule } from './jobs/jobs.module.js';
 import { NotificationsModule } from './notifications/notifications.module.js';
@@ -34,6 +36,8 @@ import { SettingsModule } from './settings/settings.module.js';
     ConsultModule,
     DriversModule,
     KycModule,
+    FinanceModule,
+    TripsModule,
     GeoModule,
   ],
   controllers: [HealthController],
