@@ -356,6 +356,7 @@ erDiagram
 |---|---|---|
 | `otp.maxPerPhone` / `otp.cooldownMin` | ۷ / ۵ دقیقه | ۱ |
 | `otp.maxPerIp`، `otp.maxPerDevice` | ۲۰ در ساعت | ۱ |
+| `otp.maxSuccessPerPhonePerHour` | ۳۰ ورود موفق در ساعت | ۱ |
 | `otp.botBlockHours` | ۴ | ۱ |
 | `kyc.ownerReminderHours` | ۲۴ | ۱ |
 | `inquiry.windowMin` | ۲۵ | ۲ |
