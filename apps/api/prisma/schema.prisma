@@ -1,4 +1,4 @@
-// Phase 0: accounts, sign-in, settings, audit, files, SMS log.
+// Phase 0: accounts, sign-in, settings, audit, files, SMS log. Phase 1 (bottom): drivers, KYC, ledger.
 // Money columns (later phases) are BigInt rials; rates are Int basis points.
 
 generator client {
@@ -40,6 +40,7 @@ model User {
   roles         UserRole[]
   refreshTokens RefreshToken[]
   files         FileObject[]
+  driverProfile DriverProfile?
 }
 
 model UserRole {
@@ -147,6 +148,7 @@ model FileObject {
   size       Int
   createdAt  DateTime       @default(now())
   owner      User?          @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  kycItems   KycItem[]
 }
 
 enum SmsStatus {
@@ -187,4 +189,215 @@ model ConsultRequest {
 
   @@index([handledAt, createdAt])
   @@index([phone, createdAt])
+}
+
+// ───────────────────────── Phase 1: drivers, KYC, ledger ─────────────────────────
+
+enum DriverStatus {
+  /// registration started, not sent yet
+  draft
+  /// sent, waiting for an expert
+  submitted
+  /// an expert rejected at least one item; the driver re-uploads only those
+  needs_fix
+  approved
+  /// blocked (e.g. too many cancellations after accepting, architecture §4.2 dispatch)
+  blocked
+}
+
+enum VehicleType {
+  pickup
+  khavar
+  kamyonet
+  single_truck
+  ten_wheeler
+  trailer
+}
+
+enum VehicleBody {
+  flatbed
+  sided
+  dump
+  covered
+}
+
+/// One per driver account. Registration steps 1, 5 (design/project/driver-register.dc.html).
+model DriverProfile {
+  id           String       @id @default(cuid())
+  userId       String       @unique
+  firstName    String
+  lastName     String
+  nationalId   String
+  /// optional
+  licenseNo    String?
+  /// referral code typed at registration (the referral module resolves it later)
+  refCode      String?
+  status       DriverStatus @default(draft)
+  province     String?
+  city         String?
+  /// cities where this driver takes loads («شهرهای سرویس»), includes `city`
+  serviceCities String[]
+  address      String?
+  postalCode   String?
+  lat          Float?
+  lng          Float?
+  /// «سر کارم»
+  online       Boolean      @default(false)
+  submittedAt  DateTime?
+  approvedAt   DateTime?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  user     User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vehicles Vehicle[]
+  kycItems KycItem[]
+
+  @@index([status, submittedAt])
+  @@index([nationalId])
+}
+
+/// Registration step 2. Plate is kept as the four parts of an Iranian plate: 12 ع 345 - 67.
+model Vehicle {
+  id          String      @id @default(cuid())
+  driverId    String
+  type        VehicleType
+  body        VehicleBody
+  capacityTon Int?
+  year        Int?
+  plate1      String
+  plateLetter String
+  plate2      String
+  plate3      String
+  createdAt   DateTime    @default(now())
+
+  driver DriverProfile @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  owner  VehicleOwner?
+
+  @@index([driverId])
+}
+
+enum OwnerRelation {
+  father
+  mother
+  spouse
+  brother
+  sister
+  child
+  partner
+  employer
+  other
+}
+
+/// Present only when the vehicle's owner is not the driver. Non-first-degree relations
+/// (partner, employer, other) need an authorization document or the owner's consent video.
+model VehicleOwner {
+  id             String        @id @default(cuid())
+  vehicleId      String        @unique
+  firstName      String
+  lastName       String
+  nationalId     String
+  phone          String
+  relation       OwnerRelation
+  /// free text when relation = other
+  relationOther  String?
+  /// sha256 of the link token texted to the owner (the plain token is never stored)
+  videoTokenHash String?        @unique
+  videoLinkSentAt DateTime?
+  videoReminderSentAt DateTime?
+  createdAt      DateTime      @default(now())
+
+  vehicle  Vehicle   @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  kycItems KycItem[]
+}
+
+enum KycSubject {
+  driver
+  owner
+}
+
+enum KycKind {
+  national_id_front
+  national_id_back
+  vehicle_card_front
+  vehicle_card_back
+  green_sheet
+  license
+  selfie_video
+  owner_national_id_front
+  owner_national_id_back
+  /// power of attorney, notarized consent or lease
+  owner_authorization
+  owner_video
+}
+
+enum KycStatus {
+  pending
+  approved
+  rejected
+}
+
+/// One uploaded document or video and the expert's verdict on it. Re-uploading a rejected item
+/// adds a new row; only the newest row per (subject, kind) counts.
+model KycItem {
+  id           String     @id @default(cuid())
+  subject      KycSubject
+  driverId     String?
+  ownerId      String?
+  kind         KycKind
+  fileId       String
+  status       KycStatus  @default(pending)
+  /// one of the fixed short reasons (they must fit an SMS parameter, see docs/SMS-TEMPLATES.md)
+  rejectReason String?
+  /// text the person read aloud in the video, exactly as shown to them
+  scriptSnapshot String?
+  /// manual result until a Shahkar provider is connected (DECISIONS §10)
+  shahkarResult Json?
+  reviewedById String?
+  reviewedAt   DateTime?
+  createdAt    DateTime   @default(now())
+
+  driver DriverProfile? @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  owner  VehicleOwner?  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  file   FileObject     @relation(fields: [fileId], references: [id])
+
+  @@index([driverId, kind, createdAt])
+  @@index([ownerId, kind, createdAt])
+  @@index([status, createdAt])
+}
+
+/// Double-entry ledger (architecture §7): the entries of one transaction always sum to zero.
+model LedgerTxn {
+  id        String   @id @default(cuid())
+  /// event type, e.g. `trip_settlement`
+  kind      String
+  /// what it belongs to, e.g. `order:cl123`
+  ref       String?
+  /// makes retries safe: the same key never posts twice
+  idempotencyKey String? @unique
+  meta      Json?
+  createdAt DateTime @default(now())
+
+  entries LedgerEntry[]
+
+  @@index([ref])
+}
+
+model LedgerEntry {
+  id         String    @id @default(cuid())
+  txnId      String
+  /// e.g. `wallet:user:cl123`, `platform:revenue:fee`
+  account    String
+  /// signed rials: positive = credit, negative = debit
+  amountRial BigInt
+  txn        LedgerTxn @relation(fields: [txnId], references: [id], onDelete: Restrict)
+
+  @@index([account])
+  @@index([txnId])
+}
+
+/// Running balance per account, updated inside the same database transaction as its entries.
+model AccountBalance {
+  account    String   @id
+  balanceRial BigInt  @default(0)
+  updatedAt  DateTime @updatedAt
 }
