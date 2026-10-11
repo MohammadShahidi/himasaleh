@@ -31,6 +31,20 @@ export class JobsService implements OnModuleInit, OnApplicationShutdown {
     this.markReady();
   }
 
+  /** Handles one-off jobs of a queue (see `later`). */
+  async onQueue<T extends object>(queue: string, handler: (data: T) => Promise<void>) {
+    await this.ready;
+    await this.boss.createQueue(queue);
+    await this.boss.work<T>(queue, async (jobs) => {
+      for (const j of jobs) await handler(j.data);
+    });
+  }
+
+  /** Queues a one-off job to run after `afterSec` seconds. */
+  async later(queue: string, data: object, afterSec: number) {
+    await this.boss.send(queue, data, { startAfter: afterSec });
+  }
+
   /** Registers a repeating job (cron) and its handler. Safe to call from any module's onModuleInit. */
   async every(queue: string, cron: string, handler: () => Promise<void>) {
     await this.ready;

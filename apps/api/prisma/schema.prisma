@@ -41,6 +41,8 @@ model User {
   refreshTokens RefreshToken[]
   files         FileObject[]
   driverProfile DriverProfile?
+  devices       Device[]
+  notifications NotificationLog[]
 }
 
 model UserRole {
@@ -400,4 +402,55 @@ model AccountBalance {
   account    String   @id
   balanceRial BigInt  @default(0)
   updatedAt  DateTime @updatedAt
+}
+
+// ───────────────────────── Phase 1: push notifications ─────────────────────────
+
+/// A phone running the Android app. One user may have several; a token is deleted on sign-out or when FCM says it is invalid.
+model Device {
+  id         String   @id @default(cuid())
+  userId     String
+  /// FCM registration token
+  token      String   @unique
+  platform   String   @default("android")
+  appVersion String?
+  createdAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+enum NotifyChannel {
+  push
+  sms
+}
+
+enum NotifyStatus {
+  sent
+  failed
+  /// the app confirmed the push arrived
+  acked
+}
+
+/// One row per attempt to tell a user something; `ackedAt` lets the SMS fallback know the push arrived.
+model NotificationLog {
+  id          String        @id @default(cuid())
+  userId      String
+  type        String
+  channel     NotifyChannel
+  status      NotifyStatus
+  title       String?
+  /// deep link opened when the notification is tapped
+  path        String?
+  providerRef String?
+  error       String?
+  createdAt   DateTime      @default(now())
+  ackedAt     DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([type, createdAt])
 }

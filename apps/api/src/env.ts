@@ -30,6 +30,13 @@ const schema = z.object({
   SMS_IR_TPL_OWNER_VIDEO_REMINDER: z.coerce.number().int().positive().optional(),
   SMS_IR_TPL_DRIVER_CANCEL_WARNING: z.coerce.number().int().positive().optional(),
 
+  SMS_IR_TPL_NEW_LOAD: z.coerce.number().int().positive().optional(),
+
+  /** Push provider for the Android app. `fake` only logs. */
+  PUSH_PROVIDER: z.enum(['fake', 'fcm']).default('fake'),
+  /** Firebase service-account JSON (the whole file's content). Server only; never in the repo or the app. */
+  FCM_SERVICE_ACCOUNT_JSON: z.string().min(1).optional(),
+
   NOMINATIM_URL: z.string().url().default('https://nominatim.openstreetmap.org'),
 
   S3_ENDPOINT: z.string().url(),
@@ -44,6 +51,7 @@ const schema = z.object({
   /** Create the buckets at startup (local demo only). */
   S3_AUTO_CREATE_BUCKETS: bool.default(false),
 }).superRefine((e, ctx) => {
+  if (e.PUSH_PROVIDER === 'fcm' && !e.FCM_SERVICE_ACCOUNT_JSON) ctx.addIssue({ code: 'custom', path: ['FCM_SERVICE_ACCOUNT_JSON'], message: 'required when PUSH_PROVIDER=fcm' });
   const usesSmsIr = e.SMS_PRIMARY_PROVIDER === 'smsir' || e.SMS_BACKUP_PROVIDER === 'smsir';
   if (usesSmsIr && !e.SMS_IR_API_KEY) ctx.addIssue({ code: 'custom', path: ['SMS_IR_API_KEY'], message: 'required when sms.ir is a provider' });
   if (usesSmsIr && !e.SMS_IR_OTP_TEMPLATE_ID)

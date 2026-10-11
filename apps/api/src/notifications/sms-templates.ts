@@ -9,6 +9,8 @@ export const SMS_TEMPLATE_PARAMS = {
   driver_rejected: ['NAME', 'DOC', 'REASON'],
   /** Sent to the driver 24 h after the owner link was issued and no consent video arrived. */
   owner_video_reminder: ['NAME'],
+  /** A new load for a driver: «بار جدید در #CITY#: #GOODS# …» (docs/SMS-TEMPLATES.md, not created yet). */
+  new_load: ['CITY', 'GOODS', 'FARE', 'MINUTES'],
   /** More than 3 cancellations after accepting a load in one day. */
   driver_cancel_warning: ['NAME'],
 } as const;
