@@ -22,24 +22,32 @@ export class OtpService {
   async request(phone: string, ip: string, deviceId: string | null) {
     const s = await this.settings.getMany([
       'otp.maxPerPhone', 'otp.cooldownMin', 'otp.resendSec', 'otp.maxPerIpPerHour', 'otp.maxPerDevicePerHour',
-      'otp.botDistinctPhones', 'otp.botWindowMin', 'otp.botBlockHours', 'otp.ttlSec',
+      'otp.botDistinctPhones', 'otp.botWindowMin', 'otp.botBlockHours', 'otp.ttlSec', 'otp.maxSuccessPerPhonePerHour',
     ] as const);
     const now = new Date();
+    const hourAgo = new Date(now.getTime() - HOUR);
 
     await this.assertNotBlocked(phone, ip, deviceId, now);
 
+    // A correct code ends the streak: only requests after the last success count toward the phone limits,
+    // so signing out and back in right away is never throttled.
+    const lastSuccess = await this.prisma.otpRequestLog.findFirst({
+      where: { phone, succeededAt: { not: null } }, orderBy: { succeededAt: 'desc' }, select: { succeededAt: true },
+    });
     const recent = await this.prisma.otpRequestLog.findMany({
-      where: { phone }, orderBy: { createdAt: 'desc' }, take: s['otp.maxPerPhone'], select: { createdAt: true },
+      where: { phone, ...(lastSuccess?.succeededAt ? { createdAt: { gt: lastSuccess.succeededAt } } : {}) },
+      orderBy: { createdAt: 'desc' }, take: s['otp.maxPerPhone'], select: { createdAt: true },
     });
     const wait = phoneWaitSeconds(recent.map((r) => r.createdAt), now, {
       maxPerPhone: s['otp.maxPerPhone'], cooldownMin: s['otp.cooldownMin'], resendSec: s['otp.resendSec'],
     });
     if (wait > 0) throw tooMany(wait);
 
-    const hourAgo = new Date(now.getTime() - HOUR);
-    if ((await this.prisma.otpRequestLog.count({ where: { ip, createdAt: { gte: hourAgo } } })) >= s['otp.maxPerIpPerHour'])
+    if ((await this.prisma.otpCode.count({ where: { phone, usedAt: { gte: hourAgo } } })) >= s['otp.maxSuccessPerPhonePerHour'])
       throw tooMany(3600);
-    if (deviceId && (await this.prisma.otpRequestLog.count({ where: { deviceId, createdAt: { gte: hourAgo } } })) >= s['otp.maxPerDevicePerHour'])
+    if ((await this.prisma.otpRequestLog.count({ where: { ip, succeededAt: null, createdAt: { gte: hourAgo } } })) >= s['otp.maxPerIpPerHour'])
+      throw tooMany(3600);
+    if (deviceId && (await this.prisma.otpRequestLog.count({ where: { deviceId, succeededAt: null, createdAt: { gte: hourAgo } } })) >= s['otp.maxPerDevicePerHour'])
       throw tooMany(3600);
 
     await this.prisma.otpRequestLog.create({ data: { phone, ip, deviceId } });
@@ -76,7 +84,11 @@ export class OtpService {
       await this.prisma.otpCode.update({ where: { id: otp.id }, data: { attempts: { increment: 1 } } });
       throw new AppError(HttpStatus.BAD_REQUEST, 'OTP_WRONG', 'کد تایید اشتباه است.');
     }
-    if (consume) await this.prisma.otpCode.update({ where: { id: otp.id }, data: { usedAt: new Date() } });
+    if (consume) {
+      const now = new Date();
+      await this.prisma.otpCode.update({ where: { id: otp.id }, data: { usedAt: now } });
+      await this.prisma.otpRequestLog.updateMany({ where: { phone, succeededAt: null }, data: { succeededAt: now } });
+    }
   }
 
   private async assertNotBlocked(phone: string, ip: string, deviceId: string | null, now: Date) {

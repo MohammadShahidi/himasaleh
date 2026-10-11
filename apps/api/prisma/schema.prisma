@@ -65,12 +65,15 @@ model OtpCode {
 }
 
 /// Every OTP request, kept for rate limiting and bot detection.
+/// `succeededAt` is set when the person entered the code; such requests no longer count toward
+/// the phone/IP/device limits (bot detection still sees them).
 model OtpRequestLog {
-  id        String   @id @default(cuid())
-  phone     String
-  ip        String
-  deviceId  String?
-  createdAt DateTime @default(now())
+  id          String    @id @default(cuid())
+  phone       String
+  ip          String
+  deviceId    String?
+  createdAt   DateTime  @default(now())
+  succeededAt DateTime?
 
   @@index([phone, createdAt])
   @@index([ip, createdAt])

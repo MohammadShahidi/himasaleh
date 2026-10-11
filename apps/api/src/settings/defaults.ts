@@ -6,6 +6,7 @@ import { DEFAULT_CONSULT_TOPICS } from '@hm/shared';
  */
 export const SETTING_DEFAULTS = {
   /** Requests allowed in one uninterrupted streak per phone before a cooldown. */
+  /** Requests whose code was entered correctly never count toward the limits below, except the success cap. */
   'otp.maxPerPhone': 7,
   'otp.cooldownMin': 5,
   /** Minimum seconds between two requests for the same phone (the «ارسال دوباره» timer). */
@@ -13,6 +14,8 @@ export const SETTING_DEFAULTS = {
   'otp.maxPerIpPerHour': 20,
   'otp.maxPerDevicePerHour': 20,
   /** Distinct phones from one IP or device inside the window that count as a bot. */
+  /** Successful sign-ins per phone per hour; a generous guard against SMS spam from a verified number. */
+  'otp.maxSuccessPerPhonePerHour': 30,
   'otp.botDistinctPhones': 5,
   'otp.botWindowMin': 10,
   'otp.botBlockHours': 4,
