@@ -1,4 +1,5 @@
 // Port of design/project/WaybillCard.dc.html — «برگ حمل الکترونیکی».
+import { toFaDigits } from '@hm/shared';
 import { Icon } from '@/components/icon';
 import { Plate } from '@/components/plate';
 
@@ -31,31 +32,31 @@ export function WaybillCard({ data }: { data: WaybillData }) {
           <span style={{ width: 46, height: 46, borderRadius: 14, background: '#FF5B0F', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="file-invoice" size={24} /></span>
           <div>
             <div style={{ fontSize: 13, color: '#AAA', fontWeight: 600 }}>برگ حمل الکترونیکی</div>
-            <div style={{ marginTop: 2, fontSize: 18, fontWeight: 900, letterSpacing: '.5px' }}>شماره <bdi dir="ltr">{data.no}</bdi></div>
+            <div style={{ marginTop: 2, fontSize: 18, fontWeight: 900, letterSpacing: '.5px' }}>شماره <bdi dir="ltr">{toFaDigits(data.no)}</bdi></div>
           </div>
         </div>
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,.08)', border: '1px solid rgba(255,255,255,.14)', borderRadius: 999, padding: '6px 12px', fontSize: 13, fontWeight: 700 }}>
             <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#FF5B0F', boxShadow: '0 0 0 4px rgba(255,91,15,.25)' }} />{data.status}
           </span>
-          <span style={{ fontSize: 13, color: '#BBB' }}>کد رهگیری: <b dir="ltr" style={{ color: '#fff', unicodeBidi: 'isolate' }}>{data.track}</b></span>
+          <span style={{ fontSize: 13, color: '#BBB' }}>کد رهگیری: <b dir="ltr" style={{ color: '#fff', unicodeBidi: 'isolate' }}>{toFaDigits(data.track)}</b></span>
         </div>
       </div>
 
       <div style={{ padding: '22px 24px', display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto minmax(0,1fr)', gap: 14, alignItems: 'center', borderBottom: '1px dashed #EAEAEA' }}>
         <div>
           <div style={{ fontSize: 12, fontWeight: 700, color: '#FF5B0F', display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="building-store" size={15} />مبدا (بارگیری)</div>
-          <div style={{ marginTop: 6, fontSize: 16, fontWeight: 800, color: '#141414' }}>{data.fromTitle}</div>
-          <div style={{ marginTop: 4, fontSize: 13, color: '#777', lineHeight: 1.8 }}>{data.fromAddr}</div>
+          <div style={{ marginTop: 6, fontSize: 16, fontWeight: 800, color: '#141414' }}>{toFaDigits(data.fromTitle)}</div>
+          <div style={{ marginTop: 4, fontSize: 13, color: '#777', lineHeight: 1.8 }}>{toFaDigits(data.fromAddr)}</div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, color: '#CCC' }}>
           <Icon name="truck" size={24} style={{ color: '#FF5B0F', transform: 'scaleX(-1)' }} />
-          <span style={{ fontSize: 12, color: '#999', whiteSpace: 'nowrap' }}>{data.distance}</span>
+          <span style={{ fontSize: 12, color: '#999', whiteSpace: 'nowrap' }}>{toFaDigits(data.distance)}</span>
         </div>
         <div>
           <div style={{ fontSize: 12, fontWeight: 700, color: '#1F9D55', display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="map-pin" size={15} />مقصد (تخلیه)</div>
-          <div style={{ marginTop: 6, fontSize: 16, fontWeight: 800, color: '#141414' }}>{data.toTitle}</div>
-          <div style={{ marginTop: 4, fontSize: 13, color: '#777', lineHeight: 1.8 }}>{data.toAddr}</div>
+          <div style={{ marginTop: 6, fontSize: 16, fontWeight: 800, color: '#141414' }}>{toFaDigits(data.toTitle)}</div>
+          <div style={{ marginTop: 4, fontSize: 13, color: '#777', lineHeight: 1.8 }}>{toFaDigits(data.toAddr)}</div>
         </div>
       </div>
 
@@ -63,7 +64,7 @@ export function WaybillCard({ data }: { data: WaybillData }) {
         {data.rows.map((r) => (
           <div key={r.k}>
             <div style={{ fontSize: 12, color: '#999', fontWeight: 600 }}>{r.k}</div>
-            <div style={{ marginTop: 4, fontSize: 14, fontWeight: 700, color: '#222', lineHeight: 1.8 }}>{r.v}</div>
+            <div style={{ marginTop: 4, fontSize: 14, fontWeight: 700, color: '#222', lineHeight: 1.8 }}>{toFaDigits(r.v)}</div>
           </div>
         ))}
       </div>
@@ -73,7 +74,7 @@ export function WaybillCard({ data }: { data: WaybillData }) {
           <span style={{ width: 46, height: 46, borderRadius: '50%', background: '#F4F4F4', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#555' }}><Icon name="steering-wheel" size={24} /></span>
           <div>
             <div style={{ fontSize: 15, fontWeight: 800, color: '#141414' }}>{data.driverName}</div>
-            <div style={{ fontSize: 13, color: '#777' }}>{data.vehicle}</div>
+            <div style={{ fontSize: 13, color: '#777' }}>{toFaDigits(data.vehicle)}</div>
           </div>
         </div>
         <Plate {...data.plate} />
