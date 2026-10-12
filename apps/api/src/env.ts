@@ -39,6 +39,13 @@ const schema = z.object({
 
   /** Enables the test-load tool for staff (POST /dev/test-trips). Off by default; turn on only on dev and acceptance servers. */
   ENABLE_DEV_TOOLS: bool.default(false),
+  /**
+   * Test numbers: with ENABLE_DEV_TOOLS on, every SMS to a number starting with this prefix (e.g. 0900000) goes to an in-memory
+   * test provider instead of the real one, and a tester can read it at GET /dev/test-sms. Real numbers are never affected.
+   */
+  SMS_TEST_PREFIX: z.string().regex(/^09\d{5,9}$/, 'digits, starting with 09, 7–11 long').optional(),
+  /** Comma-separated mobiles that get the staff role at start-up (there is no staff management UI before phase 3). */
+  STAFF_BOOTSTRAP_PHONES: z.string().optional(),
 
   /** Mobile ↔ national ID check. `manual` = the expert decides. */
   SHAHKAR_PROVIDER: z.enum(['manual', 'jibit']).default('manual'),
