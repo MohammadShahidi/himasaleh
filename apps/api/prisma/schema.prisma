@@ -1,4 +1,4 @@
-// Phase 0: accounts, sign-in, settings, audit, files, SMS log.
+// Phase 0: accounts, sign-in, settings, audit, files, SMS log. Phase 1 (bottom): drivers, KYC, ledger.
 // Money columns (later phases) are BigInt rials; rates are Int basis points.
 
 generator client {
@@ -40,6 +40,9 @@ model User {
   roles         UserRole[]
   refreshTokens RefreshToken[]
   files         FileObject[]
+  driverProfile DriverProfile?
+  devices       Device[]
+  notifications NotificationLog[]
 }
 
 model UserRole {
@@ -147,6 +150,7 @@ model FileObject {
   size       Int
   createdAt  DateTime       @default(now())
   owner      User?          @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  kycItems   KycItem[]
 }
 
 enum SmsStatus {
@@ -187,4 +191,380 @@ model ConsultRequest {
 
   @@index([handledAt, createdAt])
   @@index([phone, createdAt])
+}
+
+// ───────────────────────── Phase 1: drivers, KYC, ledger ─────────────────────────
+
+enum DriverStatus {
+  /// registration started, not sent yet
+  draft
+  /// sent, waiting for an expert
+  submitted
+  /// an expert rejected at least one item; the driver re-uploads only those
+  needs_fix
+  approved
+  /// blocked (e.g. too many cancellations after accepting, architecture §4.2 dispatch)
+  blocked
+}
+
+enum VehicleType {
+  pickup
+  khavar
+  kamyonet
+  single_truck
+  ten_wheeler
+  trailer
+}
+
+enum VehicleBody {
+  flatbed
+  sided
+  dump
+  covered
+}
+
+/// One per driver account. Registration steps 1, 5 (design/project/driver-register.dc.html).
+model DriverProfile {
+  id           String       @id @default(cuid())
+  userId       String       @unique
+  firstName    String
+  lastName     String
+  nationalId   String
+  /// optional
+  licenseNo    String?
+  /// referral code typed at registration (the referral module resolves it later)
+  refCode      String?
+  status       DriverStatus @default(draft)
+  province     String?
+  city         String?
+  /// cities where this driver takes loads («شهرهای سرویس»), includes `city`
+  serviceCities String[]
+  address      String?
+  postalCode   String?
+  lat          Float?
+  lng          Float?
+  /// «سر کارم»
+  online       Boolean      @default(false)
+  submittedAt  DateTime?
+  approvedAt   DateTime?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  user     User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vehicles Vehicle[]
+  kycItems KycItem[]
+  trips    Trip[]
+  offers   DispatchOffer[]
+
+  @@index([status, submittedAt])
+  @@index([nationalId])
+}
+
+/// Registration step 2. Plate is kept as the four parts of an Iranian plate: 12 ع 345 - 67.
+model Vehicle {
+  id          String      @id @default(cuid())
+  driverId    String
+  type        VehicleType
+  body        VehicleBody
+  capacityTon Int?
+  year        Int?
+  plate1      String
+  plateLetter String
+  plate2      String
+  plate3      String
+  createdAt   DateTime    @default(now())
+
+  driver DriverProfile @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  owner  VehicleOwner?
+
+  @@index([driverId])
+}
+
+enum OwnerRelation {
+  father
+  mother
+  spouse
+  brother
+  sister
+  child
+  partner
+  employer
+  other
+}
+
+/// Present only when the vehicle's owner is not the driver. Non-first-degree relations
+/// (partner, employer, other) need an authorization document or the owner's consent video.
+model VehicleOwner {
+  id             String        @id @default(cuid())
+  vehicleId      String        @unique
+  firstName      String
+  lastName       String
+  nationalId     String
+  phone          String
+  relation       OwnerRelation
+  /// free text when relation = other
+  relationOther  String?
+  /// sha256 of the link token texted to the owner (the plain token is never stored)
+  videoTokenHash String?        @unique
+  videoLinkSentAt DateTime?
+  videoReminderSentAt DateTime?
+  createdAt      DateTime      @default(now())
+
+  vehicle  Vehicle   @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  kycItems KycItem[]
+}
+
+enum KycSubject {
+  driver
+  owner
+}
+
+enum KycKind {
+  national_id_front
+  national_id_back
+  vehicle_card_front
+  vehicle_card_back
+  green_sheet
+  license
+  selfie_video
+  owner_national_id_front
+  owner_national_id_back
+  /// power of attorney, notarized consent or lease
+  owner_authorization
+  owner_video
+}
+
+enum KycStatus {
+  pending
+  approved
+  rejected
+}
+
+/// One uploaded document or video and the expert's verdict on it. Re-uploading a rejected item
+/// adds a new row; only the newest row per (subject, kind) counts.
+model KycItem {
+  id           String     @id @default(cuid())
+  subject      KycSubject
+  driverId     String?
+  ownerId      String?
+  kind         KycKind
+  fileId       String
+  status       KycStatus  @default(pending)
+  /// one of the fixed short reasons (they must fit an SMS parameter, see docs/SMS-TEMPLATES.md)
+  rejectReason String?
+  /// text the person read aloud in the video, exactly as shown to them
+  scriptSnapshot String?
+  /// manual result until a Shahkar provider is connected (DECISIONS §10)
+  shahkarResult Json?
+  reviewedById String?
+  reviewedAt   DateTime?
+  createdAt    DateTime   @default(now())
+
+  driver DriverProfile? @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  owner  VehicleOwner?  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  file   FileObject     @relation(fields: [fileId], references: [id])
+
+  @@index([driverId, kind, createdAt])
+  @@index([ownerId, kind, createdAt])
+  @@index([status, createdAt])
+}
+
+/// Double-entry ledger (architecture §7): the entries of one transaction always sum to zero.
+model LedgerTxn {
+  id        String   @id @default(cuid())
+  /// event type, e.g. `trip_settlement`
+  kind      String
+  /// what it belongs to, e.g. `order:cl123`
+  ref       String?
+  /// makes retries safe: the same key never posts twice
+  idempotencyKey String? @unique
+  meta      Json?
+  createdAt DateTime @default(now())
+
+  entries LedgerEntry[]
+
+  @@index([ref])
+}
+
+model LedgerEntry {
+  id         String    @id @default(cuid())
+  txnId      String
+  /// e.g. `wallet:user:cl123`, `platform:revenue:fee`
+  account    String
+  /// signed rials: positive = credit, negative = debit
+  amountRial BigInt
+  txn        LedgerTxn @relation(fields: [txnId], references: [id], onDelete: Restrict)
+
+  @@index([account])
+  @@index([txnId])
+}
+
+/// Running balance per account, updated inside the same database transaction as its entries.
+model AccountBalance {
+  account    String   @id
+  balanceRial BigInt  @default(0)
+  updatedAt  DateTime @updatedAt
+}
+
+// ───────────────────────── Phase 1: push notifications ─────────────────────────
+
+/// A phone running the Android app. One user may have several; a token is deleted on sign-out or when FCM says it is invalid.
+model Device {
+  id         String   @id @default(cuid())
+  userId     String
+  /// FCM registration token
+  token      String   @unique
+  platform   String   @default("android")
+  appVersion String?
+  createdAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+enum NotifyChannel {
+  push
+  sms
+}
+
+enum NotifyStatus {
+  sent
+  failed
+  /// the app confirmed the push arrived
+  acked
+}
+
+/// One row per attempt to tell a user something; `ackedAt` lets the SMS fallback know the push arrived.
+model NotificationLog {
+  id          String        @id @default(cuid())
+  userId      String
+  type        String
+  channel     NotifyChannel
+  status      NotifyStatus
+  title       String?
+  /// deep link opened when the notification is tapped
+  path        String?
+  providerRef String?
+  error       String?
+  createdAt   DateTime      @default(now())
+  ackedAt     DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([type, createdAt])
+}
+
+// ───────────────────────── Phase 1: dispatch and trips ─────────────────────────
+
+enum TripStatus {
+  /// offers are out, nobody accepted yet
+  open
+  assigned
+  /// the driver is at the seller
+  loading
+  /// loaded, waybill issued, on the road
+  in_transit
+  /// at the destination
+  arrived
+  delivered
+  cancelled
+}
+
+/// A load to carry. In phase 1 it is created by the dev test tool; from phase 2 it belongs to an Order.
+model Trip {
+  id          String     @id @default(cuid())
+  status      TripStatus @default(open)
+  /// 1 go to the seller · 2 load · 3 go to the destination · 4 deliver and get the signed waybill photo · 5 done
+  step        Int        @default(1)
+  /// who accepted the offer
+  driverId    String?
+  /// «۱۴۰۵۰۷۱۲-۸۸۴۱»
+  waybillNo   String     @unique
+  /// «HM-58213»
+  trackCode   String     @unique
+  goods       String
+  weightText  String?
+  fromTitle   String
+  fromAddr    String
+  fromPhone   String?
+  fromLat     Float?
+  fromLng     Float?
+  toTitle     String
+  toAddr      String
+  toContact   String?
+  toPhone     String?
+  toLat       Float?
+  toLng       Float?
+  distanceKm  Int?
+  whenText    String?
+  /// loading and delivery notes shown to the driver (list of strings)
+  notes       Json?
+  /// internal note, never shown to the driver (process doc: waybill)
+  internalNote String?
+  /// what the customer paid for carrying (rials); the driver sees fare minus the platform share
+  fareRial    BigInt
+  /// platform share of the fare in basis points, copied when the offer was made (never changes afterwards)
+  driverFeeBp Int
+  feeSource   String     @default("default")
+  isTest      Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  acceptedAt  DateTime?
+  deliveredAt DateTime?
+
+  driver DriverProfile? @relation(fields: [driverId], references: [id])
+  offers DispatchOffer[]
+  events TripEvent[]
+
+  @@index([status, createdAt])
+  @@index([driverId, status])
+}
+
+enum OfferStatus {
+  pending
+  accepted
+  rejected
+  expired
+  /// another driver accepted first
+  taken
+}
+
+/// A load offered to one driver. The first to accept wins; the rest become `taken`.
+model DispatchOffer {
+  id          String      @id @default(cuid())
+  tripId      String
+  driverId    String
+  status      OfferStatus @default(pending)
+  fareRial    BigInt
+  driverFeeBp Int
+  expiresAt   DateTime
+  createdAt   DateTime    @default(now())
+  respondedAt DateTime?
+
+  trip   Trip          @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  driver DriverProfile @relation(fields: [driverId], references: [id], onDelete: Cascade)
+
+  @@unique([tripId, driverId])
+  @@index([driverId, status, expiresAt])
+}
+
+/// One step the driver took, with the phone's own clock (it may have been offline).
+model TripEvent {
+  id          String   @id @default(cuid())
+  tripId      String
+  step        Int
+  clientAt    DateTime
+  serverAt    DateTime @default(now())
+  lat         Float?
+  lng         Float?
+  photoFileId String?
+  /// the app's counter; makes a re-sent batch harmless
+  clientSeq   Int?
+
+  trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  @@unique([tripId, step])
+  @@index([tripId])
 }

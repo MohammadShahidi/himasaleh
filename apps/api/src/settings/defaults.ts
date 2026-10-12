@@ -27,6 +27,27 @@ export const SETTING_DEFAULTS = {
   'consult.maxPerPhonePerHour': 3,
   'consult.maxPerIpPerHour': 20,
   'consult.slaHours': 24,
+
+  /** Hours after the owner's video link was issued before the driver is reminded (once). */
+  'kyc.ownerVideoReminderHours': 24,
+
+  /**
+   * SMS for a new load: `off` never, `fallback` only when the driver has no app or the push was not confirmed in time,
+   * `always` together with the push. Admin edits it under «قوانین عملیاتی».
+   */
+  /** Platform share of the fare taken from the driver, in basis points (800 = 8%). Campaigns may lower it per driver later. */
+  'fee.driver.defaultBp': 800,
+  /** Minutes a load offer stays open for a driver. */
+  'dispatch.offerTtlMin': 15,
+
+  'notify.newLoadSms.mode': 'fallback' as 'off' | 'fallback' | 'always',
+  /** Seconds to wait for the app to confirm a push before the fallback SMS goes (must be far below the offer's lifetime). */
+  'notify.smsFallbackAfterSec': 60,
+
+  /** Android app versions (build numbers). Below the minimum the app shows an «update» screen. */
+  'app.android.minVersionCode': 1,
+  'app.android.latestVersionCode': 1,
+  'app.android.storeUrl': '' as string,
 } as const;
 
 export type SettingKey = keyof typeof SETTING_DEFAULTS;

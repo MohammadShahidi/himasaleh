@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  applyBp, formatToman, formatTomanWords, isNationalId, isSheba, normalizeMobile,
+  applyBp, consentScripts, jalaliYmd, toJalali, driverProfileInputSchema, formatToman, formatTomanWords, isNationalId, isSheba, normalizeMobile, ownerProofOk, REJECT_REASONS, requiredKinds,
   otpVerifySchema, toEnDigits, toFaDigits,
 } from './index.js';
 
@@ -66,5 +66,77 @@ describe('otpVerifySchema', () => {
   });
   it('rejects a short code', () => {
     expect(otpVerifySchema.safeParse({ phone: '09123456789', code: '123' }).success).toBe(false);
+  });
+});
+
+describe('driver registration rules', () => {
+  const base = {
+    firstName: 'حسن', lastName: 'کریمی', nationalId: '۱۲۳۴۵۶۷۸۹۱',
+    vehicle: { type: 'khavar', body: 'flatbed', plate1: '۱۲', plateLetter: 'ع', plate2: '۳۴۵', plate3: '۶۷' },
+    owner: null, province: 'تهران', city: 'تهران', serviceCities: ['تهران'], address: 'تهران، خیابان آزادی، پلاک ۱',
+  };
+
+  it('accepts a complete self-owned registration and normalizes digits', () => {
+    const r = driverProfileInputSchema.parse(base);
+    expect(r.nationalId).toBe('1234567891');
+    expect(r.vehicle.plate2).toBe('345');
+  });
+
+  it('saves without the address step; the address is only required to submit', () => {
+    const { province, city, serviceCities, address, ...noLocation } = base;
+    void province; void city; void serviceCities; void address;
+    expect(driverProfileInputSchema.safeParse(noLocation).success).toBe(true);
+  });
+
+  it('rejects a bad national id and an incomplete plate', () => {
+    expect(driverProfileInputSchema.safeParse({ ...base, nationalId: '1234567890' }).success).toBe(false);
+    expect(driverProfileInputSchema.safeParse({ ...base, vehicle: { ...base.vehicle, plate2: '34' } }).success).toBe(false);
+  });
+
+  it('needs the owner details, and a written relation for «سایر»', () => {
+    const owner = { firstName: 'حمید', lastName: 'کریمی', nationalId: '1234567891', phone: '09123456789', relation: 'other' };
+    expect(driverProfileInputSchema.safeParse({ ...base, owner }).success).toBe(false);
+    expect(driverProfileInputSchema.safeParse({ ...base, owner: { ...owner, relationOther: 'همکار' } }).success).toBe(true);
+  });
+
+  it('lists the documents a registration must have', () => {
+    expect(requiredKinds(null)).not.toContain('owner_national_id_front');
+    expect(requiredKinds({ relation: 'father' })).toEqual(expect.arrayContaining(['owner_national_id_front', 'owner_national_id_back']));
+  });
+
+  it('first-degree owner: a consent video or a texted link is enough', () => {
+    expect(ownerProofOk('father', new Set(), false)).toBe(false);
+    expect(ownerProofOk('father', new Set(), true)).toBe(true);
+    expect(ownerProofOk('father', new Set(['owner_video']), false)).toBe(true);
+  });
+
+  it('other owners also need a document or the video itself, not just the link', () => {
+    expect(ownerProofOk('partner', new Set(), true)).toBe(false);
+    expect(ownerProofOk('partner', new Set(['owner_authorization']), true)).toBe(true);
+    expect(ownerProofOk('partner', new Set(['owner_video']), false)).toBe(true);
+  });
+
+  it('keeps every rejection reason short enough for an SMS parameter', () => {
+    for (const r of REJECT_REASONS) expect(r.length).toBeLessThanOrEqual(25);
+  });
+
+  it('fills the consent scripts with the entered details', () => {
+    const s = consentScripts({ driverName: 'حسن کریمی', driverNationalId: '۱۲۳۴۵۶۷۸۹۱', plate: '۱۲ ع ۳۴۵ ایران ۶۷', owner: { name: 'حمید کریمی', nationalId: '۱۲۳۴۵۶۷۸۹۱', relation: 'برادر' } });
+    expect(s.driver).toContain('حسن کریمی');
+    expect(s.owner).toContain('حمید کریمی');
+    expect(consentScripts({ driverName: 'ا', driverNationalId: '۱', plate: 'پ' }).owner).toBeNull();
+  });
+});
+
+describe('jalali', () => {
+  it('converts known dates', () => {
+    expect(toJalali(2026, 10, 12)).toEqual([1405, 7, 20]);
+    expect(toJalali(2026, 3, 21)).toEqual([1405, 1, 1]);
+    expect(toJalali(2024, 3, 20)).toEqual([1403, 1, 1]);
+  });
+  it('uses the Tehran day, not the UTC day', () => {
+    // 20:45 UTC on 2026-10-11 is already 00:15 on the 12th in Tehran.
+    expect(jalaliYmd(new Date('2026-10-11T20:45:00Z'))).toBe('14050720');
+    expect(jalaliYmd(new Date('2026-10-11T12:00:00Z'))).toBe('14050719');
   });
 });

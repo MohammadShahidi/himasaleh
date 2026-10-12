@@ -1,4 +1,5 @@
 import { Logger } from '@nestjs/common';
+import type { SmsTemplateKey } from './sms-templates.js';
 
 /** What a provider reports back for one sent message. */
 export interface SmsReceipt {
@@ -14,6 +15,8 @@ export interface SmsProvider {
   /** Sends the OTP through the provider's approved template (pattern). */
   sendOtp(to: string, code: string, text: string): Promise<SmsReceipt>;
   send(to: string, text: string): Promise<SmsReceipt>;
+  /** Sends one of the approved templates (sms-templates.ts) with its parameters. */
+  sendTemplate(to: string, key: SmsTemplateKey, params: Record<string, string>): Promise<SmsReceipt>;
 }
 
 /** Development provider: writes the message to the log instead of sending it. */
@@ -28,6 +31,11 @@ export class FakeSmsProvider implements SmsProvider {
 
   async send(to: string, text: string) {
     this.logger.log(`[${this.name}] → ${to}: ${text}`);
+    return {};
+  }
+
+  async sendTemplate(to: string, key: SmsTemplateKey, params: Record<string, string>) {
+    this.logger.log(`[${this.name}] ${key} → ${to}: ${JSON.stringify(params)}`);
     return {};
   }
 }

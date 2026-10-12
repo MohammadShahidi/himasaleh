@@ -1,0 +1,18 @@
+{
+  "appId": "ir.himasaleh.app",
+  "appName": "های مصالح",
+  "webDir": "www",
+  "server": {
+    "url": "https://himasaleh.ir/driver",
+    "cleartext": false,
+    "allowNavigation": ["himasaleh.ir"]
+  },
+  "android": {
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
+    }
+  }
+}

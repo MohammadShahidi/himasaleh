@@ -19,7 +19,7 @@ export class FilesService {
   ) {}
 
   /** Streams one multipart file straight to storage, enforcing type and size while it streams. */
-  upload(req: Request, ownerId: string, visibility: Visibility) {
+  upload(req: Request, ownerId: string | null, visibility: Visibility) {
     return new Promise<{ id: string; mime: string; size: number }>((resolve, reject) => {
       let bb: busboy.Busboy;
       try {
