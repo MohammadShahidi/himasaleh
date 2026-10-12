@@ -29,6 +29,14 @@ export class SettingsService {
     return out;
   }
 
+  /** Removes an override so the code default applies again. */
+  async reset(key: SettingKey, actorId: string, ip?: string) {
+    const before = await this.get(key);
+    await this.prisma.setting.deleteMany({ where: { key } });
+    this.cache.delete(key);
+    await this.audit.log({ actorId, action: 'setting.reset', entity: 'setting', entityId: key, before, after: SETTING_DEFAULTS[key], ip });
+  }
+
   async set<K extends SettingKey>(key: K, value: SettingValue<K>, actorId: string, ip?: string) {
     const before = await this.get(key);
     await this.prisma.setting.upsert({

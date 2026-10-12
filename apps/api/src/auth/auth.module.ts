@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { ENV, type Env } from '../env.js';
+import { StaffBootstrapService } from '../users/staff-bootstrap.service.js';
 import { UsersService } from '../users/users.service.js';
 import { AuthController } from './auth.controller.js';
 import { AuthGuard } from './auth.guard.js';
@@ -16,7 +17,7 @@ import { TokensService } from './tokens.service.js';
     }),
   ],
   controllers: [AuthController],
-  providers: [OtpService, TokensService, UsersService, { provide: APP_GUARD, useClass: AuthGuard }],
+  providers: [OtpService, TokensService, UsersService, StaffBootstrapService, { provide: APP_GUARD, useClass: AuthGuard }],
   exports: [TokensService, UsersService],
 })
 export class AuthModule {}

@@ -129,21 +129,3 @@ export function KycReview() {
     </div>
   );
 }
-
-/** Dev/acceptance only: the API answers 404 unless ENABLE_DEV_TOOLS is on. */
-export function TestTripTool() {
-  const [msg, setMsg] = useState('');
-  const make = useMutation({
-    mutationFn: () => api<{ offered: number; waybillNo: string }>('/dev/test-trips', { method: 'POST', json: {} }),
-    onSuccess: (r) => setMsg(`بار آزمایشی ${toFaDigits(r.waybillNo)} ساخته شد و برای ${toFaDigits(r.offered)} راننده آنلاین فرستاده شد.`),
-    onError: (e) => setMsg(e instanceof ApiError && e.status === 404 ? 'ابزار آزمایشی در این سرور غیرفعال است.' : e instanceof ApiError ? e.message : 'خطا'),
-  });
-  return (
-    <div style={card}>
-      <div style={{ fontSize: 16, fontWeight: 900 }}>ساخت بار آزمایشی</div>
-      <p style={{ margin: '6px 0 12px', fontSize: 13, color: '#777', lineHeight: 1.9 }}>برای آزمایش پنل راننده: یک بار نمونه برای رانندگان تاییدشده‌ای که «سر کارم» هستند می‌فرستد.</p>
-      <button onClick={() => make.mutate()} disabled={make.isPending} style={{ border: '1.5px solid #141414', background: '#fff', borderRadius: 12, padding: '10px 18px', fontSize: 14, fontWeight: 800, cursor: 'pointer', fontFamily: 'inherit' }}>ارسال بار آزمایشی</button>
-      {msg && <div style={{ marginTop: 10, fontSize: 13, fontWeight: 700, color: '#444' }}>{msg}</div>}
-    </div>
-  );
-}
