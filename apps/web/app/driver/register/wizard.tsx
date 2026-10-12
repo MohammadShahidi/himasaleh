@@ -3,7 +3,7 @@
 // Port of design/project/driver-register.dc.html: the six-step registration, wired to /drivers/me and /files.
 import {
   consentScripts, digitsOnly, isNationalId, type KycKind, normalizeMobile, OWNER_RELATION_LABEL, OWNER_RELATIONS, type OwnerRelation,
-  needsOwnerAuthorization, toFaDigits, VEHICLE_BODIES, VEHICLE_BODY_LABEL, VEHICLE_TYPE_LABEL, VEHICLE_TYPES, type VehicleBody, type VehicleType,
+  needsOwnerAuthorization, ownerProofOk, toFaDigits, VEHICLE_BODIES, VEHICLE_BODY_LABEL, VEHICLE_TYPE_LABEL, VEHICLE_TYPES, type VehicleBody, type VehicleType,
 } from '@hm/shared';
 import { useRouter } from 'next/navigation';
 import { type ChangeEvent, type CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -158,6 +158,7 @@ export function DriverWizard() {
   const plateOk = p1.length === 2 && p2.length === 3 && p3.length === 2;
   const ownerOk = !owner || (ofn.trim() && oln.trim() && isNationalId(onid) && normalizeMobile(ophone) && rel != null && (rel !== 'other' || relOther.trim()));
   const have = (k: KycKind) => !!docs[k] && docs[k]!.status !== 'rejected';
+  const haveSet = new Set((Object.keys(docs) as KycKind[]).filter(have));
   const plateText = p1 ? `${toFaDigits(p1)} ${pL} ${toFaDigits(p2)} - ایران ${toFaDigits(p3)}` : '[پلاک]';
   const scripts = useMemo(() => consentScripts({
     driverName: `${fn} ${ln}`.trim() || '[نام و نام خانوادگی]', driverNationalId: nid ? toFaDigits(nid) : '[کد ملی]', plate: plateText,
@@ -167,8 +168,9 @@ export function DriverWizard() {
   const valid = (s: number): boolean => {
     if (s === 1) return !!(fn.trim() && ln.trim() && nidOk && normalizeMobile(phone));
     if (s === 2) return !!(vt && bt && plateOk && ownerOk);
-    if (s === 3) return DOCS.every((d) => !d.required || have(d.kind)) && (!owner || (have('owner_national_id_front') && have('owner_national_id_back') && (!authReq || have('owner_authorization') || have('owner_video'))));
-    if (s === 4) return have('selfie_video') && (!owner || have('owner_video') || linkIssued);
+    // The owner's proof (authorization document or consent video) is judged in step 4, where the video can be recorded.
+    if (s === 3) return DOCS.every((d) => !d.required || have(d.kind)) && (!owner || (have('owner_national_id_front') && have('owner_national_id_back')));
+    if (s === 4) return have('selfie_video') && (!owner || (rel != null && ownerProofOk(rel, haveSet, linkIssued)));
     if (s === 5) return !!(city && addr.trim().length > 5);
     if (s === 6) return agree;
     return true;
@@ -387,8 +389,8 @@ export function DriverWizard() {
                       {([
                         { kind: 'owner_national_id_front', label: 'کارت ملی مالک (رو)', icon: 'id', required: true },
                         { kind: 'owner_national_id_back', label: 'کارت ملی مالک (پشت)', icon: 'id', required: true },
-                        { kind: 'owner_authorization', label: 'وکالت‌نامه، رضایت‌نامه محضری یا اجاره‌نامه', icon: 'file-certificate', required: authReq },
-                      ] as DocSlot[]).map((s) => <UploadBox key={s.kind} slot={s} doc={docs[s.kind]} locked={locked(s.kind)} bad={bad(s.required && !have(s.kind) && !(s.kind === 'owner_authorization' && have('owner_video')))} onPick={(f) => pickDoc(s.kind, f)} onRemove={() => removeDoc(s.kind)} />)}
+                        { kind: 'owner_authorization', label: 'وکالت‌نامه، رضایت‌نامه محضری یا اجاره‌نامه', icon: 'file-certificate', required: false },
+                      ] as DocSlot[]).map((s) => <UploadBox key={s.kind} slot={s} doc={docs[s.kind]} locked={locked(s.kind)} bad={bad(s.required && !have(s.kind))} onPick={(f) => pickDoc(s.kind, f)} onRemove={() => removeDoc(s.kind)} />)}
                     </div>
                   </div>
                 )}
@@ -429,7 +431,7 @@ export function DriverWizard() {
                         </div>
                       </div>
                     )}
-                    {err && step === 4 && !have('owner_video') && !linkIssued && <div style={{ marginTop: 8, fontSize: 13, color: '#E0371F' }}>ویدیو رضایت مالک را بارگذاری کنید یا لینک ضبط را بگیرید.</div>}
+                    {err && step === 4 && have('selfie_video') && owner && !(rel != null && ownerProofOk(rel, haveSet, linkIssued)) && <div style={{ marginTop: 8, fontSize: 13, color: '#E0371F' }}>{authReq ? 'برای این مالک یا وکالت‌نامه/رضایت‌نامه/اجاره‌نامه را در مرحلهٔ مدارک بفرستید، یا ویدیوی رضایت مالک را همین‌جا ضبط کنید (فقط لینک کافی نیست).' : 'ویدیو رضایت مالک را بارگذاری کنید یا لینک ضبط را بگیرید.'}</div>}
                   </div>
                 )}
               </div>
